@@ -48,5 +48,5 @@ def test2():
 if __name__ == '__main__': #Question- Why isn't this if __name__ == '__unit_tests__'?
     test0()
     test1()
-    test2() #Question: so how granular do I get with these testing variations?
-                #TODO: Write better tests.
+    test2()
+    #TODO: Write better tests.

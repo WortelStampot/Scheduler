@@ -16,7 +16,7 @@ with open("testing/input/employee1.txt") as f:
             max_shifts = int(extract_data(line))
 
             weekAvailability = {}
-            for i in range(7):
+            for i in range(7): # day availability
                 weekday = main.Weekday(i)
                 line = f.readline()
                 dayAvailability_string = extract_data(line)
@@ -38,10 +38,25 @@ def compileWeek(roleFileName):
             roles = [role.strip() for role in line.split(',')]
 
             week.append({day: roles})
-    return week
+    roleObjects = createRoleObjects(week)
+    return roleObjects
 
-week = compileWeek('roles_smallSample.txt')
-rolesOfWeek = main.createRoles(week)
+
+def createRoleObjects(week):
+	'''creates a list of Role objects based on roles named in a 'week' '''
+	rolesOfWeek = []
+	for day in week:
+		for dayName,roles in day.items():
+			rolesOfDay = [main.Role(name=roleName, day=dayName) for roleName in roles]
+		rolesOfWeek.append(rolesOfDay)
+	return rolesOfWeek
+
+roleObjects = compileWeek('roles_smallSample.txt')
+
+def compileEmployees(employeeFileName):
+    pass
+def createEmployeeObjects():
+    pass
 
 employee_objects = []
 for employee in employees:
@@ -52,6 +67,8 @@ for employee in employees:
     new_employee = main.Employee(name,max_shifts,availability)
     employee_objects.append(new_employee)
 
-schedule = main.createSchedule(rolesOfWeek, employee_objects)
+schedule = main.createSchedule(roleObjects, employee_objects)
 
-main.scheduleView_Restaurant(schedule, week)
+print(schedule)
+print(roleObjects)
+#main.scheduleView_Restaurant(schedule, week) # Can change to single schedule input once schedule is list of lists

@@ -52,6 +52,37 @@ class Employee:
 				remainingShifts -= 1
 		return remainingShifts
 
+	def canTakeOnRole(self, roleObject):
+		#number of shifts available > 0
+		if not self.shiftsRemaining(Schedule.week) > 0:
+			return False
+		
+		# employee must have availabilty for the role
+		if roleObject.name.lower() not in self.availability[roleObject.day]:
+			return False
+		
+		return True
+
+class Schedule:
+	day = []
+	week = []
+
+	def createSchedule(rolesOfWeek, employeesOfWeek): #TODO: week schedule, a list of lists of day schedules
+		for day in range(len(rolesOfWeek)):
+			for role in rolesOfWeek[day]:
+				#find all the available employees for role
+				possibleEmployees = [employee for employee in employeesOfWeek if employee.canTakeOnRole(role)]
+				#assign the best employee for the role
+				try:
+					roleAndEmployee = (role, max(possibleEmployees, key=lambda employee: employeeRoleRank(employee, week_schedule, role) ))
+				except ValueError:
+					roleAndEmployee = (role, Employee('Unassinged',99,{}))
+				week_schedule.append(roleAndEmployee)
+
+		return week_schedule
+
+
+
 
 def isDouble(employee, schedule, role): # How to think about consolidating the same use of arguements here?
 	for grouping in schedule:
@@ -60,20 +91,8 @@ def isDouble(employee, schedule, role): # How to think about consolidating the s
 	return True
 
 
-def can_take_on_role(employee, role, schedule=None): # Chaining the schedule in here to get it to 'shifts remaining' does not seem optimal.
-													# TODO: fix this
-	#number of shifts available > 0
-	if not employee.shiftsRemaining(schedule) > 0:
-		return False
-	
-	# employee must have availabilty for the role
-	if role.name.lower() not in employee.availability[role.day]:
-		return False
-	
-	return True
 
-
-def employee_role_rank(employee, schedule, role): #Oh, maybe I could pass in the role_and_employees list directly, to consolidate arguments?
+def employeeRoleRank(employee, schedule, role): #Oh, maybe I could pass in the roleAndEmployees list directly, to consolidate arguments?
 	employeeRank = 100
 	#TODO highest aptitude for role
 
@@ -95,25 +114,25 @@ def createRoles(week):
 	return rolesOfWeek
 
 
-def createSchedule(rolesOfWeek, employees):
+def createSchedule(rolesOfWeek, employees): #TODO: week schedule, a list of lists of day schedules
 	week_schedule = []
 	for day in range(len(rolesOfWeek)):
 		for role in rolesOfWeek[day]:
 			#find all the available employees for role
-			possible_employees = [employee for employee in employees if can_take_on_role(employee, role, week_schedule)]
+			possibleEmployees = [employee for employee in employees if canTakeOnRole(employee, role, week_schedule)]
 			#assign the best employee for the role
 			try:
-				role_and_employee = (role, max(possible_employees, key=lambda employee: employee_role_rank(employee, week_schedule, role) ))
+				roleAndEmployee = (role, max(possibleEmployees, key=lambda employee: employeeRoleRank(employee, week_schedule, role) ))
 			except ValueError:
-				role_and_employee = (role, Employee('Unassinged',99,{}))
-			week_schedule.append(role_and_employee)
+				roleAndEmployee = (role, Employee('Unassinged',99,{}))
+			week_schedule.append(roleAndEmployee)
 
 	return week_schedule
 
 
 def scheduleView_Restaurant(schedule, week):
 	'''print the schedule in 'Restaurant View' '''
-	for day in range(len(week)): # for the seven days of the week.
+	for day in range(len(week)):
 		headerDate= Weekday(day)
 		print(f'{headerDate}')
 		for grouping in schedule:

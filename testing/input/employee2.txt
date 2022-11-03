@@ -1,0 +1,29 @@
+Employee- Sil
+Max Shifts- 2
+Monday- ["lunch", "aux", "eve"]
+Tuesday-['lunch']
+Wednesday- []
+Thursday- []
+Friday- []
+Saturday- []
+Sunday- []
+
+Employee- Mathew
+Max Shifts- 3
+Monday- ['back']
+Tuesday- []
+Wednesday- []
+Thursday- []
+Friday- []
+Saturday- []
+Sunday- []
+
+Employee- Ashlynn
+Max Shifts- 4
+Monday- ['lunch']
+Tuesday- []
+Wednesday- []
+Thursday- []
+Friday- []
+Saturday- []
+Sunday- []
