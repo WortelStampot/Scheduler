@@ -69,19 +69,39 @@ class Schedule:
 
 	def createSchedule(rolesOfWeek, employeesOfWeek): #TODO: week schedule, a list of lists of day schedules
 		for day in range(len(rolesOfWeek)):
+			Schedule.day = []
 			for role in rolesOfWeek[day]:
 				#find all the available employees for role
 				possibleEmployees = [employee for employee in employeesOfWeek if employee.canTakeOnRole(role)]
 				#assign the best employee for the role
 				try:
-					roleAndEmployee = (role, max(possibleEmployees, key=lambda employee: employeeRoleRank(employee, week_schedule, role) ))
+					roleAndEmployee = (role, max(possibleEmployees, key=employeeRoleRank(employee, role) ))
 				except ValueError:
 					roleAndEmployee = (role, Employee('Unassinged',99,{}))
 				week_schedule.append(roleAndEmployee)
 
 		return week_schedule
 
+	def isDouble_insideclass(employee, daySchedule):
+		if employee not in daySchedule:
+			return False
+		return True
 
+	
+	def employeeRoleRank(employee, role=None):
+		employeeRank = 100
+
+		if Schedule.isDouble2(employee):
+			employeeRank -=80
+		if employee.shiftsRemaining(Schedule.week) <= 2:
+			employeeRank -= 40
+
+		return employeeRank
+
+def isDouble_outsideClass(employeeObject, daySchedule):
+		if employeeObject not in daySchedule:
+			return False
+		return True
 
 
 def isDouble(employee, schedule, role): # How to think about consolidating the same use of arguements here?
