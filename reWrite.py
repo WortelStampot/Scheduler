@@ -12,14 +12,19 @@ class Weekday(Enum):
 
 class Role:
     def __init__(self, name, day, callTime=None ):
+        """
+        name: name of employee, str
+        day: weekday, Weekday enum
+        callTime: start of shift, datetime.time
+        """
         self.name = name
         self.day = day
 
         #default callTimes based on name
         callTimes = {
-        'lunch': 10.30, #Question: Use datetime.time instead of int?
-        'front': 16.30,
-        'aux': 18.00
+            'lunch': datetime.time(hour=10, minute=30), #Question: Use datetime.time instead of int?
+            'front': datetime.time(hour=16, minute=30),
+            'aux': datetime.time(hour=18, minute=0)
         }
         self.callTime = callTimes.get(name)
 
