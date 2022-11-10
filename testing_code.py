@@ -67,9 +67,6 @@ def compileStaff(staffFileName):
 
         return weekStaff
 
-compileStaff('staff_test.txt')
-
-
 def compileRoles(roleFileName):
     """input: .txt file containing names of roles and associated weekday
     Output: A list of dictionaries for each weekday.
@@ -91,6 +88,7 @@ def compileRoles(roleFileName):
     return weekRoleNames
 
 
+compileStaff('staff_test.txt')
 weekRoleNames = compileRoles('roles_monday.txt') #bah, the naming here is a mess.
 #rolesOfWeek = reWrite.createRoles(weekRoleNames)
 
