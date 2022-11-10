@@ -32,13 +32,13 @@ def getRequest(line):
 def setRequests(file, staff):
     """set staff.availability according to request input"""
     staff.availability = { #set default full availability
-            reWrite.Weekday.MONDAY: [datetime.time(8),datetime.time(23)],
-            reWrite.Weekday.TUESDAY: [datetime.time(8),datetime.time(23)],
-            reWrite.Weekday.WENDESDAY: [datetime.time(8),datetime.time(23)],
-            reWrite.Weekday.THURSDAY: [datetime.time(8),datetime.time(23)],
-            reWrite.Weekday.FRIDAY: [datetime.time(8),datetime.time(23)],
-            reWrite.Weekday.SATURDAY: [datetime.time(8),datetime.time(23)],
-            reWrite.Weekday.SUNDAY: [datetime.time(8),datetime.time(23)]
+            reWrite.Weekday.MONDAY: [datetime.time(hour=8),datetime.time(hour=23)],
+            reWrite.Weekday.TUESDAY: [datetime.time(hour=8),datetime.time(hour=23)],
+            reWrite.Weekday.WENDESDAY: [datetime.time(hour=8),datetime.time(hour=23)],
+            reWrite.Weekday.THURSDAY: [datetime.time(hour=8),datetime.time(hour=23)],
+            reWrite.Weekday.FRIDAY: [datetime.time(hour=8),datetime.time(hour=23)],
+            reWrite.Weekday.SATURDAY: [datetime.time(hour=8),datetime.time(hour=23)],
+            reWrite.Weekday.SUNDAY: [datetime.time(hour=8),datetime.time(hour=23)]
             }
     line = file.readline()
     print(line + 'inside setRequests') # Help.
