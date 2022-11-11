@@ -1,5 +1,6 @@
 import reWrite, ast, datetime
 from pathlib import Path
+import os
 
 
 
@@ -43,29 +44,44 @@ def setRequests(file, staff):
     line = file.readline()
     print(line + 'inside setRequests') # Help.
 
-
 def compileStaff(staffFileName):
     """compile staff from .txt file containing staff data"""
-    staffFilePath = Path.cwd() / 'testing/input' / staffFileName
+    staffFilePath = os.path.join("testing", "input", staffFileName)
     with open(staffFilePath) as f:
         weekStaff = []
-        while line := f.readline(): # can you explain this? I can't seem to grasp how this works.
+        while True:
+            line = f.readline()
+            if line == "": #end of file
+                break
+
             if line.lower().startswith('name'):
                 staffName = line.split(':')[1].strip()
-
+                print(staffName)
                 line = f.readline()
-                print(line + 'hey')
             if line.lower().startswith('shifts'):
                 maxShifts = int(line.split(':')[1].strip())
-
-                staffObject = reWrite.Staff(name=staffName)
-
+                print(maxShifts)
+                line = f.readline()
             if line.lower().startswith('requests'):
-                setRequests(f, staffObject)
+                for line in f:
+                    if line == "\n":
+                        break
+                    weekday_and_availability = [data.strip() for data in line.split(":")]
+                    weekday = reWrite.Weekday(weekday_and_availability[0])
 
-                weekStaff.append(staffObject)
+                    print(weekday)
+
+                # weekStaff.append(staffObject)
 
         return weekStaff
+
+def test_requests_parsing(f):
+    line = f.readline()
+    if line.lower().startswith('requests'):
+        for line in f:
+            if line == "\n":
+                break
+            print([data.strip() for data in line.split(":")])
 
 def compileRoles(roleFileName):
     """input: .txt file containing names of roles and associated weekday
@@ -87,9 +103,8 @@ def compileRoles(roleFileName):
             weekRoleNames.append({day: roles})
     return weekRoleNames
 
-
 compileStaff('staff_test.txt')
-weekRoleNames = compileRoles('roles_monday.txt') #bah, the naming here is a mess.
+# weekRoleNames = compileRoles('roles_monday.txt') #bah, the naming here is a mess.
 #rolesOfWeek = reWrite.createRoles(weekRoleNames)
 
 #schedule = reWrite.createWeekSchedule(rolesOfWeek, staffList)

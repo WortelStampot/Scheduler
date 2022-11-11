@@ -2,13 +2,13 @@ import random, datetime
 from enum import Enum
 
 class Weekday(Enum):
-    MONDAY = 0
-    TUESDAY = 1
-    WENDESDAY = 2
-    THURSDAY = 3
-    FRIDAY = 4
-    SATURDAY = 5
-    SUNDAY = 6
+    MONDAY = "Monday"
+    TUESDAY = "Tuesday"
+    WEDNESDAY = "Wednesday"
+    THURSDAY = "Thursday"
+    FRIDAY = "Friday"
+    SATURDAY = "Saturday"
+    SUNDAY = "Sunday"
 
 class Role:
     def __init__(self, name, day, callTime=None ):

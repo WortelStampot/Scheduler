@@ -1,19 +1,24 @@
+#Staff information
+#Each staff has a name, max number of shifts, and availability
+#requests
+#WEEKDAY: list of times describing time slices
+#e.g 13,24 means the staff is available from 13 (1pm) to 24 (midnight)
+#e.g 8,12,16,20 means the staff is available from 8 (8am) to 12 (12pm) and from 16 (4pm) to 20 (8pm)
 name: Atlas
 shifts: 7
-Requests:
-	Monday: 1pm-
-	Wednesday: -6pm
-	Thursday: 10am - 8pm
+requests:
+	Monday: 13.30,24
+	Wednesday: 0,18
+	Thursday: 10,20
 
-
-Name: Pbody
+name: Pbody
 shifts: 8
-availability:
-	Monday: 04:00 - 23:59
+requests:
+	Monday: 2,24
 
 name: Chell
-Shifts: 4
+shifts: 4
 requests:
-	Monday: 08:00 - 22:00
-	Tuesday: 13:00 - 23:00
-	Wednesday: 1pm-11pm
+	Monday: 8,22
+	Tuesday: 13,23
+	Wednesday: 13,23
