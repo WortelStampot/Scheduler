@@ -7,55 +7,8 @@ from classes import Staff, Role, Weekdays
 
 #TODO: config from seperate file
 
-
-schema = {
-    "roles": [
-        {
-            "name": str(),
-            "callTime": str(),
-            "qualifiedStaff": [
-                str()
-            ],
-            "day": str()
-        }
-    ],
-    "staff": [
-        {
-            "name": str(),
-            "maxShifts": int(),
-            "rolePreference": [
-                str()
-            ],
-            "doubles": bool(),
-            "availability": {
-                "MONDAY": [
-                    str()
-                ],
-                "TUESDAY": [
-                    str()
-                ],
-                "WEDNESDAY": [
-                    str()
-                ],
-                "THURSDAY": [
-                    str()
-                ],
-                "FRIDAY": [
-                    str()
-                ],
-                "SATURDAY": [
-                    str()
-                ],
-                "SUNDAY": [
-                    str()
-                ]
-            }
-        }
-    ]
-}
-
 app = Flask(__name__)
-app.config['roleStaffSchema'] = schema
+app.config.from_object("config.DefaultConfig")
 #I'd like to follow the documentation for seperating the config settings:
 # https://flask.palletsprojects.com/en/2.2.x/config/
 
@@ -64,6 +17,8 @@ app.config['roleStaffSchema'] = schema
 #app.config.from_object('kikischeduler.config')
 #app.config.from_envvar('KIKISCHEDULER_SETTINGS')
 #app.config.from_pyfile('yourconfig.cfg')
+
+
 
 
 @app.route('/')
@@ -165,7 +120,7 @@ def scheduleToJSON(schedule):
 @app.route('/schedule', methods=["POST"])
 def createSchedule():
     roleStaffData = request.get_json()
-    roleStaffSchema = app.config["roleStaffSchema"]
+    roleStaffSchema = app.config["SCHEMA"]
     if roleStaffData == None:
         return 'Alert: Check payload header'
     try:
