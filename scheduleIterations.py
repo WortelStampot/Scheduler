@@ -4,6 +4,7 @@ from classes import Weekdays, Role
 import networkx as nx
 from networkx import bipartite
 import copy
+from editedHopcroftKarp import availabilityMatching
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,8 @@ class Schedule:
         #Fill list of staff nodes to match the number of roles in the week's role collection.
             #This is useful when some staff will be required to work more than their suggested 'maxShift' count.
             #currently choosing staff at random from the dictionary's maxRemainingShift key.
+
+            #This is actually ineffective since the staff with the highest shifts remaining is not garunteed to be available for roles...
         staffNodes = []
         for role in self.roles:
             staff = random.choice(staffByShifts[maxRemainingShift])
@@ -61,22 +64,18 @@ class Schedule:
 
         #connect staff to each role they are available for, forming the availability bipartite graph.
         roleStaffConnections_Availablity = []
-        for staff in staffByShifts:
+        for staff in staffNodes:
             for role in self.roles:
                 if staff.isAvailableFor_CallTime(role):
                     roleStaffConnections_Availablity.append((role, staff))
         Bgraph.add_edges_from(roleStaffConnections_Availablity)
         
-        #run graph through the maximum matching algorithm
-        maxMatching_Availability = nx.bipartite.maximum_matching(Bgraph)
+        #this 'schedule' is made up of roles with matching available staff.
+        #it is possible for no match to have been found by the way the staff node list is currently being built.
+        # when this is the case, roles with unassigned staff, while have a value "None" 
+        schedule = availabilityMatching(Bgraph)
 
-        #Maximum_matching returns a dictionary with both 'right' and 'left' sets
-        #unsure how to cleanly extract a single set,
-        #for now checking that 'role' key is in self.roles gets the desired result.
-        schedule = {}
-        for role, staff in maxMatching_Availability.items():
-            if role in self.roles:
-                schedule[role] = staff
+        
 
         return schedule
 
