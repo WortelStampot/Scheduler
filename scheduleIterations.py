@@ -7,39 +7,11 @@ import copy
 
 logger = logging.getLogger(__name__)
 
-# TODO:
-# logging stats before a repair function and after a repair function.
-    # A function which logs the stats of the repair function before and after
-
-    #schedule.repairUnavailables()
-    #inside log the unavailables before a repair
-    #and log the unavailables after a repair
-    #
-    #Now after repairDoubles
-    #I'd like to know the unavailable count as well
-    #That means identify the count of the repairs that came before it.
-
-
-
 
 def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
-    schedule.repairUnavailables()
-
-    #del schedule.graph
-    #logger.info(f"Unavailables graph deleted")
-
-    doubles = schedule.identifyDoubles()
-    DoubleCount = len(doubles)
-    logger.debug(f'Before repairDoubles: {DoubleCount}')
+    
     schedule.repairDoubles()
-    remainingDoubles = schedule.identifyDoubles()
-    remainingDoubleCount = len(remainingDoubles)
-    logger.debug(f"Remaing doubles {remainingDoubles}")
-    logger.debug(f"number of doubles: {remainingDoubleCount}")
-    logger.debug(f"Doubles repaired: {DoubleCount - remainingDoubleCount}")
-    unavailables = schedule.identifyUnavailables()
-    logger.debug(f"unavailable Count: {unavailables}")
     
     return schedule
 
@@ -58,17 +30,34 @@ class Schedule:
         Set 1 vertices are Staff objects, duplicated by their number of 'shiftsRemaining'
         """
 
-        #dupelicate staff by their count of shiftsRemaining
-        staffByShifts = []
+        staffByShifts = {}
         for staff in self.staff:
+            #makes sure shifts remaining aligns with a staff's indicated availability
             shiftsRemaining = min(staff.maxShifts, numberOfDaysCouldWork(staff))
-            for shiftCount in range(shiftsRemaining):
-                staffByShifts.append(copy.deepcopy(staff))
+            staffByShifts.setdefault(shiftsRemaining, [])
+            staffByShifts[shiftsRemaining].append(staff)
+        maxRemainingShift = max(staffByShifts)  
+
+        #Fill list of staff nodes to match the number of roles in the week's role collection.
+            #This is useful when some staff will be required to work more than their suggested 'maxShift' count.
+            #currently choosing staff at random from the dictionary's maxRemainingShift key.
+        staffNodes = []
+        for role in self.roles:
+            staff = random.choice(staffByShifts[maxRemainingShift])
+            #move staff to lower key, possibly remove key and update max
+            #if that was the last staff with that number of shifts remaining
+            staffByShifts[maxRemainingShift].remove(staff)
+            staffByShifts.setdefault(maxRemainingShift-1, [])
+            staffByShifts[maxRemainingShift-1].append(staff)
+            if staffByShifts[maxRemainingShift] == []:
+                del staffByShifts[maxRemainingShift]
+                maxRemainingShift -= 1
+            staffNodes.append(copy.deepcopy(staff))
         
         #establish set of Role and Staff nodes
         Bgraph = nx.Graph()
-        Bgraph.add_nodes_from(self.roles, bipartite=0)
-        Bgraph.add_nodes_from(staffByShifts, bipartite=1)
+        Bgraph.add_nodes_from(staffNodes, bipartite=0)
+        Bgraph.add_nodes_from(self.roles, bipartite=1)
 
         #connect staff to each role they are available for, forming the availability bipartite graph.
         roleStaffConnections_Availablity = []
@@ -108,30 +97,13 @@ class Schedule:
         staffDays = set() #set of staff day pairs
         for role, staff in self.schedule.items():
             day = role.day
-            staffDay = (staff, day)
+            staffDay = (staff.name, day)
 
             if staffDay in staffDays:
                 doubles.append(role)
             else:
                 staffDays.add(staffDay)
         return doubles
-
-    def repairUnavailables(self):
-        unavailables= self.identifyUnavailables()
-        logger.info(f"repairUnavailables starting count: {len(unavailables)}")
-        
-        MAX_ATTEMPTS = 100
-        attempts = 0
-        while unavailables != [] and attempts < MAX_ATTEMPTS:
-            unavailableRole = random.choice(unavailables)
-            self.repairUnavailable(unavailableRole)
-            unavailables = self.identifyUnavailables()
-
-            attempts += 1
-            logger.debug(f"unavailable attempts: {attempts}")
-            logger.debug(f"remaining unavailables: {len(unavailables)}")
-
-        logger.info(f"repairUnavailables ending count: {len(unavailables)}")
 
     def repairDoubles(self):
         doubles = self.identifyDoubles()
@@ -149,40 +121,6 @@ class Schedule:
 
         logger.debug(f"repairDoubles ending count: {len(doubles)}")
 
-    
-    def repairUnavailable(self, unavailableRole):
-        """
-        The staff at schedule[unavailableRole] should not be available to work the current role
-        they're assigned to. This function performs a series of swaps within the schedule to fix this unavailability.
-        """
-
-        """
-        We need to cap the maximum cycle length we look for because this could take a LONG time with a larger number.
-        Try to change this to 8 to see how long it takes! (just remember the point of this is to give us a wider range of options for fixing the schedule)
-        """
-
-        try:
-            self.graph
-        except AttributeError:
-            self.graph = {role1: {role2: staff1.isAvailableFor_CallTime(role2) for role2 in self.schedule} for role1, staff1 in self.schedule.items()}
-            logger.info(f"Unavailables graph created")
-
-        logger.info(f"Unavailable role to repair: {unavailableRole}")
-        MAX_LENGTH = 5
-        for length in range(2,MAX_LENGTH):
-            allCycles = self.allCyclesOfLength(unavailableRole, length)
-            logger.debug(f"found {len(allCycles)} cycles of length {length}")
-            if allCycles == []:
-                logger.warning(f"no cycles for length:{length}")
-                length += 1
-                continue
-
-            cycle = random.choice(allCycles)
-            logger.info(f"selected cyle: {cycle}")
-            self.cycleSwap(cycle)
-            return
-        
-        logger.info(f"Currently no way of repairing {unavailableRole}")
 
     def repairDouble(self, doubleRole):
         logger.debug(f"Double role to repair: {doubleRole}")
