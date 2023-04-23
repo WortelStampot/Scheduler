@@ -31,40 +31,22 @@ class Schedule:
         Set 1 vertices are Staff objects, duplicated by their number of 'shiftsRemaining'
         """
 
-        staffByShifts = {}
+        #dupelicate staff by their count of shiftsRemaining
+        staffByShifts = []
         for staff in self.staff:
             #makes sure shifts remaining aligns with a staff's indicated availability
             shiftsRemaining = min(staff.maxShifts, numberOfDaysCouldWork(staff))
-            staffByShifts.setdefault(shiftsRemaining, [])
-            staffByShifts[shiftsRemaining].append(staff)
-        maxRemainingShift = max(staffByShifts)  
-
-        #Fill list of staff nodes to match the number of roles in the week's role collection.
-            #This is useful when some staff will be required to work more than their suggested 'maxShift' count.
-            #currently choosing staff at random from the dictionary's maxRemainingShift key.
-
-            #This is actually ineffective since the staff with the highest shifts remaining is not garunteed to be available for roles...
-        staffNodes = []
-        for role in self.roles:
-            staff = random.choice(staffByShifts[maxRemainingShift])
-            #move staff to lower key, possibly remove key and update max
-            #if that was the last staff with that number of shifts remaining
-            staffByShifts[maxRemainingShift].remove(staff)
-            staffByShifts.setdefault(maxRemainingShift-1, [])
-            staffByShifts[maxRemainingShift-1].append(staff)
-            if staffByShifts[maxRemainingShift] == []:
-                del staffByShifts[maxRemainingShift]
-                maxRemainingShift -= 1
-            staffNodes.append(copy.deepcopy(staff))
+            for shiftCount in range(shiftsRemaining):
+                staffByShifts.append(copy.deepcopy(staff))
         
         #establish set of Role and Staff nodes
         Bgraph = nx.Graph()
-        Bgraph.add_nodes_from(staffNodes, bipartite=0)
+        Bgraph.add_nodes_from(staffByShifts, bipartite=0)
         Bgraph.add_nodes_from(self.roles, bipartite=1)
 
         #connect staff to each role they are available for, forming the availability bipartite graph.
         roleStaffConnections_Availablity = []
-        for staff in staffNodes:
+        for staff in staffByShifts:
             for role in self.roles:
                 if staff.isAvailableFor_CallTime(role):
                     roleStaffConnections_Availablity.append((role, staff))
@@ -72,10 +54,30 @@ class Schedule:
         
         #this 'schedule' is made up of roles with matching available staff.
         #it is possible for no match to have been found by the way the staff node list is currently being built.
-        # when this is the case, roles with unassigned staff, while have a value "None" 
+        #when this is the case, roles with unassigned staff, while have a value "None" 
         schedule = availabilityMatching(Bgraph)
+        for role, staff in schedule.items():
+            if staff == None:
+                logger.debug(f'{role} left unassigned')
 
-        
+
+        staffByShifts = {}
+        for staff in self.staff:
+            shiftCount = staff.shiftsRemaining(schedule)
+            staffByShifts.setdefault(shiftCount, [])
+            staffByShifts[shiftCount].append(staff)
+        maxRemainingShift = max(staffByShifts)
+
+        for role, staff in schedule.items():
+            if staff == None:
+                for selectingStaff in staffByShifts[maxRemainingShift]:
+                    if selectingStaff.isAvailableFor_CallTime(role):
+                        logger.debug(f'{selectingStaff} found to fill {role}')
+                        schedule[role] = selectingStaff
+
+    # This is really dumb, basically what I'm wanting to do is
+    # match the remaining 'Unassigned' staff with an available staff seleted from the currently highest shifts remaining.
+    # the goal being, from this point on, availablity pairing is done and contained.
 
         return schedule
 
