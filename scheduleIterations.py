@@ -73,31 +73,7 @@ class Schedule:
             if staff == None:
                 logger.debug(f'{role} left unassigned')
 
-
-        staffByShifts = {}
-        for staff in self.staff:
-            shiftCount = staff.shiftsRemaining(schedule)
-            staffByShifts.setdefault(shiftCount, [])
-            staffByShifts[shiftCount].append(staff)
-        maxRemainingShift = max(staffByShifts)
-
-        for role, staff in schedule.items():
-            if staff == None:
-                for selectingStaff in staffByShifts[maxRemainingShift]:
-                    if selectingStaff.isAvailableFor_CallTime(role):
-                        logger.debug(f'{selectingStaff} found to fill {role}')
-                        staffByShifts[maxRemainingShift].remove(selectingStaff)
-                        staffByShifts.setdefault(maxRemainingShift-1, [])
-                        staffByShifts[maxRemainingShift-1].append(selectingStaff)
-                        if staffByShifts[maxRemainingShift] == []:
-                            del staffByShifts[maxRemainingShift]
-                            maxRemainingShift -= 1
-                    schedule[role] = selectingStaff
-
-
-    # This is really dumb, basically what I'm wanting to do is
-    # match the remaining 'Unassigned' staff with an available staff seleted from the currently highest shifts remaining.
-    # the goal being, from this point on, availablity pairing is done and contained.
+    #Question: Since our strategy is finding cycles and making swaps from here on. Is it neccesary to find an available staff for the unmatched roles at this point?
 
         return schedule
 
