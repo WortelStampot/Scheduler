@@ -38,6 +38,8 @@ class Schedule:
             shiftsRemaining = min(staff.maxShifts, numberOfDaysCouldWork(staff))
             for shiftCount in range(shiftsRemaining):
                 staffByShifts.append(copy.deepcopy(staff))
+        if len(staffByShifts) < len(self.roles):
+            logger.warning(f"Staff shifts: {len(staffByShifts)} less than role count: {len(self.roles)}.")
         
         #establish set of Role and Staff nodes
         Bgraph = nx.Graph()
@@ -50,11 +52,22 @@ class Schedule:
             for role in self.roles:
                 if staff.isAvailableFor_CallTime(role):
                     roleStaffConnections_Availablity.append((role, staff))
+        
+        #check for gap in staff pool availability.
+        rolesWithAvailability = set(role for role, staff in roleStaffConnections_Availablity)
+        for role in self.roles:
+            if role not in rolesWithAvailability:
+                logger.warning(f"No staff available for {role}")
         Bgraph.add_edges_from(roleStaffConnections_Availablity)
         
         #this 'schedule' is made up of roles with matching available staff.
-        #it is possible for no match to have been found by the way the staff node list is currently being built.
-        #when this is the case, roles with unassigned staff, while have a value "None" 
+        #it is possible for no match to have been found by the way the staff node list is being built.
+        # The two causes I'm seeing are:
+            # 1) the total of staff's min(maxshift, daysCouldWork) could be < the number of roles
+            # 2) there is a gap in the availability within the staffCollection for a role.
+        # Being able to identify the cause between those scenarios sounds neat.
+    
+        #Question: Any pitfalls you foresee by using None to represent "unassigned" from here on?
         schedule = availabilityMatching(Bgraph)
         for role, staff in schedule.items():
             if staff == None:
@@ -73,7 +86,14 @@ class Schedule:
                 for selectingStaff in staffByShifts[maxRemainingShift]:
                     if selectingStaff.isAvailableFor_CallTime(role):
                         logger.debug(f'{selectingStaff} found to fill {role}')
-                        schedule[role] = selectingStaff
+                        staffByShifts[maxRemainingShift].remove(selectingStaff)
+                        staffByShifts.setdefault(maxRemainingShift-1, [])
+                        staffByShifts[maxRemainingShift-1].append(selectingStaff)
+                        if staffByShifts[maxRemainingShift] == []:
+                            del staffByShifts[maxRemainingShift]
+                            maxRemainingShift -= 1
+                    schedule[role] = selectingStaff
+
 
     # This is really dumb, basically what I'm wanting to do is
     # match the remaining 'Unassigned' staff with an available staff seleted from the currently highest shifts remaining.
