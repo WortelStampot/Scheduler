@@ -52,7 +52,7 @@ class Schedule:
         roleStaffConnections_Availablity = []
         for staff in staffByShifts:
             for role in self.roles:
-                if staff.isAvailableFor_CallTime(role):
+                if staff.isAvailable(role):
                     roleStaffConnections_Availablity.append((role, staff))
         
         #check for gap in staff pool availability.
@@ -61,13 +61,6 @@ class Schedule:
             if role not in rolesWithAvailability:
                 logger.warning(f"No staff available for {role}")
         Bgraph.add_edges_from(roleStaffConnections_Availablity)
-        
-        #this 'schedule' is made up of roles with matching available staff.
-        #it is possible for no match to have been found by the way the staff node list is being built.
-        # The two causes I'm seeing are:
-            # 1) the total of staff's min(maxshift, daysCouldWork) could be < the number of roles
-            # 2) there is a gap in the availability within the staffCollection for a role.
-        # Being able to identify the cause between those scenarios sounds neat.
 
         #Question: Any pitfalls you foresee by using None to represent "unassigned" from here on?
         #Put another way: Would respecting a None value from here on be a useful constraint for 'clean / best-practice' code?
@@ -98,7 +91,7 @@ class Schedule:
         """
         Return list of all roles where the staff is unavailable to work the role
         """
-        return [role for role, staff in self.schedule.items() if not staff.isAvailableFor_CallTime(role)]
+        return [role for role, staff in self.schedule.items() if not staff.isAvailable(role)]
     
     def identifyDoubles(self):
         """
@@ -171,7 +164,7 @@ class Schedule:
                     staffAlreadyWorksRole = True
                     break
 
-            return (testRole.day in possibleSwapDays or staffAlreadyWorksRole) and testStaff.isAvailableFor_CallTime(testRole)
+            return (testRole.day in possibleSwapDays or staffAlreadyWorksRole) and testStaff.isAvailable(testRole)
 
     def allCyclesOfLength(self, startRole, length):
         """
