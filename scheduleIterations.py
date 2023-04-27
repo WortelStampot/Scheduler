@@ -1,9 +1,10 @@
 import random
 import logging
-from classes import Weekdays, Role
+from classes import Weekdays, Role, Staff
 import networkx as nx
 from networkx import bipartite
 import copy
+import datetime
 from editedHopcroftKarp import availabilityMatching
 
 logger = logging.getLogger(__name__)
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
     
+    scheduleDebug = schedule.schedule
     schedule.repairDoubles()
     
     return schedule
@@ -66,12 +68,26 @@ class Schedule:
             # 1) the total of staff's min(maxshift, daysCouldWork) could be < the number of roles
             # 2) there is a gap in the availability within the staffCollection for a role.
         # Being able to identify the cause between those scenarios sounds neat.
-    
+
         #Question: Any pitfalls you foresee by using None to represent "unassigned" from here on?
+        #Put another way: Would respecting a None value from here on be a useful constraint for 'clean / best-practice' code?
         schedule = availabilityMatching(Bgraph)
         for role, staff in schedule.items():
             if staff == None:
                 logger.debug(f'{role} left unassigned')
+
+        #DEBUG STUFF
+        #replacing None with an 'Unassigned' Staff object to see how double repairs would work.
+        for role, staff in schedule.items():
+            if staff == None:
+                schedule[role] = Staff('Unassigned',99, {Weekdays.MONDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
+                Weekdays.TUESDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
+                Weekdays.WEDNESDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
+                Weekdays.THURSDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
+                Weekdays.FRIDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
+                Weekdays.SATURDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
+                Weekdays.SUNDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)]}
+                )
 
     #Question: Since our strategy is finding cycles and making swaps from here on. Is it neccesary to find an available staff for the unmatched roles at this point?
 
@@ -122,6 +138,8 @@ class Schedule:
     def repairDouble(self, doubleRole):
         logger.debug(f"Double role to repair: {doubleRole}")
 
+        #Question: Now that we're using networkx.
+        # Would using a networkx graph give us added support with the cycle/swap strategy (making sure the graph is built and updated properly comes to mind)?
         try:
             self.graph
         except AttributeError:
