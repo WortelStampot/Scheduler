@@ -41,7 +41,7 @@ class Schedule:
             for shiftCount in range(shiftsRemaining):
                 staffByShifts.append(copy.deepcopy(staff))
         if len(staffByShifts) < len(self.roles):
-            logger.warning(f"Staff shifts: {len(staffByShifts)} less than role count: {len(self.roles)}.")
+            logger.warning(f"Staff shifts: {len(staffByShifts)} < role count: {len(self.roles)}.")
         
         #establish set of Role and Staff nodes
         Bgraph = nx.Graph()
@@ -141,7 +141,7 @@ class Schedule:
 
     def repairDoubles(self):
         doubles = self.identifyDoubles()
-        logger.debug(f"repairDoubles starting count: {len(doubles)}")
+        logger.info(f"repairDoubles starting count: {len(doubles)}")
 
         MAX_ATTEMPTS = 200
         attempts = 0
@@ -152,8 +152,9 @@ class Schedule:
 
             attempts += 1
             logger.debug(f"doubles attempts: {attempts}")
-
-        logger.debug(f"repairDoubles ending count: {len(doubles)}")
+        
+        endingDoubleCount = self.identifyDoubles()
+        logger.info(f"repairDoubles ending count: {len(endingDoubleCount)}")
 
 
     def repairDouble(self, doubleRole):
@@ -165,7 +166,6 @@ class Schedule:
             self.graph
         except AttributeError:
             self.graph = {role1: {role2: self.StaffIsAvailableFor_Day(staff1,role2) for role2 in self.schedule} for role1, staff1 in self.schedule.items()}
-            logger.info(f"Doubles graph created")
 
         MAX_LENGTH = 5
         for length in range(2,MAX_LENGTH):
@@ -236,14 +236,11 @@ class Schedule:
         """
         cycles = []
         currentNode = path[-1]
-        logger.debug(f"path = {path}")
-        logger.debug(f"current node: {currentNode}")
         staff = self.schedule[currentNode] # staff variable for logging
         if length == 1:
             startNode = path[0]
             #only add path to cycles if the current node connects to the start node
             if self.graph[currentNode][startNode]:
-                logger.debug(f"path connects into a cycle")
                 cycles.append(path)
             return cycles
         
@@ -256,7 +253,6 @@ class Schedule:
             newVisited = {role: didVisit for role, didVisit in visited.items()}
             newVisited[neighbor] = True
             newCycles = self.allCyclesOfLengthHelper(length-1, path + [neighbor], newVisited)
-            logger.debug(f"neighbor: {neighbor}, newCycles: {newCycles}")
             cycles.extend(newCycles)
         return cycles
 
