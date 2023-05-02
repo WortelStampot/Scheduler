@@ -92,7 +92,19 @@ class Staff:
 				logging.info(f'{self.name} already scheduled for {pair[0]}')
 				return True
 		return False
-		
+	
+	def isOpenFor(self, role2, schedule):
+		daysWorking = set()
+		alldays = set(day for day in Weekdays)
+		for role in schedule:
+			if schedule[role] == self:
+				daysWorking.add((role.day))
+		openDays = alldays - daysWorking
+
+		if role2.day in openDays and self.isAvailable(role2):
+			return True
+		return False
+	
 
 	def shiftsRemaining(self, schedule):
 		shiftCount = 0
