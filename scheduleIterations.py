@@ -13,7 +13,31 @@ logger = logging.getLogger(__name__)
 def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
     
+    logger.info(f'Unavailables: {schedule.identifyUnavailables}')
     scheduleDebug = schedule.schedule
+
+    doublesConnections = []
+    #this list contains all the roles a staff is 'open to swap to'
+    #except the role which a staff is currently working
+        #this is the reason for StaffAlreadyWorksRole = False in Mat's function.
+    for role in scheduleDebug:
+        staff = scheduleDebug[role]
+        for role2 in scheduleDebug:
+            if staff.isOpenFor(role2, scheduleDebug):
+                doublesConnections.append((staff,role2))
+
+    # now with a list of doublesConnections, we could make a graph?
+    # This part is hazy to me, 
+
+    repairDoublesGraph = nx.Graph()
+    repairDoublesGraph.add_edges_from(doublesConnections) #adding the edges also adds the corosponding nodes which the edge connects?
+    #This graph does mix role and staff objects as nodes. Is this a problem?
+    #Is this graph correct?
+
+    #TODO:
+    #remove duplicate pairings (x,y) == (y,x)
+    #find cycles in graph.
+
     schedule.repairDoubles()
     
     return schedule
@@ -60,17 +84,19 @@ class Schedule:
         for role in self.roles:
             if role not in rolesWithAvailability:
                 logger.warning(f"No staff available for {role}")
+
+        #add edges to the graph      
         Bgraph.add_edges_from(roleStaffConnections_Availablity)
 
         #Question: Any pitfalls you foresee by using None to represent "unassigned" from here on?
-        #Put another way: Would respecting a None value from here on be a useful constraint for 'clean / best-practice' code?
         schedule = availabilityMatching(Bgraph)
 
+        #log roles which are left unmatched
         for role, staff in schedule.items():
             if staff == None:
                 logger.debug(f'{role} left unassigned')
 
-        #Assign staff to these roles based on which staff has the highest shifts remaining with this schedule.
+        #Assign staff to the unmatched roles based on which staff has the highest shifts remaining with this schedule.
         staffByShiftsDict = {}
         for staff in self.staff:
             shiftsRemaining = staff.shiftsRemaining(schedule)
@@ -193,7 +219,8 @@ class Schedule:
                     break
 
             return (testRole.day in possibleSwapDays or staffAlreadyWorksRole) and testStaff.isAvailable(testRole)
-
+    
+    
     def allCyclesOfLength(self, startRole, length):
         """
         Find all groups of roles in the schedule of size 'length' involving the 'unavailableRole'
@@ -274,7 +301,6 @@ class Schedule:
         for i in range(1,len(cycle)):
             logger.debug(f"Swapping {cycle[0]} with {cycle[i]}")
             self.swap(cycle[0], cycle[i])
-        logger.info("Unavailable Repaired")
 
     def swap(self, role1, role2):
         #swap the staff in the schedule
