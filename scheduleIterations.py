@@ -13,32 +13,14 @@ logger = logging.getLogger(__name__)
 def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
     
-    logger.info(f'Unavailables: {schedule.identifyUnavailables()}')
-    scheduleDebug = schedule.schedule
+    unavailables = schedule.identifyUnavailables()
+    logger.info(f'Unavailables after Matching: {len(unavailables), unavailables}')
 
-    doublesConnections = []
-    #this list contains all the roles a staff is 'open to swap to'
-    #except the role which a staff is currently working
-        #this is the reason for StaffAlreadyWorksRole = False in Mat's function.
-    for role in scheduleDebug:
-        staff = scheduleDebug[role]
-        for role2 in scheduleDebug:
-            if staff.isOpenFor(role2, scheduleDebug):
-                doublesConnections.append((staff,role2))
-
-    # now with a list of doublesConnections, we could make a graph?
-    # This part is hazy to me, 
-
-    repairDoublesGraph = nx.Graph()
-    repairDoublesGraph.add_edges_from(doublesConnections) #adding the edges also adds the corosponding nodes which the edge connects?
-    #This graph does mix role and staff objects as nodes. Is this a problem?
-    #Is this graph correct?
-
-    #TODO:
-    #remove duplicate pairings (x,y) == (y,x)
-    #find cycles in graph.
-
+    doubles = schedule.identifyDoubles()
+    logger.info(f'Doubles before repairing: {len(doubles), doubles}')
     schedule.repairDoubles()
+    doubles = schedule.identifyDoubles()
+    logger.info(f'Doubles after repairing: {len(doubles), doubles}')
     
     return schedule
 
@@ -171,8 +153,6 @@ class Schedule:
     def repairDouble(self, doubleRole):
         logger.debug(f"Double role to repair: {doubleRole}")
 
-        #Question: Now that we're using networkx.
-        # Would using a networkx graph give us added support with the cycle/swap strategy (making sure the graph is built and updated properly comes to mind)?
         try:
             self.graph
         except AttributeError:
@@ -187,6 +167,7 @@ class Schedule:
                 length += 1
                 continue
             cycle = random.choice(allCycles)
+            logger.info(f'selected cycle: {cycle}')
             self.cycleSwap(cycle)
             return
 
@@ -281,11 +262,30 @@ class Schedule:
         For more info you can look up "decomposing cycles as a product of transpositions" or take a look at the lecture
         notes mentioned in that post.
         """
+        doubleCount = self.identifyDoubles()
+        logger.debug(f'doubles before swap: {len(doubleCount), doubleCount}')
         logger.info(f"Repairing: {cycle[0]}(staff:{self.schedule[cycle[0]]}), with cycle: {[(role, self.schedule[role]) for role in cycle]}")
+
+        cycleStaff = [self.schedule[role] for role in cycle]
+        for staff in cycleStaff:
+            logger.debug(f'{staff} Schedule Before Swap:')
+            shifts = staff.scheduleView(self.schedule)
+            for shift in shifts:
+                logger.debug(f'{shift}')
 
         for i in range(1,len(cycle)):
             logger.debug(f"Swapping {cycle[0]} with {cycle[i]}")
             self.swap(cycle[0], cycle[i])
+
+        for staff in cycleStaff:
+            logger.debug(f'{staff} Schedule After Swap:')
+            shifts = staff.scheduleView(self.schedule)
+            for shift in shifts:
+                logger.debug(f'{shift}')
+        
+        doubleCount = self.identifyDoubles()
+        logger.debug(f'doubles after swap: {len(doubleCount), doubleCount}')
+        
 
     def swap(self, role1, role2):
         #swap the staff in the schedule

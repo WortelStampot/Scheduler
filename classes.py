@@ -105,6 +105,14 @@ class Staff:
 			return True
 		return False
 	
+	def scheduleView(self, schedule):
+		shifts = []
+		for role, staff in schedule.items():
+			if staff.name == self.name:
+				shifts.append(role)
+		shifts.sort(key=lambda role: role.day.value)
+		return shifts
+
 
 	def shiftsRemaining(self, schedule):
 		shiftCount = 0
