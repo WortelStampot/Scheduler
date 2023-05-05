@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
     
-    logger.info(f'Unavailables: {schedule.identifyUnavailables}')
+    logger.info(f'Unavailables: {schedule.identifyUnavailables()}')
     scheduleDebug = schedule.schedule
 
     doublesConnections = []
@@ -88,7 +88,6 @@ class Schedule:
         #add edges to the graph      
         Bgraph.add_edges_from(roleStaffConnections_Availablity)
 
-        #Question: Any pitfalls you foresee by using None to represent "unassigned" from here on?
         schedule = availabilityMatching(Bgraph)
 
         #log roles which are left unmatched
@@ -107,6 +106,9 @@ class Schedule:
         for role, staff in schedule.items():
             if staff == None:
                 availableStaff = [staff for staff in staffByShiftsDict[highestShiftCount] if staff.isAvailable(role)]
+                if len(availableStaff) == 0:
+                    logger.warning(f"no available staff for {role}")
+                    continue
                 logger.debug(f'Available staff for {role}: {availableStaff}')
                 selectedStaff = random.choice(availableStaff)
                 logger.debug(f'selected {selectedStaff}')
@@ -120,23 +122,6 @@ class Schedule:
                     highestShiftCount -= 1
 
                 schedule[role] = selectedStaff
-
-
-        #DEBUG STUFF
-        #replacing None with an 'Unassigned' Staff object to see how double repairs would work.
-        for role, staff in schedule.items():
-            if staff == None:
-                schedule[role] = Staff('Unassigned',99, {Weekdays.MONDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
-                Weekdays.TUESDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
-                Weekdays.WEDNESDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
-                Weekdays.THURSDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
-                Weekdays.FRIDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
-                Weekdays.SATURDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)],
-                Weekdays.SUNDAY: [datetime.time(10, 0), datetime.time(13, 0), datetime.time(16, 30), datetime.time(18, 0), datetime.time(10, 30), datetime.time(12, 0)]}
-                )
-                logger.warning(f'assigend "Unassigned Staff" for {role}')
-
-    #Question: Since our strategy is finding cycles and making swaps from here on. Is it neccesary to find an available staff for the unmatched roles at this point?
 
         return schedule
 
