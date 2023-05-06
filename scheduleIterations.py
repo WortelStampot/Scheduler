@@ -158,6 +158,9 @@ class Schedule:
         except AttributeError:
             self.graph = {role1: {role2: self.StaffIsAvailableFor_Day(staff1,role2) for role2 in self.schedule} for role1, staff1 in self.schedule.items()}
 
+            #here we could make the graph a staff's shifts number of times and then compress the graph into one.
+            #Another approach is make an adjustment in StaffIsAvailableFor_Day()
+
         MAX_LENGTH = 5
         for length in range(2,MAX_LENGTH):
             logger.info(f"finding all cycles of length: {length}")
@@ -176,7 +179,7 @@ class Schedule:
 
     def StaffIsAvailableFor_Day(self, testStaff, testRole):
             allDays = {day for day in Weekdays}
-            staffWorkingDays = {role.day for role, staff in self.schedule.items() if staff is testStaff}
+            staffWorkingDays = {role.day for role, staff in self.schedule.items() if staff.name == testStaff.name} #wow, this may be it.
             possibleSwapDays = allDays - staffWorkingDays
             staffAlreadyWorksRole = False
             for role, staff in self.schedule.items():
@@ -238,8 +241,37 @@ class Schedule:
             return cycles
         
         unvisitedNeighbors = [role for role in visited if self.graph[currentNode][role] and not visited[role]]
-        logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles")
+
+        #logging staff schedule so far to validate list of unvistedNeighbors Roles
+        logger.debug(f'{staff} Schedule:')
+        shifts = staff.scheduleView(self.schedule)
+        for shift in shifts:
+            logger.debug(f'{shift}')
+
+        logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles") # This is incorrect
         logger.debug(f"open roles: {unvisitedNeighbors}")
+        if staff.name == 'Lucas':
+            lucas = [p for r, p in self.schedule.items() if p.name == 'Lucas']
+            lucas0 = lucas[0]
+            lucas1 = lucas[1]
+            lucas2 = lucas[2]
+            lucas3 = lucas[3]
+            lucas0Sched = lucas0.scheduleView(self.schedule)
+            lucas2Sched = lucas2.scheduleView(self.schedule)
+            lucas0FirstRole = lucas0.scheduleView(self.schedule)[0]
+            lucas2SecondRole = lucas2.scheduleView(self.schedule)[1]
+
+            lucas0Graph = [role for role, value in self.graph[lucas0FirstRole].items() if value == True]
+            lucas2Graph = [role for role, value in self.graph[lucas2SecondRole].items() if value]
+
+            #So what's going on is that the graph is incorrect for the duplicated staff nodes.
+            #the graph is being built correctly based on the first role,
+            #however the first role does not take into account the remaining roles this staff is scheduled for.
+
+            #an approach could be to 'overlay' the graphs together and get a correct graph for the number of shifts a staff is scheduled for.
+
+
+            print('bugbugg')
         for neighbor in unvisitedNeighbors:
             #we need a copy of visited because we don't want changes to visited in one function
             #call to mess with visited in another function call
@@ -266,6 +298,7 @@ class Schedule:
         logger.debug(f'doubles before swap: {len(doubleCount), doubleCount}')
         logger.info(f"Repairing: {cycle[0]}(staff:{self.schedule[cycle[0]]}), with cycle: {[(role, self.schedule[role]) for role in cycle]}")
 
+        #logging staff schedule before swap
         cycleStaff = [self.schedule[role] for role in cycle]
         for staff in cycleStaff:
             logger.debug(f'{staff} Schedule Before Swap:')
@@ -276,7 +309,8 @@ class Schedule:
         for i in range(1,len(cycle)):
             logger.debug(f"Swapping {cycle[0]} with {cycle[i]}")
             self.swap(cycle[0], cycle[i])
-
+        
+        #logging staff schedule after swap
         for staff in cycleStaff:
             logger.debug(f'{staff} Schedule After Swap:')
             shifts = staff.scheduleView(self.schedule)
