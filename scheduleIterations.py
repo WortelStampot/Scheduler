@@ -10,14 +10,14 @@ from editedHopcroftKarp import availabilityMatching
 logger = logging.getLogger(__name__)
 
 
+#What I'm doing in this pass is adding to and removing bulk from the code to refine the activity log.
+
 def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
     
     unavailables = schedule.identifyUnavailables()
     logger.info(f'Unavailables after Matching: {len(unavailables), unavailables}')
 
-    doubles = schedule.identifyDoubles()
-    logger.info(f'Doubles before repairing: {len(doubles), doubles}')
     schedule.repairDoubles()
     doubles = schedule.identifyDoubles()
     logger.info(f'Doubles after repairing: {len(doubles), doubles}')
@@ -89,7 +89,7 @@ class Schedule:
             if staff == None:
                 availableStaff = [staff for staff in staffByShiftsDict[highestShiftCount] if staff.isAvailable(role)]
                 if len(availableStaff) == 0:
-                    logger.warning(f"no available staff for {role}")
+                    logger.warning(f"no available staff for {role}") #This will leave a Role unpaired with a 'None' object- probably causing some issues further on...
                     continue
                 logger.debug(f'Available staff for {role}: {availableStaff}')
                 selectedStaff = random.choice(availableStaff)
@@ -134,62 +134,54 @@ class Schedule:
 
     def repairDoubles(self):
         doubles = self.identifyDoubles()
-        logger.info(f"repairDoubles starting count: {len(doubles)}")
+        logger.info(f"repairDoubles starting count: {len(doubles)}\n{doubles}")
 
-        MAX_ATTEMPTS = 200
+        MAX_ATTEMPTS = 100 #it now seems unlikely for 100 attempts to be reached with ~89 Roles in a weekly roleCollection
         attempts = 0
         while doubles != [] and attempts < MAX_ATTEMPTS:
-            doubleRole = random.choice(doubles)
-            self.repairDouble(doubleRole)
-            doubles = self.identifyDoubles()
+            doubleRole = random.choice(doubles) #select a random double from the list
+            self.repairDouble(doubleRole) #start repair process for selected double
+
+            doubles = self.identifyDoubles() #recompute the list of doubles after repair.
 
             attempts += 1
             logger.debug(f"doubles attempts: {attempts}")
         
-        endingDoubleCount = self.identifyDoubles()
-        logger.info(f"repairDoubles ending count: {len(endingDoubleCount)}")
+        endingDoubles = self.identifyDoubles() #logging the number of doubles after the repairDoubles process.
+        if endingDoubles != []:
+            logger.warning(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}\n{endingDoubles}")
+        else:
+            logger.info(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}")
 
 
     def repairDouble(self, doubleRole):
-        logger.debug(f"Double role to repair: {doubleRole}")
+        staff = self.schedule[doubleRole]
 
-        try:
+        logger.info(f"Double role to repair: {doubleRole}, {staff}")
+
+        try: #creating the doubles graph when it doesn't yet exist
             self.graph
         except AttributeError:
             self.graph = {role1: {role2: self.StaffIsAvailableFor_Day(staff1,role2) for role2 in self.schedule} for role1, staff1 in self.schedule.items()}
 
-            #here we could make the graph a staff's shifts number of times and then compress the graph into one.
-            #Another approach is make an adjustment in StaffIsAvailableFor_Day()
-
-        MAX_LENGTH = 5
+        MAX_LENGTH = 5 #reasonablly setting a limit of the cycles we're willing to search for within the graph.
         for length in range(2,MAX_LENGTH):
             logger.info(f"finding all cycles of length: {length}")
             allCycles = self.allCyclesOfLength(doubleRole, length)
-            if allCycles == []:
+
+            if allCycles == []: # when no cycles found, increment length and do a deeper search.
                 logger.warning(f"no cycles for length:{length}")
                 length += 1
                 continue
-            cycle = random.choice(allCycles)
-            logger.info(f'selected cycle: {cycle}')
-            self.cycleSwap(cycle)
+            logger.debug(f"{allCycles}") #show cycles found
+            cycle = random.choice(allCycles) # select a random cycle from the list
+            logger.info(f'selected cycle: {cycle}') #show selected cycle
+
+            self.cycleSwap(cycle) #swap the staff within the cycle
             return
-
-        logger.warning(f"{doubleRole} left unrepaired.")
-
-
-    def StaffIsAvailableFor_Day(self, testStaff, testRole):
-            allDays = {day for day in Weekdays}
-            staffWorkingDays = {role.day for role, staff in self.schedule.items() if staff.name == testStaff.name} #using staff.name as unique ID for now.
-            possibleSwapDays = allDays - staffWorkingDays
-            #commenting out to simplify for debugging.
-            """ staffAlreadyWorksRole = False
-            for role, staff in self.schedule.items():
-                if staff is testStaff and role is testRole:
-                    staffAlreadyWorksRole = True
-                    break
-
-            return (testRole.day in possibleSwapDays or staffAlreadyWorksRole) and testStaff.isAvailable(testRole)"""
-            return testRole.day in possibleSwapDays
+        
+        #when no cycles are found within the MAX_LENGTH limit, we come here, leaving the double unrepaired
+        logger.warning(f"{doubleRole},{staff} left unrepaired.")
     
     
     def allCyclesOfLength(self, startRole, length):
@@ -213,11 +205,9 @@ class Schedule:
         doubles/availability.
         """
         logger.info(f"starting role: {startRole} with staff: {self.schedule[startRole]}")
-        path = [startRole]
-        #at the start, nothing but the node we're repairing has been visited, 
-        # since the cycle we're looking for should start with that node
-        visited = {role: False for role in self.graph}
-        visited[startRole] = True
+        path = [startRole] #establish the starting point to search from
+        visited = {role: False for role in self.graph} # 'a dictionary letting us know which nodes have been visited (so we don't visit them again)'
+        visited[startRole] = True #setting the starting Role of path as visited
 
         return self.allCyclesOfLengthHelper(length, path, visited)
 
@@ -235,16 +225,18 @@ class Schedule:
         cycles = []
         currentNode = path[-1]
         staff = self.schedule[currentNode] # staff variable for logging
+
         if length == 1:
             startNode = path[0]
-            #only add path to cycles if the current node connects to the start node
             if self.graph[currentNode][startNode]:
                 cycles.append(path)
             return cycles
         
         unvisitedNeighbors = [role for role in visited if self.graph[currentNode][role] and not visited[role]]
+        #these are the roles which staff1 is 'open for' and have not yet been visited in the search for a cycle at the current length
 
         #logging staff schedule so far to validate list of unvistedNeighbors Roles
+        #TODO: move this up in the logging activity.
         logger.debug(f'{staff} Schedule:')
         shifts = staff.scheduleView(self.schedule)
         for shift in shifts:
@@ -255,10 +247,7 @@ class Schedule:
             else:
                 logger.debug(f'{swappableRoles}')
 
-
-
-
-        logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles") # This is incorrect
+        logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles")
         logger.debug(f"open roles: {unvisitedNeighbors}")
 
         """if staff.name == 'Lucas':
@@ -365,6 +354,26 @@ class Schedule:
         #A brute force option is to recreate the graph after each swap.
         #So, for now I'll do that.
 
+
+    def StaffIsAvailableFor_Day(self, Staff1, Role2):
+        """
+        The function we use to create a graph representing which Roles a Staff is 'open to swap with'
+        'open for' is True when Staff1 is not yet scheduled on Role2's day.
+        """
+        allDays = {day for day in Weekdays}
+        staffWorkingDays = {role.day for role, staff in self.schedule.items() if staff.name == Staff1.name} #using staff.name as unique ID for now.
+        possibleSwapDays = allDays - staffWorkingDays
+
+        #commenting out to simplify for debugging.
+        #TODO: include the current Role Staff1 is assigned with
+        """ staffAlreadyWorksRole = False 
+        for role, staff in self.schedule.items():
+            if staff is testStaff and role is testRole:
+                staffAlreadyWorksRole = True
+                break
+
+        return (testRole.day in possibleSwapDays or staffAlreadyWorksRole) and testStaff.isAvailable(testRole)"""
+        return Role2.day in possibleSwapDays
 
     def tupleRepresentation(self):
         return [(role,staff) for role, staff in self.schedule.items()]
