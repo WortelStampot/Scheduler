@@ -179,15 +179,17 @@ class Schedule:
 
     def StaffIsAvailableFor_Day(self, testStaff, testRole):
             allDays = {day for day in Weekdays}
-            staffWorkingDays = {role.day for role, staff in self.schedule.items() if staff.name == testStaff.name} #wow, this may be it.
+            staffWorkingDays = {role.day for role, staff in self.schedule.items() if staff.name == testStaff.name} #using staff.name as unique ID for now.
             possibleSwapDays = allDays - staffWorkingDays
-            staffAlreadyWorksRole = False
+            #commenting out to simplify for debugging.
+            """ staffAlreadyWorksRole = False
             for role, staff in self.schedule.items():
                 if staff is testStaff and role is testRole:
                     staffAlreadyWorksRole = True
                     break
 
-            return (testRole.day in possibleSwapDays or staffAlreadyWorksRole) and testStaff.isAvailable(testRole)
+            return (testRole.day in possibleSwapDays or staffAlreadyWorksRole) and testStaff.isAvailable(testRole)"""
+            return testRole.day in possibleSwapDays
     
     
     def allCyclesOfLength(self, startRole, length):
@@ -246,11 +248,20 @@ class Schedule:
         logger.debug(f'{staff} Schedule:')
         shifts = staff.scheduleView(self.schedule)
         for shift in shifts:
+            swappableRoles = [role for role in unvisitedNeighbors if role.day == shift.day]
             logger.debug(f'{shift}')
+            if swappableRoles != []:
+                logger.warning(f"{swappableRoles}")
+            else:
+                logger.debug(f'{swappableRoles}')
+
+
+
 
         logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles") # This is incorrect
         logger.debug(f"open roles: {unvisitedNeighbors}")
-        if staff.name == 'Lucas':
+
+        """if staff.name == 'Lucas':
             lucas = [p for r, p in self.schedule.items() if p.name == 'Lucas']
             lucas0 = lucas[0]
             lucas1 = lucas[1]
@@ -271,7 +282,7 @@ class Schedule:
             #an approach could be to 'overlay' the graphs together and get a correct graph for the number of shifts a staff is scheduled for.
 
 
-            print('bugbugg')
+            print('bugbugg') """
         for neighbor in unvisitedNeighbors:
             #we need a copy of visited because we don't want changes to visited in one function
             #call to mess with visited in another function call
@@ -327,14 +338,33 @@ class Schedule:
         logger.debug(f"Staff sawpped: {self.schedule[role2]} with {self.schedule[role1]}")
 
         #update the graph to reflect the swap. The rows and columns involving role1 and role2 need to be swapped.
-        #This should only be done once we start fixing availabilites, so if self.graph doesn't exist, we exit.
         try:
             self.graph
         except AttributeError:
-            return
-        self.graph[role2], self.graph[role1] = self.graph[role1], self.graph[role2]
-        #for role in self.graph:
-            #self.graph[role][role2], self.graph[role][role1] = self.graph[role][role1], self.graph[role][role2]
+            return #This should only be done once we start fixing availabilites, so if self.graph doesn't exist, we exit.
+        self.graph = {role1: {role2: self.StaffIsAvailableFor_Day(staff1,role2) for role2 in self.schedule} for role1, staff1 in self.schedule.items()}
+
+        #this doesn't really accomplish what we want.
+        #Right now, we're swapping staff1's 'openness', the roles they are open for with respect to repairing doubles-
+        # with Staff2's list of roles.
+        #What we want to do is update staff1 and staff2's 'opennes' in the graph, based on the swapping of roles.
+        # When staff1 takes on role2, they are no longer open for the day of role2.
+        # How I see it, now all the values of staff1's openness have to be recomputed to include the day of role2.day-
+        #And since the graph is a matrix of roles (shifts?), every row which is a role that staff1 is currently assigned with, has to be recomputed to include the addition of role2.day
+        #(all roles which are on role2.day flip from True (open for) to False (already working))
+        #This is what is what has to happen for staff1 taking on role2.
+        #While the role staff1 is swapping out of is a double, so no added 'openness' will be created for staff1.
+
+        #What's the situation look like for staff2 who is taking on role1?
+        # All roles staff2 was open for which are on role1.day flip from True to False,
+        # While it is also possible that the day of role2 which staff2 is swapping out of is the only shift staff2 had that day.
+        # In this case, staff2's openness would also be recomputed to flip any role on role2.day from False to True in the graph.
+
+        #Being able to update the graph as swaps are made is cool.
+        #However, with my current understanding of the problem, I don't see how to make such contained adjustments yet.
+        #A brute force option is to recreate the graph after each swap.
+        #So, for now I'll do that.
+
 
     def tupleRepresentation(self):
         return [(role,staff) for role, staff in self.schedule.items()]
