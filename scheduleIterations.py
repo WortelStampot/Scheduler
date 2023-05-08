@@ -10,8 +10,6 @@ from editedHopcroftKarp import availabilityMatching
 logger = logging.getLogger(__name__)
 
 
-#What I'm doing in this pass is adding to and removing bulk from the code to refine the activity log.
-
 def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
     
@@ -153,11 +151,17 @@ class Schedule:
         else:
             logger.info(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}")
 
+        print('repairDoubles Complete.')
+
 
     def repairDouble(self, doubleRole):
         staff = self.schedule[doubleRole]
 
         logger.info(f"Double role to repair: {doubleRole}, {staff}")
+        logger.debug(f'{staff} Schedule:')
+        shifts = staff.scheduleView(self.schedule)
+        for shift in shifts:
+            logger.debug(f'{shift}')
 
         try: #creating the doubles graph when it doesn't yet exist
             self.graph
@@ -173,7 +177,7 @@ class Schedule:
                 logger.warning(f"no cycles for length:{length}")
                 length += 1
                 continue
-            logger.debug(f"{allCycles}") #show cycles found
+            logger.debug(f"cycles found: {allCycles}") #show cycles found
             cycle = random.choice(allCycles) # select a random cycle from the list
             logger.info(f'selected cycle: {cycle}') #show selected cycle
 
@@ -204,7 +208,6 @@ class Schedule:
         working role1 could work role2. If that's true, then staff1 could be reassigned to role2 without breaking
         doubles/availability.
         """
-        logger.info(f"starting role: {startRole} with staff: {self.schedule[startRole]}")
         path = [startRole] #establish the starting point to search from
         visited = {role: False for role in self.graph} # 'a dictionary letting us know which nodes have been visited (so we don't visit them again)'
         visited[startRole] = True #setting the starting Role of path as visited
@@ -235,43 +238,8 @@ class Schedule:
         unvisitedNeighbors = [role for role in visited if self.graph[currentNode][role] and not visited[role]]
         #these are the roles which staff1 is 'open for' and have not yet been visited in the search for a cycle at the current length
 
-        #logging staff schedule so far to validate list of unvistedNeighbors Roles
-        #TODO: move this up in the logging activity.
-        logger.debug(f'{staff} Schedule:')
-        shifts = staff.scheduleView(self.schedule)
-        for shift in shifts:
-            swappableRoles = [role for role in unvisitedNeighbors if role.day == shift.day]
-            logger.debug(f'{shift}')
-            if swappableRoles != []:
-                logger.warning(f"{swappableRoles}")
-            else:
-                logger.debug(f'{swappableRoles}')
+        logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles\n{unvisitedNeighbors}")
 
-        logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles")
-        logger.debug(f"open roles: {unvisitedNeighbors}")
-
-        """if staff.name == 'Lucas':
-            lucas = [p for r, p in self.schedule.items() if p.name == 'Lucas']
-            lucas0 = lucas[0]
-            lucas1 = lucas[1]
-            lucas2 = lucas[2]
-            lucas3 = lucas[3]
-            lucas0Sched = lucas0.scheduleView(self.schedule)
-            lucas2Sched = lucas2.scheduleView(self.schedule)
-            lucas0FirstRole = lucas0.scheduleView(self.schedule)[0]
-            lucas2SecondRole = lucas2.scheduleView(self.schedule)[1]
-
-            lucas0Graph = [role for role, value in self.graph[lucas0FirstRole].items() if value == True]
-            lucas2Graph = [role for role, value in self.graph[lucas2SecondRole].items() if value]
-
-            #So what's going on is that the graph is incorrect for the duplicated staff nodes.
-            #the graph is being built correctly based on the first role,
-            #however the first role does not take into account the remaining roles this staff is scheduled for.
-
-            #an approach could be to 'overlay' the graphs together and get a correct graph for the number of shifts a staff is scheduled for.
-
-
-            print('bugbugg') """
         for neighbor in unvisitedNeighbors:
             #we need a copy of visited because we don't want changes to visited in one function
             #call to mess with visited in another function call
@@ -298,39 +266,19 @@ class Schedule:
         logger.debug(f'doubles before swap: {len(doubleCount), doubleCount}')
         logger.info(f"Repairing: {cycle[0]}(staff:{self.schedule[cycle[0]]}), with cycle: {[(role, self.schedule[role]) for role in cycle]}")
 
-        #logging staff schedule before swap
-        cycleStaff = [self.schedule[role] for role in cycle]
-        for staff in cycleStaff:
-            logger.debug(f'{staff} Schedule Before Swap:')
-            shifts = staff.scheduleView(self.schedule)
-            for shift in shifts:
-                logger.debug(f'{shift}')
-
         for i in range(1,len(cycle)):
-            logger.debug(f"Swapping {cycle[0]} with {cycle[i]}")
             self.swap(cycle[0], cycle[i])
-        
-        #logging staff schedule after swap
-        for staff in cycleStaff:
-            logger.debug(f'{staff} Schedule After Swap:')
-            shifts = staff.scheduleView(self.schedule)
-            for shift in shifts:
-                logger.debug(f'{shift}')
         
         doubleCount = self.identifyDoubles()
         logger.debug(f'doubles after swap: {len(doubleCount), doubleCount}')
+        print(f'Doubles progress: {len(doubleCount)}')
         
 
     def swap(self, role1, role2):
         #swap the staff in the schedule
         self.schedule[role2], self.schedule[role1] = self.schedule[role1], self.schedule[role2]
-        logger.debug(f"Staff sawpped: {self.schedule[role2]} with {self.schedule[role1]}")
 
-        #update the graph to reflect the swap. The rows and columns involving role1 and role2 need to be swapped.
-        try:
-            self.graph
-        except AttributeError:
-            return #This should only be done once we start fixing availabilites, so if self.graph doesn't exist, we exit.
+        #update the graph to reflect the swap. 
         self.graph = {role1: {role2: self.StaffIsAvailableFor_Day(staff1,role2) for role2 in self.schedule} for role1, staff1 in self.schedule.items()}
 
         #this doesn't really accomplish what we want.
