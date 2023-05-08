@@ -1,14 +1,14 @@
 import random
 import logging
-from classes import Weekdays, Role, Staff
+from classes import Weekdays
 import networkx as nx
-from networkx import bipartite
 import copy
-import datetime
 from editedHopcroftKarp import availabilityMatching
 
 logger = logging.getLogger(__name__)
 
+#codeReduction:
+#this pass is for reducing the code workspace to what is needed.
 
 def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
