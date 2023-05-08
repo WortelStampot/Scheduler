@@ -29,8 +29,6 @@ class Schedule:
         self.schedule = self.startSchedule()
     
     def startSchedule(self):
-        #This is actually an 'availabilitySchedule'
-        #Unsure how a 'startschedule' fits in to current Schedule class structure.
         """
         Make a bipartite graph.
         Set 0 vertices are Role objects
@@ -150,8 +148,6 @@ class Schedule:
             logger.warning(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}\n{endingDoubles}")
         else:
             logger.info(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}")
-
-        print('repairDoubles Complete.')
 
 
     def repairDouble(self, doubleRole):
@@ -323,9 +319,6 @@ class Schedule:
         return (testRole.day in possibleSwapDays or staffAlreadyWorksRole) and testStaff.isAvailable(testRole)"""
         return Role2.day in possibleSwapDays
 
-    def tupleRepresentation(self):
-        return [(role,staff) for role, staff in self.schedule.items()]
-
     def toJSON(self):
         scheduleJSON = []
         for role, staff in self.schedule.items():
@@ -346,13 +339,3 @@ def numberOfDaysCouldWork(staff):
         #don't want someone with no availability to work
         days = -10
     return days
-
-def logShiftCount(staffByShiftsDict, roleList):
-    shiftCount = 0
-    roleCount = len(roleList)
-    for shiftKey, staffList in staffByShiftsDict.items():
-        if shiftKey != -10:
-            shiftCount += shiftKey * len(staffList)
-    if shiftCount < roleCount:
-        return logger.warning(f"Role count exceeds Staff availability\nStaff shifts available: {shiftCount}, Roles to fill: {roleCount}")
-    return logger.info(f"Staff shifts available: {shiftCount}, Roles to fill: {roleCount}")
