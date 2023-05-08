@@ -308,16 +308,13 @@ class Schedule:
         staffWorkingDays = {role.day for role, staff in self.schedule.items() if staff.name == Staff1.name} #using staff.name as unique ID for now.
         possibleSwapDays = allDays - staffWorkingDays
 
-        #commenting out to simplify for debugging.
-        #TODO: include the current Role Staff1 is assigned with
-        """ staffAlreadyWorksRole = False 
+        staffAlreadyWorksRole = False #this section allows for including the role Staff1 is currently assinged in the return value
         for role, staff in self.schedule.items():
-            if staff is testStaff and role is testRole:
+            if staff is Staff1 and role is Role2:
                 staffAlreadyWorksRole = True
                 break
 
-        return (testRole.day in possibleSwapDays or staffAlreadyWorksRole) and testStaff.isAvailable(testRole)"""
-        return Role2.day in possibleSwapDays
+        return (Role2.day in possibleSwapDays or staffAlreadyWorksRole) and Staff1.isAvailable(Role2)
 
     def toJSON(self):
         scheduleJSON = []
