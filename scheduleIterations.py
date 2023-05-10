@@ -148,6 +148,8 @@ class Schedule:
             logger.warning(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}\n{endingDoubles}")
         else:
             logger.info(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}")
+            
+        print(f'repairDoubles complete. remaining doubles: {len(endingDoubles)}')
 
 
     def repairDouble(self, doubleRole):
