@@ -69,25 +69,16 @@ def availabilityMatching(Graph, top_nodes=None):
     """
     
     def breadth_first_search():
-        for staff in staffNodes: #this loop populates the queue and distances dictionary for each staff in the staff node set.
-            #if this staff node has no identified match, we add it to the 'distances' dictionary with a value of 0
-            #At the start of this function, this True for all staff nodes in the staff nodes set.
-            #this staff node (object?) then gets appended to the 'queue'.
+        for staff in staffNodes:
             if staffMatches[staff] is None:
                 distances[staff] = 0
-                queue.append(staff)
-            #However, when the value of this staff in the staffMatches dictionary is not None
-            #we set this staff's value in the 'distances' dictionary to INFINITY.
-                # My question here, what is this 'distances' dictionary?
-                # What is it tracking the state of? Distance from this staff node to what?
+                queue.append(staff) # What is this 'distances' dictionary tracking the state of?
             else:
                 distances[staff] = INFINITY
-        distances[None] = INFINITY # here we add a 'None' node to the distances dictionary with a value of INFINITY.
-        #What is the function of this None node? What is it setting us up for?
+        distances[None] = INFINITY 
         while queue: #this loop checks if there is a staff node in the set, for whom to identify a connecting edge (this will be done with the depth-first-search). 
             staff = queue.popleft()
-            if distances[staff] < distances[None]: # if the distance value of staff is less than INFINITY
-                #Would 'if distances[staff] is not INFINITY' be another way to write this?
+            if distances[staff] < distances[None]:
                 debugGraph = Graph[staff]
                 for role in Graph[staff]: # In this loop we go through each role this staff is connected (adjacent?) to.
                     #the staff node being the dictionary key to get into a deeper dictionary of the graph data strucutre. A dictionary of connected role nodes for each staff.
