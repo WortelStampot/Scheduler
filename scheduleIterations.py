@@ -58,7 +58,7 @@ class Schedule:
         rolesWithAvailability = set(role for role, staff in roleStaffConnections_Availablity)
         for role in self.roles:
             if role not in rolesWithAvailability:
-                logger.warning(f"No staff available for {role}")
+                logger.warning(f"No staff has availability for {role}")
 
         #add edges to the graph      
         Bgraph.add_edges_from(roleStaffConnections_Availablity)
@@ -82,7 +82,7 @@ class Schedule:
             if staff == None:
                 availableStaff = [staff for staff in staffByShiftsDict[highestShiftCount] if staff.isAvailable(role)]
                 if len(availableStaff) == 0:
-                    logger.warning(f"no available staff for {role}") #This will leave a Role unpaired with a 'None' object- probably causing some issues further on...
+                    logger.warning(f"Filling availability gap: no available staff for {role}") #This will leave a Role unpaired with a 'None' object- probably causing some issues further on...
                     continue
                 logger.debug(f'Available staff for {role}: {availableStaff}')
                 selectedStaff = random.choice(availableStaff)
