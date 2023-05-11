@@ -7,9 +7,6 @@ from editedHopcroftKarp import availabilityMatching
 
 logger = logging.getLogger(__name__)
 
-#codeReduction:
-#this pass is for reducing the code workspace to what is needed.
-
 def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
     
@@ -130,6 +127,7 @@ class Schedule:
 
     def repairDoubles(self):
         doubles = self.identifyDoubles()
+        self.unrepairedDoubles = list() #attaching to schedule for now
         logger.info(f"repairDoubles starting count: {len(doubles)}\n{doubles}")
 
         MAX_ATTEMPTS = 100 #it now seems unlikely for 100 attempts to be reached with ~89 Roles in a weekly roleCollection
@@ -138,7 +136,7 @@ class Schedule:
             doubleRole = random.choice(doubles) #select a random double from the list
             self.repairDouble(doubleRole) #start repair process for selected double
 
-            doubles = self.identifyDoubles() #recompute the list of doubles after repair.
+            doubles = [role for role in self.identifyDoubles() if role not in self.unrepairedDoubles] #recompute the list of doubles, leaving out perviously unrepaired roles.
 
             attempts += 1
             logger.debug(f"doubles attempts: {attempts}")
@@ -184,6 +182,7 @@ class Schedule:
         
         #when no cycles are found within the MAX_LENGTH limit, we come here, leaving the double unrepaired
         logger.warning(f"{doubleRole},{staff} left unrepaired.")
+        self.unrepairedDoubles.append(doubleRole)
     
     
     def allCyclesOfLength(self, startRole, length):
