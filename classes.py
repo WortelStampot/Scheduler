@@ -15,37 +15,12 @@ class Weekdays(Enum):
 
 
 class Role:
-
-	callTimes = {
-		'lunch': datetime.time(hour=10, minute=30),
-		'brunch': datetime.time(hour=10, minute=30),
-		'brunchdoor': datetime.time(hour=12, minute=00),
-		'swing': datetime.time(hour=13),
-		'FMN': datetime.time(hour=14),
-		'shermans': datetime.time(hour=16, minute=30),
-		'veranda': datetime.time(hour=16, minute=30),
-		'outside': datetime.time(hour=16, minute=30),
-		'bbar': datetime.time(hour=16, minute=30),
-		'vbar': datetime.time(hour=16, minute=30),
-		'front': datetime.time(hour=16, minute=30),
-		'uber': datetime.time(hour=16, minute=30),
-		'door': datetime.time(hour=18),
-		'door2':datetime.time(hour=18),
-		'back': datetime.time(hour=18),
-		'middle': datetime.time(hour=18),
-		'shermans6pm': datetime.time(hour=18),
-		'aux': datetime.time(hour=18)
-		}
-
 	def __init__(self, name, day, callTime=None, qualifiedStaff=None, preferredStaff=None):
 		self.name = name
 		self.day = day
+		self.callTime = callTime
 		self.qualifiedStaff = qualifiedStaff
 		self.preferredStaff = preferredStaff
-
-		self.callTime = Role.callTimes.get(name, callTime)
-		if self.callTime == None:
-			raise ValueError(f'provide callTime for {self.name}')
 		
 	def __repr__(self):
 		return "{self.__class__.__name__}({self.name},{self.day.name})".format(self=self)
