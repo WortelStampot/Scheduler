@@ -82,9 +82,10 @@ class Schedule:
             if staff == None:
                 availableStaff = [staff for staff in staffByShiftsDict[highestShiftCount] if staff.isAvailable(role)]
                 if len(availableStaff) == 0:
-                    logger.warning(f"Filling availability gap: no available staff for {role}") #This will leave a Role unpaired with a 'None' object- probably causing some issues further on...
-                    continue
-                logger.debug(f'Available staff for {role}: {availableStaff}')
+                    logger.warning(f"Filling availability gap: no available staff for {role} with shiftcount {highestShiftCount}")
+                    highestShiftCount -= 1 #Dirtiest quick fix to move on for the moment...
+                    availableStaff = [staff for staff in staffByShiftsDict[highestShiftCount] if staff.isAvailable(role)]
+                logger.debug(f'Available staff for {role} from shiftcount {highestShiftCount}: {availableStaff}')
                 selectedStaff = random.choice(availableStaff)
                 logger.debug(f'selected {selectedStaff}')
 
@@ -164,7 +165,7 @@ class Schedule:
         except AttributeError:
             self.graph = {role1: {role2: self.StaffIsAvailableFor_Day(staff1,role2) for role2 in self.schedule} for role1, staff1 in self.schedule.items()}
 
-        MAX_LENGTH = 10 #reasonablly setting a limit of the cycles we're willing to search for within the graph.
+        MAX_LENGTH = 6 #reasonablly setting a limit of the cycles we're willing to search for within the graph.
         for length in range(2,MAX_LENGTH):
             logger.info(f"finding all cycles of length: {length}")
             allCycles = self.allCyclesOfLength(doubleRole, length)
