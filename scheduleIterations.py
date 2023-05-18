@@ -279,28 +279,6 @@ class Schedule:
         #update the graph to reflect the swap. 
         self.graph = {role1: {role2: self.StaffIsAvailableFor_Day(staff1,role2) for role2 in self.schedule} for role1, staff1 in self.schedule.items()}
 
-        #this doesn't really accomplish what we want.
-        #Right now, we're swapping staff1's 'openness', the roles they are open for with respect to repairing doubles-
-        # with Staff2's list of roles.
-        #What we want to do is update staff1 and staff2's 'opennes' in the graph, based on the swapping of roles.
-        # When staff1 takes on role2, they are no longer open for the day of role2.
-        # How I see it, now all the values of staff1's openness have to be recomputed to include the day of role2.day-
-        #And since the graph is a matrix of roles (shifts?), every row which is a role that staff1 is currently assigned with, has to be recomputed to include the addition of role2.day
-        #(all roles which are on role2.day flip from True (open for) to False (already working))
-        #This is what is what has to happen for staff1 taking on role2.
-        #While the role staff1 is swapping out of is a double, so no added 'openness' will be created for staff1.
-
-        #What's the situation look like for staff2 who is taking on role1?
-        # All roles staff2 was open for which are on role1.day flip from True to False,
-        # While it is also possible that the day of role2 which staff2 is swapping out of is the only shift staff2 had that day.
-        # In this case, staff2's openness would also be recomputed to flip any role on role2.day from False to True in the graph.
-
-        #Being able to update the graph as swaps are made is cool.
-        #However, with my current understanding of the problem, I don't see how to make such contained adjustments yet.
-        #A brute force option is to recreate the graph after each swap.
-        #So, for now I'll do that.
-
-
     def StaffIsAvailableFor_Day(self, Staff1, Role2):
         """
         The function we use to create a graph representing which Roles a Staff is 'open to swap with'
