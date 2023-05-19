@@ -153,12 +153,16 @@ class Schedule:
 
     def repairDouble(self, doubleRole):
         staff = self.schedule[doubleRole]
-
         logger.info(f"Double role to repair: {doubleRole}, {staff}")
+
+        #log staff schedule
         logger.debug(f'{staff} Schedule:')
         shifts = staff.scheduleView(self.schedule)
         for shift in shifts:
             logger.debug(f'{shift}')
+        #log staff availability
+        for day, avail in staff.availability.items():
+            logger.debug(f'{day.name, avail}')
 
         try: #creating the doubles graph when it doesn't yet exist
             self.graph
