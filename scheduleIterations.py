@@ -16,6 +16,7 @@ def createSchedule(roleCollection, staffCollection):
     schedule.repairDoubles()
     doubles = schedule.identifyDoubles()
     logger.info(f'Doubles after repairing: {len(doubles), doubles}')
+    logger.info(f'unmatched role: {schedule.unMatchedRoles}')
     
     return schedule
 
@@ -70,34 +71,11 @@ class Schedule:
             if staff == None:
                 logger.debug(f'{role} left unassigned')
 
-        #Assign staff to the unmatched roles based on which staff has the highest shifts remaining with this schedule.
-        staffByShiftsDict = {}
-        for staff in self.staff:
-            shiftsRemaining = staff.shiftsRemaining(schedule)
-            staffByShiftsDict.setdefault(shiftsRemaining,[])
-            staffByShiftsDict[shiftsRemaining].append(staff)
-        
-        highestShiftCount = max(staffByShiftsDict)
-        for role, staff in schedule.items():
-            if staff == None:
-                availableStaff = [staff for staff in staffByShiftsDict[highestShiftCount] if staff.isAvailable(role)]
-                if len(availableStaff) == 0:
-                    logger.warning(f"Filling availability gap: no available staff for {role} with shiftcount {highestShiftCount}")
-                    highestShiftCount -= 1 #Dirtiest quick fix to move on for the moment...
-                    availableStaff = [staff for staff in staffByShiftsDict[highestShiftCount] if staff.isAvailable(role)]
-                logger.debug(f'Available staff for {role} from shiftcount {highestShiftCount}: {availableStaff}')
-                selectedStaff = random.choice(availableStaff)
-                logger.debug(f'selected {selectedStaff}')
+        #Identify unmatchable roles
+        self.unMatchedRoles = [role for role, staff in schedule.items() if staff is None]
 
-                #move staff down a key in the shifts dictionary
-                staffByShiftsDict[highestShiftCount].remove(selectedStaff)
-                staffByShiftsDict.setdefault(highestShiftCount - 1, [])
-                staffByShiftsDict[highestShiftCount - 1].append(selectedStaff)
-                if staffByShiftsDict[highestShiftCount] == []:
-                    staffByShiftsDict.pop(highestShiftCount)
-                    highestShiftCount -= 1
-
-                schedule[role] = selectedStaff
+        #prune unmatchable roles from schedule
+        schedule = {role: staff for role, staff in schedule.items() if staff is not None}
 
         return schedule
 
