@@ -42,7 +42,9 @@ class Schedule:
                 staffByShifts.append(copy.deepcopy(staff))
         if len(staffByShifts) < len(self.roles):
             logger.warning(f"Staff shifts: {len(staffByShifts)} < role count: {len(self.roles)}.")
-        
+        else:
+            logger.info(f"Staff shifts: {len(staffByShifts)} >= role count: {len(self.roles)}.")
+    
         #establish set of Role and Staff nodes
         Bgraph = nx.Graph()
         Bgraph.add_nodes_from(staffByShifts, bipartite=0)
