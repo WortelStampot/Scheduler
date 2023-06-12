@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request
+import parsingFunctions
 import main
-import scheduleIterations
 import json
 
 from classes import Weekdays
@@ -26,14 +26,14 @@ def createSchedule():
     if roleStaffData == None:
         return 'Alert: Check payload header'
     try:
-        main.validatePayload(roleStaffData,roleStaffSchema)
+        parsingFunctions.validatePayload(roleStaffData,roleStaffSchema)
     except ValueError as err:
         return {"error": str(err)}
 
-    roleCollection = [main.parseRole(role) for role in roleStaffData["roles"]]
-    staffCollection = [main.parseStaff(staff) for staff in roleStaffData["staff"]]
+    roleCollection = [parsingFunctions.parseRole(role) for role in roleStaffData["roles"]]
+    staffCollection = [parsingFunctions.parseStaff(staff) for staff in roleStaffData["staff"]]
 
-    schedule = scheduleIterations.createSchedule(roleCollection, staffCollection)
+    schedule = main.createSchedule(roleCollection, staffCollection)
 
     scheduleJSON = schedule.toJSON()
 
