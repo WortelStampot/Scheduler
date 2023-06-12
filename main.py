@@ -130,9 +130,7 @@ def parseStaff(staff):
         availability = formatAvailability(staff["availability"])
     except ValueError:
         raise ValueError(f"Invalid format for Staff: {name} availability.")
-    rolePreference = staff["rolePreference"]
-    doubles = staff["doubles"]
-    return Staff(name=name, maxShifts=maxShifts, availability=availability, rolePreference=rolePreference, doubles=doubles)
+    return Staff(name=name, maxShifts=maxShifts, availability=availability)
 
 
 def formatAvailability(availability):
