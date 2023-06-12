@@ -4,12 +4,6 @@ class DefaultConfig(object):
             {
                 "name": str(),
                 "callTime": str(),
-                "qualifiedStaff": [
-                    str()
-                ],
-                "preferredStaff": [
-                    str()
-                ],
                 "day": str()
             }
         ],
@@ -17,10 +11,6 @@ class DefaultConfig(object):
             {
                 "name": str(),
                 "maxShifts": int(),
-                "rolePreference": [
-                    str()
-                ],
-                "doubles": bool(),
                 "availability": {
                     "MONDAY": [
                         str()
