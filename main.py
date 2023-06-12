@@ -113,14 +113,12 @@ def parseRole(role):
         callTime = datetime.time(hour=hour, minute=minutes)
     except ValueError:
         raise ValueError(f"Call time {role['callTime']} not in a valid format")
-    qualifiedStaff = role["qualifiedStaff"]
-    preferredStaff = role["preferredStaff"]
     try:
         day = role["day"]
         weekday = Weekdays[day]
     except KeyError:
         raise ValueError(f"Day: {day} for Role: {name} not in valid format.")
-    return Role(name=name, day=weekday, callTime=callTime, qualifiedStaff=qualifiedStaff)
+    return Role(name=name, day=weekday, callTime=callTime)
 
 
 def parseStaff(staff):
