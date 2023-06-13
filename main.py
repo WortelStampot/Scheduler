@@ -3,7 +3,7 @@ import logging
 from classes import Weekdays
 import networkx as nx
 import copy
-from editedHopcroftKarp import availabilityMatching
+from matching import availabilityMatching
 
 logger = logging.getLogger(__name__)
 
