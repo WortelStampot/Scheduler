@@ -40,8 +40,10 @@ def createStartingSchedule(roleCollection, staffCollection):
     #and ready to be used by our matching algorithm.
     startingSchedule = availabilityMatching(Graph)
 
-    #and we return our starting schedule.
-    return startingSchedule
+    Schedule = classes.Schedule() # this is the point where a 'Schedule' object is created.
+    Schedule.schedule = startingSchedule
+
+    return Schedule # from this point on, we can work with the Schedule object directly.
 
     #EDGE CASE:
     #When there is a Role which no Staff is available for we could notice at this point.
@@ -51,6 +53,22 @@ def createStartingSchedule(roleCollection, staffCollection):
     for role in self.roles:
         if role not in rolesWithAvailability:
             logger.warning(f"No staff has availability for {role}")
+
+    #OBSERVATIONS:
+    #At this point, there is a starting schedule.
+    #What actually is a Schedule- as an object
+    #at this point it's a dictionary which holds {Role: Staff} pairs.
+    #This object gets created at which point? inside the matching algorithm?
+    #The matching algorithm traditionally returns a dictionary like this.
+    #However the networkx implementation leaves out unmatched nodes.
+    #in our case, this means any Roles which do not appear in the matching result will be 'unmatched roles'
+    #this is something worth identifying. However, there is no reason to chop up the networkx algorithm.
+    #And, our own Schedule object still does not exist.
+    #no, networkx does not need to know that we're matching a schedule and it sure will not return one.
+    
+    #so from the matching we get networkx's dictionary and then it's up to us to identify any unmatched Roles
+    #yes, when we do, we can append those to the 'Schedule' Object as 'unmatchedRoles'
+    #So the Schedule Object gets created 
      
 
 def duplicateStaff(staffCollection):
