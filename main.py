@@ -5,37 +5,50 @@ import networkx as nx
 from networkx.algorithms import bipartite
 import copy
 from matching import availabilityMatching
+import repairFunctions
 
 logger = logging.getLogger(__name__)
 
-def createSchedule(roleCollection, staffCollection):    
+def createSchedule(roleCollection, staffCollection):   
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
+    #Would really like to have a consistant syntax where Role, Staff, and Schedule variables are capitalized 
+    #When representing a direct Role, Staff, and Schedule object.
+    # capitalizing Schedule here, changes the way VScode interprets it.
+    # uncapitalized: (variable) schedule: Schedule
+    # capitalized: (variable) Schedule: Never
 
-    schedule.repairDoubles()
+    schedule.schedule = startingSchedule(schedule)
+
+    unassignedRoles = {Role for Role, Staff in schedule.schedule.items() if Staff is None} # this seems like it needs a home.
+    schedule.unassigned = unassignedRoles #inside startingSchedule?
+
+    #now a 'filled out' Schedule object exists and we can work with it directly
+    repairFunctions.repairDoubles(schedule)
     
     return schedule
 
-def createStartingSchedule(roleCollection, staffCollection):
+def startingSchedule(schedule):
     """
     Create a starting schedule by matching Roles with Staff based on availability
 
-    return:
-    Schedule object
-    """
-    ScheduleObject = Schedule() #empty while arranging
-    #Create a scheulde object here? Still hazy on what a Schedule object is to be in our context.
+    input:
+    Schedule Object
 
-    staffCollection = duplicateStaff(staffCollection) # This could be done on the appscript end?
+    return:
+    starting value for Schedule.schedule
+    """
+
+    staffCollection = duplicateStaff(schedule.staff) # This could be done on the appscript end?
     #when things get settled, maybe move this funcationality over there.
 
     Graph = nx.Graph()
-    Graph.add_nodes_from(roleCollection, bipartite=0)
-    Graph.add_nodes_from(staffCollection, bipartite=1)
+    Graph.add_nodes_from(schedule.roles, bipartite=0)
+    Graph.add_nodes_from(staffCollection, bipartite=1) #TODO: referenced at line 81 (how to reference within VSCode?)  
     left,right = nx.bipartite.sets(Graph) # debugging
 
     availabilityEdges = []  
     for staff in staffCollection:
-        for role in roleCollection:
+        for role in schedule.roles:
             if staff.isAvailable(role):
                 availabilityEdges.append((role, staff))
 
@@ -49,11 +62,10 @@ def createStartingSchedule(roleCollection, staffCollection):
 
     startingSchedule = {Role: Staff for Role, Staff in roleMatches.items() if Staff is not None} #strip unmatched roles
     unassignedRoles = {Role for Role, Staff in roleMatches.items() if Staff is None}
-
-    ScheduleObject.schedule = startingSchedule # this is the first time we have a 'schedule'
+    
     ScheduleObject.unassigned = unassignedRoles # Having access to unassigned Roles seems important
 
-    return ScheduleObject # from this point on, we can work with the Schedule object directly.
+    return startingSchedule # from this point on, we can work with the Schedule object directly.
 
     #EDGE CASE:
     #When there is a Role which no Staff is available for we could notice at this point.
@@ -70,7 +82,7 @@ def createStartingSchedule(roleCollection, staffCollection):
     # Schedule.schedule is a dictionary which holds {Role: Staff} pairs.
     # and from this point on, can be iterated on.
     # Schedule.roles is a collection of Role objects for the week.
-    # Schedule.staff is a collection of Staff object for the week. 
+    # Schedule.staff is a collection of Staff object for the week.
         #This diverges a bit since in createStartSchedule we duplicate each Staff by their 'shiftsRemaining'
         #this actually creates new unique Staff objects which are now dispersed throughout Schedule.schedule
         #I'd like to avoid this. Personally I still think of the StaffCollection as a list of unique Staff objects, unduplicated.

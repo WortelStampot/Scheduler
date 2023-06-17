@@ -98,10 +98,9 @@ class Staff:
 	
 
 class Schedule:
-	def __init__(self, roles, staff, schedule=None):
+	def __init__(self, roles, staff):
 		self.roles = roles
 		self.staff = staff
-		self.schedule = schedule #TODO: if None, run createStartingSchedule ?
 
 	def startSchedule(self):
 		"""
