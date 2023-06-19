@@ -54,11 +54,12 @@ def startingSchedule(schedule):
 
     Graph.add_edges_from(availabilityEdges)
 
-    roleMatches = availabilityMatching(Graph) #TODO: set top nodes
-    nxMatches = bipartite.maximum_matching(Graph) # this would be using networkx as is.
-    #The reason I'm not going this route is that it returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
-    #when all we want, I think, is one set with unmatched Roles still in place.
-    # By pasting the source code and cutting it a bit early to return 'roleMatches', we get what we're looking for- I think.
+    availabilityMatches = bipartite.maximum_matching(Graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
+    #TODO:
+    # set top nodes
+    # identify unmatched roles
+    # Schedule.unassigned = unmatchedRoles
+    # save 'top node' matches as startingSchedule
 
     startingSchedule = {Role: Staff for Role, Staff in roleMatches.items() if Staff is not None} #strip unmatched roles
     unassignedRoles = {Role for Role, Staff in roleMatches.items() if Staff is None}
@@ -77,10 +78,7 @@ def startingSchedule(schedule):
             logger.warning(f"No staff has availability for {role}")
 
     #OBSERVATIONS:
-    #At this point, there is a starting schedule.
     #What actually is a Schedule- as an object.
-    # Schedule.schedule is a dictionary which holds {Role: Staff} pairs.
-    # and from this point on, can be iterated on.
     # Schedule.roles is a collection of Role objects for the week.
     # Schedule.staff is a collection of Staff object for the week.
         #This diverges a bit since in createStartSchedule we duplicate each Staff by their 'shiftsRemaining'
@@ -88,17 +86,7 @@ def startingSchedule(schedule):
         #I'd like to avoid this. Personally I still think of the StaffCollection as a list of unique Staff objects, unduplicated.
         # while practically I don't yet know how to set that up with the matching algorithm, and I don't know how important it is.
         # So- for now Schedule.staff = the duplicated list of the Staff collection?
- 
-    #The networkx matching algorithm traditionally returns a dictionary like this.
-    #However the networkx implementation leaves out unmatched nodes.
-    #in our case, this means any Roles which do not appear in the matching result will be 'unmatched roles'
-    #this is something worth identifying. However, there is no reason to chop up the networkx algorithm.
-    #And, our own Schedule object still does not exist.
-    #no, networkx does not need to know that we're matching a schedule and it sure will not return one.
-    
-    #so from the matching we get networkx's dictionary and then it's up to us to identify any unmatched Roles
-    #yes, when we do, we can append those to the 'Schedule' Object as 'unmatchedRoles'
-    #So the Schedule Object gets created 
+    # Schedule.schedule is a dictionary which holds {Role: Staff} pairs.
      
 
 def duplicateStaff(staffCollection):
