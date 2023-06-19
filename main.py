@@ -4,7 +4,6 @@ import classes
 import networkx as nx
 from networkx.algorithms import bipartite
 import copy
-from matching import availabilityMatching
 import repairFunctions
 
 logger = logging.getLogger(__name__)
