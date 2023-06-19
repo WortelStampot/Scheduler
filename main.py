@@ -24,7 +24,7 @@ def createSchedule(roleCollection, staffCollection):
     #now a 'filled out' Schedule object exists and we can work with it directly
     repairFunctions.repairDoubles(Schedule)
     
-    return Schedule.schedule
+    return Schedule
 
 def startingSchedule(Schedule):
     """

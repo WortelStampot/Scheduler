@@ -1,9 +1,10 @@
 import logging
 import random
+import cycleFunctions
 logger =  logging.getLogger(__name__)
 
 def repairDoubles(Schedule):
-    doubles = identifyDoubles()
+    doubles = identifyDoubles(Schedule)
     Schedule.unrepairedDoubles = list() #TODO: sort this out- attaching to schedule for now
     logger.info(f"repairDoubles starting count: {len(doubles)}\n{doubles}")
 
@@ -11,14 +12,14 @@ def repairDoubles(Schedule):
     attempts = 0
     while doubles != [] and attempts < MAX_ATTEMPTS:
         doubleRole = random.choice(doubles) #select a random double from the list
-        Schedule.repairDouble(doubleRole) #start repair process for selected double
+        repairDouble(Schedule, doubleRole) #start repair process for selected double
 
-        doubles = [role for role in Schedule.identifyDoubles() if role not in Schedule.unrepairedDoubles] #recompute the list of doubles, leaving out perviously unrepaired roles.
+        doubles = [role for role in identifyDoubles(Schedule) if role not in Schedule.unrepairedDoubles] #recompute the list of doubles, leaving out perviously unrepaired roles.
 
         attempts += 1
         logger.debug(f"doubles attempts: {attempts}")
     
-    endingDoubles = Schedule.identifyDoubles() #logging the number of doubles after the repairDoubles process.
+    endingDoubles = identifyDoubles(Schedule) #logging the number of doubles after the repairDoubles process.
     if endingDoubles != []:
         logger.warning(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}\n{endingDoubles}")
     else:
@@ -43,12 +44,12 @@ def repairDouble(Schedule, doubleRole):
     try: #creating the doubles graph when it doesn't yet exist
         Schedule.graph
     except AttributeError:
-        Schedule.graph = {role1: {role2: Schedule.StaffIsAvailableFor_Day(staff1,role2) for role2 in Schedule.schedule} for role1, staff1 in Schedule.schedule.items()}
+        Schedule.graph = {role1: {role2: cycleFunctions.StaffIsAvailableFor_Day(Schedule,staff1,role2) for role2 in Schedule.schedule} for role1, staff1 in Schedule.schedule.items()}
 
     MAX_LENGTH = 6 #reasonablly setting a limit of the cycles we're willing to search for within the graph.
     for length in range(2,MAX_LENGTH):
         logger.info(f"finding all cycles of length: {length}")
-        allCycles = Schedule.allCyclesOfLength(doubleRole, length)
+        allCycles = cycleFunctions.allCyclesOfLength(Schedule, doubleRole, length)
 
         if allCycles == []: # when no cycles found, increment length and do a deeper search.
             logger.warning(f"no cycles for length:{length}")
@@ -58,7 +59,7 @@ def repairDouble(Schedule, doubleRole):
         cycle = random.choice(allCycles) # select a random cycle from the list
         logger.info(f'selected cycle: {cycle}') #show selected cycle
 
-        Schedule.cycleSwap(cycle) #swap the staff within the cycle
+        cycleFunctions.cycleSwap(Schedule, cycle) #swap the staff within the cycle
         return
     
     #when no cycles are found within the MAX_LENGTH limit, we come here, leaving the double unrepaired
