@@ -96,6 +96,21 @@ class Staff:
 					shiftCount += 1
 		return self.maxShifts - shiftCount
 	
+	def daysAvailable(self):
+		"""
+		based on reqeusts,
+		return number of days Staff has work availabiltiy
+		"""
+		daysAvailable = 0
+		for callTimes in self.availability.values():
+			if callTimes != []:
+				daysAvailable += 1
+		if daysAvailable == 0:
+			daysAvailable = -10 #don't want someone with no availability to work
+		logger.info(f'{self} daysAvailable: {daysAvailable}')
+
+		return daysAvailable
+	
 
 class Schedule:
 	def __init__(self, roles, staff):
