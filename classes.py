@@ -116,61 +116,6 @@ class Schedule:
 	def __init__(self, roles, staff):
 		self.roles = roles
 		self.staff = staff
-
-	def startSchedule(self):
-		"""
-		Make a bipartite graph.
-		Set 0 vertices are Role objects
-		Set 1 vertices are Staff objects, duplicated by their number of 'shiftsRemaining'
-		"""
-
-		#dupelicate staff by their count of shiftsRemaining
-		staffByShifts = []
-		for staff in self.staff:
-			#makes sure shifts remaining aligns with a staff's indicated availability
-			shiftsRemaining = min(staff.maxShifts, numberOfDaysCouldWork(staff))
-			for shiftCount in range(shiftsRemaining):
-				staffByShifts.append(copy.deepcopy(staff))
-		if len(staffByShifts) < len(self.roles):
-			logger.warning(f"Staff shifts: {len(staffByShifts)} < role count: {len(self.roles)}.")
-		else:
-			logger.info(f"Staff shifts: {len(staffByShifts)} >= role count: {len(self.roles)}.")
-
-		#establish set of Role and Staff nodes
-		Bgraph = nx.Graph()
-		Bgraph.add_nodes_from(staffByShifts, bipartite=0)
-		Bgraph.add_nodes_from(self.roles, bipartite=1)
-
-		#connect staff to each role they are available for, forming the availability bipartite graph.
-		roleStaffConnections_Availablity = []
-		for staff in staffByShifts:
-			for role in self.roles:
-				if staff.isAvailable(role):
-					roleStaffConnections_Availablity.append((role, staff))
-		
-		#check for gap in staff pool availability.
-		rolesWithAvailability = set(role for role, staff in roleStaffConnections_Availablity)
-		for role in self.roles:
-			if role not in rolesWithAvailability:
-				logger.warning(f"No staff has availability for {role}")
-
-		#add edges to the graph      
-		Bgraph.add_edges_from(roleStaffConnections_Availablity)
-
-		schedule = availabilityMatching(Bgraph)
-
-		#log roles which are left unmatched
-		for role, staff in schedule.items():
-			if staff == None:
-				logger.debug(f'{role} left unassigned')
-
-		#Identify unmatchable roles
-		self.unMatchedRoles = [role for role, staff in schedule.items() if staff is None]
-
-		#prune unmatchable roles from schedule
-		schedule = {role: staff for role, staff in schedule.items() if staff is not None}
-
-		return schedule
 	
 	def toJSON(self):
 		scheduleJSON = []
@@ -182,3 +127,20 @@ class Schedule:
 			jsonObject['callTime'] = role.callTime.strftime('%H:%M')
 			scheduleJSON.append(jsonObject)
 		return scheduleJSON
+	
+	def StaffIsAvailableFor_Day(self, Staff1, Role2):
+		"""
+		The function we use to create a graph representing which Roles a Staff is 'open to swap with'
+		'open for' is True when Staff1 is not yet scheduled on Role2's day.
+		"""
+		allDays = {day for day in Weekdays}
+		staffWorkingDays = {role.day for role, staff in self.schedule.items() if staff.name == Staff1.name} #using staff.name as unique ID for now.
+		possibleSwapDays = allDays - staffWorkingDays
+
+		staffAlreadyWorksRole = False #this section allows for including the role Staff1 is currently assinged in the return value
+		for role, staff in self.schedule.items():
+			if staff is Staff1 and role is Role2:
+				staffAlreadyWorksRole = True
+				break
+
+		return (Role2.day in possibleSwapDays or staffAlreadyWorksRole) and Staff1.isAvailable(Role2)
