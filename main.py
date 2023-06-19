@@ -9,7 +9,10 @@ import repairFunctions
 
 logger = logging.getLogger(__name__)
 
-def createSchedule(roleCollection, staffCollection):   
+def createSchedule(roleCollection, staffCollection):
+    staffCollection = duplicateStaff(staffCollection) # This could be done on the appscript end?
+    #when things get settled, maybe move this funcationality over there.
+  
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
     #Would really like to have a consistant syntax where Role, Staff, and Schedule variables are capitalized 
     #When representing a direct Role, Staff, and Schedule object.
@@ -27,6 +30,9 @@ def createSchedule(roleCollection, staffCollection):
     
     return schedule
 
+def initializeSchedule(roleCollection, staffCollection):
+    return Schedule(roleCollection, staffCollection)
+
 def startingSchedule(schedule):
     """
     Create a starting schedule by matching Roles with Staff based on availability
@@ -38,16 +44,13 @@ def startingSchedule(schedule):
     starting value for Schedule.schedule
     """
 
-    staffCollection = duplicateStaff(schedule.staff) # This could be done on the appscript end?
-    #when things get settled, maybe move this funcationality over there.
-
     Graph = nx.Graph()
     Graph.add_nodes_from(schedule.roles, bipartite=0)
-    Graph.add_nodes_from(staffCollection, bipartite=1) #TODO: referenced at line 81 (how to reference within VSCode?)  
+    Graph.add_nodes_from(schedule.staff, bipartite=1) #TODO: referenced at line 81 (how to reference within VSCode?)  
     left,right = nx.bipartite.sets(Graph) # debugging
 
     availabilityEdges = []  
-    for staff in staffCollection:
+    for staff in schedule.staff:
         for role in schedule.roles:
             if staff.isAvailable(role):
                 availabilityEdges.append((role, staff))
@@ -56,15 +59,15 @@ def startingSchedule(schedule):
 
     availabilityMatches = bipartite.maximum_matching(Graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
     #TODO:
-    # set top nodes
+    # set role nodes as top nodes
+    # save 'top node' matches as startingSchedule
     # identify unmatched roles
     # Schedule.unassigned = unmatchedRoles
-    # save 'top node' matches as startingSchedule
 
     startingSchedule = {Role: Staff for Role, Staff in roleMatches.items() if Staff is not None} #strip unmatched roles
     unassignedRoles = {Role for Role, Staff in roleMatches.items() if Staff is None}
     
-    ScheduleObject.unassigned = unassignedRoles # Having access to unassigned Roles seems important
+    schedule.unassigned = unassignedRoles # Having access to unassigned Roles seems important
 
     return startingSchedule # from this point on, we can work with the Schedule object directly.
 
@@ -87,7 +90,7 @@ def startingSchedule(schedule):
         # while practically I don't yet know how to set that up with the matching algorithm, and I don't know how important it is.
         # So- for now Schedule.staff = the duplicated list of the Staff collection?
     # Schedule.schedule is a dictionary which holds {Role: Staff} pairs.
-     
+    
 
 def duplicateStaff(staffCollection):
     '''
