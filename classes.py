@@ -1,4 +1,5 @@
 from enum import Enum
+from graphFunctions import availabilityMatching
 
 import logging
 logger = logging.getLogger(__name__)
@@ -116,6 +117,22 @@ class Schedule:
 	def __init__(self, roles, staff):
 		self.roles = roles
 		self.staff = staff
+		self.schedule = self.startingSchedule()
+		self.unassigned = [Role for Role in self.roles if Role not in self.schedule]
+	
+	def startingSchedule(self):
+		"""
+		Create a starting schedule by matching Roles with Staff based on availability
+		"""
+		availabilityMatching = availabilityMatching(self.roles, self.staff)
+
+		logger.log(f'scheduleView')
+		#TODO: scheduleView function to call whenever I'd like to see the current schedule
+		
+		return {Role: Staff for Role, Staff in availabilityMatching.items() if Role in self.roles} # get half of the matching dictionary
+		#This is what I like and is 'readable' to me, these single return statements at the end of functions
+		# with a log statement capturing whatever the thing this function has done.
+		#Is this reasonable to follow?
 	
 	def toJSON(self):
 		scheduleJSON = []
