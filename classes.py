@@ -124,15 +124,18 @@ class Schedule:
 		"""
 		Create a starting schedule by matching Roles with Staff based on availability
 		"""
-		availabilityMatching = availabilityMatching(self.roles, self.staff)
+		matching = availabilityMatching(self.roles, self.staff) # returns complete matching 'left' and 'right'
 
-		logger.log(f'scheduleView')
-		#TODO: scheduleView function to call whenever I'd like to see the current schedule
-		
-		return {Role: Staff for Role, Staff in availabilityMatching.items() if Role in self.roles} # get half of the matching dictionary
+		return {Role: Staff for Role, Staff in matching.items() if Role in self.roles} # get half of the matching dictionary
+	
 		#This is what I like and is 'readable' to me, these single return statements at the end of functions
 		# with a log statement capturing whatever the thing this function has done.
 		#Is this reasonable to follow?
+
+	def logSchedule(self):
+		for weekday in Weekdays:
+			logger.info([(role, staff) for role, staff in self.schedule.items() if role.day == weekday])
+
 	
 	def toJSON(self):
 		scheduleJSON = []

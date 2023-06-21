@@ -9,9 +9,10 @@ import repairFunctions
 logger = logging.getLogger(__name__)
 
 def createSchedule(roleCollection, staffCollection):
-    staffCollection = duplicateStaff(staffCollection) # This seems out of place here. Could be done on the appscript end?
+    staffCollection = duplicateStaff(staffCollection) # This seems out of place. Could be done on the appscript end?
   
-    Schedule = classes.Schedule(roles=roleCollection, staff=staffCollection) # creates a 'bare' Schedule object 
+    Schedule = classes.Schedule(roles=roleCollection, staff=staffCollection)
+    Schedule.logSchedule()
 
     #now that a 'filled out' Schedule object exists and we can work with it directly.
     repairFunctions.repairDoubles(Schedule)
