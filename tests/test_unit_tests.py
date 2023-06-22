@@ -1,4 +1,4 @@
-from classes import Weekdays, Role, Staff
+from Weekdays import Weekdays, Role, Staff
 
 class Test_isScheduled:
 

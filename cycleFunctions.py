@@ -1,5 +1,5 @@
 import logging
-from classes import Weekdays
+from Weekdays import Weekdays
 
 logger = logging.getLogger(__name__)
 

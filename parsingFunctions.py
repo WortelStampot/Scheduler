@@ -1,6 +1,6 @@
 import datetime
 import logging
-from classes import Weekdays
+from Weekdays import Weekdays
 from Role import Role
 from Staff import Staff
 logger = logging.getLogger(__name__)

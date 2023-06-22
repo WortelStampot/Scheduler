@@ -1,5 +1,5 @@
 import logging
-from classes import Weekdays
+from Weekdays import Weekdays
 from graphFunctions import availabilityMatching
 
 logger = logging.getLogger(__name__)
