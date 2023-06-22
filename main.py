@@ -5,19 +5,20 @@ import networkx as nx
 from networkx.algorithms import bipartite
 import copy
 import repairFunctions
+from Schedule import Schedule
 
 logger = logging.getLogger(__name__)
 
 def createSchedule(roleCollection, staffCollection):
     staffCollection = duplicateStaff(staffCollection) # This seems out of place. Could be done on the appscript end?
   
-    Schedule = classes.Schedule(roles=roleCollection, staff=staffCollection)
-    Schedule.logSchedule()
+    schedule = Schedule(roles=roleCollection, staff=staffCollection)
+    schedule.logSchedule()
 
     #now that a 'filled out' Schedule object exists and we can work with it directly.
-    repairFunctions.repairDoubles(Schedule)
+    repairFunctions.repairDoubles(schedule)
     
-    return Schedule
+    return schedule
 
 def duplicateStaff(staffCollection):
     '''
