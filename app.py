@@ -2,9 +2,6 @@ from flask import Flask
 from flask import request
 import parsingFunctions
 import main
-import json
-
-from Weekdays import Weekdays
 import logging
 #logger config, timestamp and message
 logging.basicConfig(filename='activity.log', filemode='w', level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s', datefmt='%H:%M:%S')

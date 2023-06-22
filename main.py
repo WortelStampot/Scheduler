@@ -1,8 +1,4 @@
-import random
 import logging
-import Weekdays
-import networkx as nx
-from networkx.algorithms import bipartite
 import copy
 import repairFunctions
 from Schedule import Schedule
