@@ -1,6 +1,7 @@
 import logging
 import random
 import cycleFunctions
+import graphFunctions
 logger =  logging.getLogger(__name__)
 
 def repairDoubles(Schedule):
@@ -20,19 +21,18 @@ def repairDouble(Schedule, doubleRole):
     staff = Schedule.schedule[doubleRole]
     logger.info(f"Double role to repair: {doubleRole}, {staff}")
 
-    #log staff schedule
+    #log staff schedule and avai
     logger.debug(f'{staff} Schedule:')
-    shifts = staff.scheduleView(Schedule.schedule)
-    for shift in shifts:
+    for shift in staff.scheduleView(Schedule.schedule):
         logger.debug(f'{shift}')
     #log staff availability
     for day, avail in staff.availability.items():
         logger.debug(f'{day.name, avail}')
 
-    try: #creating the doubles graph when it doesn't yet exist
+    try:
         Schedule.graph
     except AttributeError:
-        Schedule.graph = {role1: {role2: cycleFunctions.StaffIsAvailableFor_Day(Schedule,staff1,role2) for role2 in Schedule.schedule} for role1, staff1 in Schedule.schedule.items()}
+        Schedule.graph = {role1: {role2: graphFunctions.StaffIsAvailableFor_Day(Schedule,staff1,role2) for role2 in Schedule.schedule} for role1, staff1 in Schedule.schedule.items()}
 
     MAX_LENGTH = 6 #reasonablly setting a limit of the cycles we're willing to search for within the graph.
     for length in range(2,MAX_LENGTH):

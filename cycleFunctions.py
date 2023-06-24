@@ -1,5 +1,5 @@
 import logging
-from Weekdays import Weekdays
+import graphFunctions
 
 logger = logging.getLogger(__name__)
 
@@ -99,22 +99,4 @@ def swap(Schedule, role1, role2):
     Schedule.schedule[role2], Schedule.schedule[role1] = Schedule.schedule[role1], Schedule.schedule[role2]
 
     #update the graph to reflect the swap. 
-    Schedule.graph = {role1: {role2: StaffIsAvailableFor_Day(Schedule, staff1,role2) for role2 in Schedule.schedule} for role1, staff1 in Schedule.schedule.items()}
-
-
-def StaffIsAvailableFor_Day(Schedule, Staff1, Role2):
-    """
-    The function we use to create a graph representing which Roles a Staff is 'open to swap with'
-    'open for' is True when Staff1 is not yet scheduled on Role2's day.
-    """
-    allDays = {day for day in Weekdays}
-    staffWorkingDays = {role.day for role, staff in Schedule.schedule.items() if staff.name == Staff1.name} #using staff.name as unique ID for now.
-    possibleSwapDays = allDays - staffWorkingDays
-
-    staffAlreadyWorksRole = False #this section allows for including the role Staff1 is currently assinged in the return value
-    for role, staff in Schedule.schedule.items():
-        if staff is Staff1 and role is Role2:
-            staffAlreadyWorksRole = True
-            break
-
-    return (Role2.day in possibleSwapDays or staffAlreadyWorksRole) and Staff1.isAvailable(Role2)
+    Schedule.graph = {role1: {role2: graphFunctions.StaffIsAvailableFor_Day(Schedule, staff1,role2) for role2 in Schedule.schedule} for role1, staff1 in Schedule.schedule.items()}
