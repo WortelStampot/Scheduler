@@ -5,7 +5,6 @@ logger =  logging.getLogger(__name__)
 
 def repairDoubles(Schedule):
     doubles = identifyDoubles(Schedule)
-    Schedule.unrepairedDoubles = list() #TODO: sort this out- attaching to schedule for now
     logger.info(f"repairDoubles starting count: {len(doubles)}\n{doubles}")
 
     MAX_ATTEMPTS = 100 #it now seems unlikely for 100 attempts to be reached with ~89 Roles in a weekly roleCollection
@@ -64,7 +63,10 @@ def repairDouble(Schedule, doubleRole):
     
     #when no cycles are found within the MAX_LENGTH limit, we come here, leaving the double unrepaired
     logger.warning(f"{doubleRole},{staff} left unrepaired.")
-    Schedule.unrepairedDoubles.append(doubleRole)
+    try:
+        Schedule.unrepairedDoubles.append(doubleRole)
+    except AttributeError:
+        Schedule.unrepairedDoubles = [doubleRole]
 
 
 def identifyDoubles(Schedule):
