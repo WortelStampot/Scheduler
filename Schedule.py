@@ -20,9 +20,6 @@ class Schedule:
 
 		return {Role: Staff for Role, Staff in matching.items() if Role in self.roles} # get half of the matching dictionary
 	
-		#This is what I like and is 'readable' to me, these single return statements at the end of functions
-		# with a log statement capturing whatever the thing this function has done.
-		#Is this reasonable to follow?
 
 	def logSchedule(self):
 		for weekday in Weekdays:

@@ -9,9 +9,8 @@ def createSchedule(roleCollection, staffCollection):
     staffCollection = duplicateStaff(staffCollection) # This seems out of place. Could be done on the appscript end?
   
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
-    schedule.logSchedule()
+    schedule.logSchedule() #TODO: how to write this to logger.info(schedule.printSchedule()) here?
 
-    #now that a 'filled out' Schedule object exists and we can work with it directly.
     repairFunctions.repairDoubles(schedule)
     
     return schedule
