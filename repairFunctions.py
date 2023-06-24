@@ -7,16 +7,11 @@ def repairDoubles(Schedule):
     doubles = identifyDoubles(Schedule)
     logger.info(f"repairDoubles starting count: {len(doubles)}\n{doubles}")
 
-    MAX_ATTEMPTS = 100 #it now seems unlikely for 100 attempts to be reached with ~89 Roles in a weekly roleCollection
-    attempts = 0
-    while doubles != [] and attempts < MAX_ATTEMPTS:
+    while doubles != []:
         doubleRole = random.choice(doubles) #select a random double from the list
         repairDouble(Schedule, doubleRole) #start repair process for selected double
 
         doubles = [role for role in identifyDoubles(Schedule) if role not in Schedule.unrepairedDoubles] #recompute the list of doubles, leaving out perviously unrepaired roles.
-
-        attempts += 1
-        logger.debug(f"doubles attempts: {attempts}")
     
     endingDoubles = identifyDoubles(Schedule) #logging the number of doubles after the repairDoubles process.
     if endingDoubles != []:
