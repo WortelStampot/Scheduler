@@ -12,13 +12,8 @@ def repairDoubles(Schedule):
         repairDouble(Schedule, doubleRole)
         doubles = [role for role in identifyDoubles(Schedule) if role not in Schedule.unrepairedDoubles]
     
-    endingDoubles = identifyDoubles(Schedule) #logging the number of doubles after the repairDoubles process.
-    if endingDoubles != []:
-        logger.warning(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}\n{endingDoubles}")
-    else:
-        logger.info(f"repairDoubles complete. remaining doubles: {len(endingDoubles)}")
-        
-    print(f'repairDoubles complete. remaining doubles: {len(endingDoubles)}')
+    logger.info(f"repairDoubles complete. remaining doubles: {Schedule.unrepairedDoubles}")
+    print(f'repairDoubles complete. remaining doubles: {len(Schedule.unrepairedDoubles)}')
 
 
 def repairDouble(Schedule, doubleRole):
