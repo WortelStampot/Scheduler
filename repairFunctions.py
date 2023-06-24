@@ -8,10 +8,9 @@ def repairDoubles(Schedule):
     logger.info(f"repairDoubles starting count: {len(doubles)}\n{doubles}")
 
     while doubles != []:
-        doubleRole = random.choice(doubles) #select a random double from the list
-        repairDouble(Schedule, doubleRole) #start repair process for selected double
-
-        doubles = [role for role in identifyDoubles(Schedule) if role not in Schedule.unrepairedDoubles] #recompute the list of doubles, leaving out perviously unrepaired roles.
+        doubleRole = random.choice(doubles)
+        repairDouble(Schedule, doubleRole)
+        doubles = [role for role in identifyDoubles(Schedule) if role not in Schedule.unrepairedDoubles]
     
     endingDoubles = identifyDoubles(Schedule) #logging the number of doubles after the repairDoubles process.
     if endingDoubles != []:
@@ -58,10 +57,7 @@ def repairDouble(Schedule, doubleRole):
     
     #when no cycles are found within the MAX_LENGTH limit, we come here, leaving the double unrepaired
     logger.warning(f"{doubleRole},{staff} left unrepaired.")
-    try:
-        Schedule.unrepairedDoubles.append(doubleRole)
-    except AttributeError:
-        Schedule.unrepairedDoubles = [doubleRole]
+    Schedule.unrepairedDoubles.append(doubleRole)
 
 
 def identifyDoubles(Schedule):

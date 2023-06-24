@@ -10,7 +10,8 @@ class Schedule:
 		self.roles = roles
 		self.staff = staff
 		self.schedule = self.startingSchedule()
-		self.unassigned = [Role for Role in self.roles if Role not in self.schedule]
+		self.unassignedRoles = [Role for Role in self.roles if Role not in self.schedule]
+		self.unrepairedDoubles = []
 	
 	def startingSchedule(self):
 		"""
