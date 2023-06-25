@@ -3,7 +3,7 @@ import graphFunctions
 
 logger = logging.getLogger(__name__)
 
-def allCyclesOfLength(Schedule, startRole, length):
+def allCyclesOfLength(schedule, startRole, length):
     """
     Find all groups of roles in the schedule of size 'length' involving the 'unavailableRole'
     where the staff can be shuffled around while respecting doubles and availability.
@@ -18,16 +18,16 @@ def allCyclesOfLength(Schedule, startRole, length):
     """
     
     path = [startRole] 
-    visited = {role: False for role in Schedule.graph}
+    visited = {role: False for role in schedule.graph}
     visited[startRole] = True
 
-    return allCyclesOfLengthHelper(Schedule, length, path, visited)
+    return allCyclesOfLengthHelper(schedule, length, path, visited)
 
-def allCyclesOfLengthHelper(Schedule, length, path, visited):
+def allCyclesOfLengthHelper(schedule, length, path, visited):
     """
-    Find all paths of length 'length' in 'Schedule.graph' building off of path 
+    Find all paths of length 'length' in 'schedule.graph' building off of path 
     and ending at the start of path (which makes a cycle). 
-    Graph is an adjacency matrix. Schedule.graph[role1][role2] tells you if the staff working role1 could work role2
+    Graph is an adjacency matrix. schedule.graph[role1][role2] tells you if the staff working role1 could work role2
     Path is a list of the elements in the path so far (list[role])
     Length is an int representing how many more nodes we need to walk along in the path
     visited is a dictionary letting us know which nodes have been visited (so we don't visit them again)
@@ -36,15 +36,15 @@ def allCyclesOfLengthHelper(Schedule, length, path, visited):
     """
     cycles = []
     currentNode = path[-1]
-    staff = Schedule.schedule[currentNode] # staff variable for logging
+    staff = schedule.schedule[currentNode] # staff variable for logging
 
     if length == 1:
         startNode = path[0]
-        if Schedule.graph[currentNode][startNode]:
+        if schedule.graph[currentNode][startNode]:
             cycles.append(path)
         return cycles
     
-    unvisitedNeighbors = [role for role in visited if Schedule.graph[currentNode][role] and not visited[role]]
+    unvisitedNeighbors = [role for role in visited if schedule.graph[currentNode][role] and not visited[role]]
     #these are the roles which staff1 is 'open for' and have not yet been visited in the search for a cycle at the current length
 
     logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles\n{unvisitedNeighbors}")
@@ -54,11 +54,11 @@ def allCyclesOfLengthHelper(Schedule, length, path, visited):
         #call to mess with visited in another function call
         newVisited = {role: didVisit for role, didVisit in visited.items()}
         newVisited[neighbor] = True
-        newCycles = allCyclesOfLengthHelper(Schedule, length-1, path + [neighbor], newVisited)
+        newCycles = allCyclesOfLengthHelper(schedule, length-1, path + [neighbor], newVisited)
         cycles.extend(newCycles)
     return cycles
 
-def cycleSwap(Schedule, cycle):
+def cycleSwap(schedule, cycle):
     """
     Perform the sequence of swaps indicated by the cycle
     If cycle is [role1, role2, role3], staff working role1 gets reassigned to role2, staff working role2 gets reassigned to role3, staff working role3 gets reassigned to role1
@@ -72,21 +72,21 @@ def cycleSwap(Schedule, cycle):
     notes mentioned in that post.
     """
 
-    doubleCount = Schedule.identifyDoubles()
+    doubleCount = schedule.identifyDoubles()
     logger.debug(f'doubles before swap: {len(doubleCount), doubleCount}')
-    logger.info(f"Repairing: {cycle[0]}(staff:{Schedule.schedule[cycle[0]]}), with cycle: {[(role, Schedule.schedule[role]) for role in cycle]}")
+    logger.info(f"Repairing: {cycle[0]}(staff:{schedule.schedule[cycle[0]]}), with cycle: {[(role, schedule.schedule[role]) for role in cycle]}")
 
     for i in range(1,len(cycle)):
-        swap(Schedule, cycle[0], cycle[i])
+        swap(schedule, cycle[0], cycle[i])
 
-    doubleCount = Schedule.identifyDoubles()
+    doubleCount = schedule.identifyDoubles()
     logger.debug(f'doubles after swap: {len(doubleCount), doubleCount}')
     print(f'Doubles progress: {len(doubleCount)}')
 
     
-def swap(Schedule, role1, role2):
+def swap(schedule, role1, role2):
     #swap the staff in the schedule
-    Schedule.schedule[role2], Schedule.schedule[role1] = Schedule.schedule[role1], Schedule.schedule[role2]
+    schedule.schedule[role2], schedule.schedule[role1] = schedule.schedule[role1], schedule.schedule[role2]
 
     #update the graph to reflect the swap. 
-    Schedule.graph = graphFunctions.doublesGraph(Schedule)
+    schedule.graph = graphFunctions.doublesGraph(schedule)
