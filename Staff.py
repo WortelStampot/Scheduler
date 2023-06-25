@@ -53,7 +53,10 @@ class Staff:
 			return True
 		return False
 	
-	def scheduleView(self, schedule):
+	def shifts(self, schedule):
+		"""
+		returns a list of roles this staff is currently scheduled for
+		"""
 		shifts = []
 		for role, staff in schedule.items():
 			if staff.name == self.name:
@@ -84,3 +87,19 @@ class Staff:
 		logger.info(f'{self} daysAvailable: {daysAvailable}')
 
 		return daysAvailable
+
+	
+	def canWork(self, Role, Schedule):
+		"""
+		Used to create a graph representing which Roles a Staff is 'open to swap with'.
+		Returns True when Staff is not working on Role.day and Staff is available for Role.callTime
+		"""
+		allDays = {day for day in Weekdays}
+		daysWorking = {role.day for role in self.shifts(Schedule)} #using staff.name as unique ID for now.
+		openDays = allDays - daysWorking
+
+		staffWorksThisRole = False #take into account Staff being scheduled for this Role
+		if Role in self.shifts(Schedule):
+			staffWorksThisRole = True
+
+		return (Role.day in openDays or staffWorksThisRole) and self.isAvailable(Role)
