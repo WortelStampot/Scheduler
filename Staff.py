@@ -55,10 +55,13 @@ class Staff:
 	
 	def shifts(self, schedule):
 		"""
+		input: self, schedule object
+
 		returns a list of roles this staff is currently scheduled for
+		NOTE: a scheduled role is found from the schedule using staff.name
 		"""
 		shifts = []
-		for role, staff in schedule.items():
+		for role, staff in schedule.schedule.items():
 			if staff.name == self.name:
 				shifts.append(role)
 		shifts.sort(key=lambda role: role.day.value)
@@ -66,6 +69,12 @@ class Staff:
 
 
 	def shiftsRemaining(self, schedule):
+		"""
+		input: self, schedule object
+
+		returns number of shifts remaining based on this staff's maxShifts value
+		NOTE: a matching shift is found from the schedule using staff.name 
+		"""
 		shiftCount = 0
 		for role, staff in schedule.items():
 			if staff != None:
@@ -89,17 +98,19 @@ class Staff:
 		return daysAvailable
 
 	
-	def canWork(self, Role, Schedule):
+	def canWork(self, role, schedule):
 		"""
+		input: self, role object, scheudule object
+		
 		Used to create a graph representing which Roles a Staff is 'open to swap with'.
 		Returns True when Staff is not working on Role.day and Staff is available for Role.callTime
 		"""
 		allDays = {day for day in Weekdays}
-		daysWorking = {role.day for role in self.shifts(Schedule)} #using staff.name as unique ID for now.
+		daysWorking = {role.day for role in self.shifts(schedule)}
 		openDays = allDays - daysWorking
 
 		staffWorksThisRole = False #take into account Staff being scheduled for this Role
-		if Role in self.shifts(Schedule):
+		if role in self.shifts(schedule):
 			staffWorksThisRole = True
 
-		return (Role.day in openDays or staffWorksThisRole) and self.isAvailable(Role)
+		return (role.day in openDays or staffWorksThisRole) and self.isAvailable(role)
