@@ -1,6 +1,7 @@
 import logging
 from Weekdays import Weekdays
 from graphFunctions import availabilityMatching
+import copy
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,10 @@ class Schedule:
 		"""
 		Create a starting schedule by matching Roles with Staff based on availability
 		"""
-		matching = availabilityMatching(self.roles, self.staff) # returns complete matching 'left' and 'right'
+		staffCollection = duplicateStaff(self.staff) #This still seems out of place here.
+		#At least leaves schedule.staff as a unique list of staff objects outside of this function
+
+		matching = availabilityMatching(self.roles, staffCollection) # returns complete matching 'left' and 'right'
 
 		return {Role: Staff for Role, Staff in matching.items() if Role in self.roles} # get half of the matching dictionary
 	
@@ -52,3 +56,16 @@ class Schedule:
 			jsonObject['callTime'] = role.callTime.strftime('%H:%M')
 			scheduleJSON.append(jsonObject)
 		return scheduleJSON
+
+def duplicateStaff(staffCollection):
+    '''
+    duplicate Staff by the number of shifts they are available to work
+    '''
+    staffByShifts = []
+    for Staff in staffCollection:
+        shiftsRemaining = min(Staff.maxShifts, Staff.daysAvailable())
+        for shiftCount in range(shiftsRemaining):
+            staffByShifts.append(copy.deepcopy(Staff))
+        logger.debug(f'{Staff} duplicated by: {shiftCount}')
+
+    return staffByShifts
