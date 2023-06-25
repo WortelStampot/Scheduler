@@ -10,12 +10,12 @@ class Staff:
 		self.rolePreference = rolePreference
 		self.doubles = doubles
 		
-
 	def __repr__(self):
 		return "{self.__class__.__name__}({self.name})".format(self=self)
 
 	def __str__(self):
 		return f"{self.name}"
+
 
 	def isAvailable(self, role):
 		""""check role callTime is in staff availablity"""
@@ -24,35 +24,6 @@ class Staff:
 			return False
 		return True
 
-	def isQualified(self, role):
-		if self.name not in role.qualifiedStaff:
-			return False
-		return True
-	
-	def hasPreference(self, role):
-		if role.name not in self.rolePreference:
-			return False
-		return True
-
-	def isScheduled(self, role, schedule):
-		for pair in schedule:
-			if pair[0].day == role.day and pair[1] == self:
-				logging.info(f'{self.name} already scheduled for {pair[0]}')
-				return True
-		return False
-	
-	def isOpenFor(self, role2, schedule):
-		daysWorking = set()
-		alldays = set(day for day in Weekdays)
-		for role in schedule:
-			if schedule[role] == self:
-				daysWorking.add((role.day))
-		openDays = alldays - daysWorking
-
-		if role2.day in openDays and self.isAvailable(role2):
-			return True
-		return False
-	
 	def shifts(self, schedule):
 		"""
 		input: self, schedule object
@@ -67,7 +38,6 @@ class Staff:
 		shifts.sort(key=lambda role: role.day.value)
 		return shifts
 
-
 	def shiftsRemaining(self, schedule):
 		"""
 		input: self, schedule object
@@ -76,7 +46,7 @@ class Staff:
 		NOTE: a matching shift is found from the schedule using staff.name 
 		"""
 		shiftCount = 0
-		for role, staff in schedule.items():
+		for role, staff in schedule.schedule.items():
 			if staff != None:
 				if staff.name == self.name:
 					shiftCount += 1
@@ -96,12 +66,11 @@ class Staff:
 		logger.info(f'{self} daysAvailable: {daysAvailable}')
 
 		return daysAvailable
-
 	
-	def canWork(self, role, schedule):
+	def isOpenFor(self, role, schedule):
 		"""
 		input: self, role object, scheudule object
-		
+
 		Used to create a graph representing which Roles a Staff is 'open to swap with'.
 		Returns True when Staff is not working on Role.day and Staff is available for Role.callTime
 		"""
