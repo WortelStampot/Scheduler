@@ -1,4 +1,6 @@
 from Weekdays import Weekdays
+from Role import Role
+from Schedule import Schedule
 import logging
 logger = logging.getLogger(__name__)
 
@@ -17,17 +19,15 @@ class Staff:
 		return f"{self.name}"
 
 
-	def isAvailable(self, role):
+	def isAvailable(self, role: Role):
 		""""check role callTime is in staff availablity"""
 		dayAvailability = self.availability[role.day]
 		if role.callTime not in dayAvailability:
 			return False
 		return True
 
-	def shifts(self, schedule):
+	def shifts(self, schedule: Schedule):
 		"""
-		input: self, schedule object
-
 		returns a list of roles this staff is currently scheduled for
 		NOTE: a scheduled role is found from the schedule using staff.name
 		"""
@@ -38,10 +38,8 @@ class Staff:
 		shifts.sort(key=lambda role: role.day.value)
 		return shifts
 
-	def shiftsRemaining(self, schedule):
+	def shiftsRemaining(self, schedule: Schedule):
 		"""
-		input: self, schedule object
-
 		returns number of shifts remaining based on this staff's maxShifts value
 		NOTE: a matching shift is found from the schedule using staff.name 
 		"""
@@ -68,11 +66,8 @@ class Staff:
 		return daysAvailable
 	
 	#QUESTION: Does this look correct? I reversed the logic.
-	def isOpenFor(self, role, schedule):
+	def isOpenFor(self, role: Role, schedule: Schedule):
 		"""
-		input: self, role object, scheudule object
-		#TODO: enforce argument object types
-
 		Used to create a graph representing which Roles a Staff is 'open to swap with'.
 		Returns True when Staff is not working on Role.day and Staff is available for Role.callTime
 		"""
