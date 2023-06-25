@@ -21,20 +21,20 @@ def repairDouble(Schedule, doubleRole):
     staff = Schedule.schedule[doubleRole]
     logger.info(f"Double role to repair: {doubleRole}, {staff}")
 
-    #log staff schedule and avai
+    #DEBUG - log staff schedule and availability
     logger.debug(f'{staff} Schedule:')
     for shift in staff.scheduleView(Schedule.schedule):
         logger.debug(f'{shift}')
-    #log staff availability
     for day, avail in staff.availability.items():
         logger.debug(f'{day.name, avail}')
 
     try:
         Schedule.graph
     except AttributeError:
-        Schedule.graph = {role1: {role2: graphFunctions.StaffIsAvailableFor_Day(Schedule,staff1,role2) for role2 in Schedule.schedule} for role1, staff1 in Schedule.schedule.items()}
-
-    MAX_LENGTH = 6 #reasonablly setting a limit of the cycles we're willing to search for within the graph.
+        Schedule.graph = graphFunctions.doublesGraph(Schedule)
+        
+    #This is really where the function starts...
+    MAX_LENGTH = 6 #greater than 6 starts to take longer. TODO: list time in seconds for reference.
     for length in range(2,MAX_LENGTH):
         logger.info(f"finding all cycles of length: {length}")
         allCycles = cycleFunctions.allCyclesOfLength(Schedule, doubleRole, length)
