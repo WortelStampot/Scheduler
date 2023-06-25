@@ -1,0 +1,6 @@
+Arranging Branch:
+classes split into their own files
+functions split into related files
+
+There are now bug within the repairDoubles cycle
+Fix before merging into main
