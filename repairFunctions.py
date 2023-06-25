@@ -39,15 +39,15 @@ def repairDouble(Schedule, doubleRole):
         logger.info(f"finding all cycles of length: {length}")
         allCycles = cycleFunctions.allCyclesOfLength(Schedule, doubleRole, length)
 
-        if allCycles == []: # when no cycles found, increment length and do a deeper search.
+        if allCycles == []:
             logger.warning(f"no cycles for length:{length}")
             length += 1
             continue
-        logger.debug(f"cycles found: {allCycles}") #show cycles found
-        cycle = random.choice(allCycles) # select a random cycle from the list
-        logger.info(f'selected cycle: {cycle}') #show selected cycle
+        logger.debug(f"cycles found: {allCycles}")
+        cycle = random.choice(allCycles)
+        logger.info(f'selected cycle: {cycle}')
 
-        cycleFunctions.cycleSwap(Schedule, cycle) #swap the staff within the cycle
+        cycleFunctions.cycleSwap(Schedule, cycle)
         return
     
     #when no cycles are found within the MAX_LENGTH limit, we come here, leaving the double unrepaired
