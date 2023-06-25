@@ -67,9 +67,11 @@ class Staff:
 
 		return daysAvailable
 	
+	#QUESTION: Does this look correct? I reversed the logic.
 	def isOpenFor(self, role, schedule):
 		"""
 		input: self, role object, scheudule object
+		#TODO: enforce argument object types
 
 		Used to create a graph representing which Roles a Staff is 'open to swap with'.
 		Returns True when Staff is not working on Role.day and Staff is available for Role.callTime
@@ -78,8 +80,8 @@ class Staff:
 		daysWorking = {role.day for role in self.shifts(schedule)}
 		openDays = allDays - daysWorking
 
-		staffWorksThisRole = False #take into account Staff being scheduled for this Role
+		staffDoesNotWorkThisRole = True #take into account staff being scheduled for this role
 		if role in self.shifts(schedule):
-			staffWorksThisRole = True
+			staffDoesNotWorkThisRole = False
 
-		return (role.day in openDays or staffWorksThisRole) and self.isAvailable(role)
+		return (role.day in openDays and staffDoesNotWorkThisRole) and self.isAvailable(role)
