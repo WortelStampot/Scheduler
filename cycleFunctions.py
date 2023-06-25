@@ -93,4 +93,4 @@ def swap(Schedule, role1, role2):
     Schedule.schedule[role2], Schedule.schedule[role1] = Schedule.schedule[role1], Schedule.schedule[role2]
 
     #update the graph to reflect the swap. 
-    Schedule.graph = {role1: {role2: graphFunctions.StaffIsAvailableFor_Day(Schedule, staff1,role2) for role2 in Schedule.schedule} for role1, staff1 in Schedule.schedule.items()}
+    Schedule.graph = graphFunctions.doublesGraph(Schedule)
