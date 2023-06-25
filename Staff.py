@@ -19,7 +19,7 @@ class Staff:
 		return f"{self.name}"
 
 
-	def isAvailable(self, role: Role):
+	def isAvailable(self, role: 'Role'):
 		""""check role callTime is in staff availablity"""
 		dayAvailability = self.availability[role.day]
 		if role.callTime not in dayAvailability:
