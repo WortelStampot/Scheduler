@@ -16,13 +16,7 @@ def allCyclesOfLength(Schedule, startRole, length):
 
     Return list[list of roles in the schedule forming the cycle]
     """
-
-    """
-    graph is an adjacency matrix, it describes which role-staff pairs are connected to other role-staff pairs
-    graph is an dict of dicts, it's structured so that Schedule.graph[role1][role2] tells you if the staff
-    working role1 could work role2. If that's true, then staff1 could be reassigned to role2 without breaking
-    doubles/availability.
-    """
+    
     path = [startRole] #establish the starting point to search from
     visited = {role: False for role in Schedule.graph} # 'a dictionary letting us know which nodes have been visited (so we don't visit them again)'
     visited[startRole] = True #setting the starting Role of path as visited
