@@ -23,7 +23,7 @@ def repairDouble(Schedule, doubleRole):
 
     #DEBUG - log staff schedule and availability
     logger.debug(f'{staff} Schedule:')
-    for shift in staff.scheduleView(Schedule.schedule):
+    for shift in staff.shifts(Schedule):
         logger.debug(f'{shift}')
     for day, avail in staff.availability.items():
         logger.debug(f'{day.name, avail}')
