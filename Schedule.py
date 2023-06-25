@@ -26,6 +26,21 @@ class Schedule:
 		for weekday in Weekdays:
 			logger.info([(role, staff) for role, staff in self.schedule.items() if role.day == weekday])
 
+	def identifyDoubles(self):
+		"""
+		return list of roles where the assigned staff is already worked that weekday
+		"""
+		doubles = []
+		staffDays = set()
+		for role, staff in self.schedule.items():
+			day = role.day
+			staffDay = (staff.name, day)
+
+			if staffDay in staffDays:
+				doubles.append(role)
+			else:
+				staffDays.add(staffDay)
+		return doubles
 	
 	def toJSON(self):
 		scheduleJSON = []

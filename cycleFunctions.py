@@ -17,9 +17,9 @@ def allCyclesOfLength(Schedule, startRole, length):
     Return list[list of roles in the schedule forming the cycle]
     """
     
-    path = [startRole] #establish the starting point to search from
-    visited = {role: False for role in Schedule.graph} # 'a dictionary letting us know which nodes have been visited (so we don't visit them again)'
-    visited[startRole] = True #setting the starting Role of path as visited
+    path = [startRole] 
+    visited = {role: False for role in Schedule.graph}
+    visited[startRole] = True
 
     return allCyclesOfLengthHelper(Schedule, length, path, visited)
 
@@ -71,23 +71,19 @@ def cycleSwap(Schedule, cycle):
     For more info you can look up "decomposing cycles as a product of transpositions" or take a look at the lecture
     notes mentioned in that post.
     """
-    '''
-    doubleCount = identifyDoubles()
+
+    doubleCount = Schedule.identifyDoubles()
     logger.debug(f'doubles before swap: {len(doubleCount), doubleCount}')
     logger.info(f"Repairing: {cycle[0]}(staff:{Schedule.schedule[cycle[0]]}), with cycle: {[(role, Schedule.schedule[role]) for role in cycle]}")
-    '''
-    #Commenting logging out- this is what arranging is for
 
     for i in range(1,len(cycle)):
         swap(Schedule, cycle[0], cycle[i])
 
-    '''
-    doubleCount = identifyDoubles()
+    doubleCount = Schedule.identifyDoubles()
     logger.debug(f'doubles after swap: {len(doubleCount), doubleCount}')
     print(f'Doubles progress: {len(doubleCount)}')
-    '''
-    
 
+    
 def swap(Schedule, role1, role2):
     #swap the staff in the schedule
     Schedule.schedule[role2], Schedule.schedule[role1] = Schedule.schedule[role1], Schedule.schedule[role2]

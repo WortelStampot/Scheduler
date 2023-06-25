@@ -5,13 +5,13 @@ import graphFunctions
 logger =  logging.getLogger(__name__)
 
 def repairDoubles(Schedule):
-    doubles = identifyDoubles(Schedule)
+    doubles = Schedule.identifyDoubles()
     logger.info(f"repairDoubles starting count: {len(doubles)}\n{doubles}")
 
     while doubles != []:
         doubleRole = random.choice(doubles)
         repairDouble(Schedule, doubleRole)
-        doubles = [role for role in identifyDoubles(Schedule) if role not in Schedule.unrepairedDoubles]
+        doubles = [role for role in Schedule.identifyDoubles() if role not in Schedule.unrepairedDoubles]
     
     logger.info(f"repairDoubles complete. remaining doubles: {Schedule.unrepairedDoubles}")
     print(f'repairDoubles complete. remaining doubles: {len(Schedule.unrepairedDoubles)}')
@@ -53,22 +53,3 @@ def repairDouble(Schedule, doubleRole):
     #when no cycles are found within the MAX_LENGTH limit, we come here, leaving the double unrepaired
     logger.warning(f"{doubleRole},{staff} left unrepaired.")
     Schedule.unrepairedDoubles.append(doubleRole)
-
-
-def identifyDoubles(Schedule):
-    """
-    return list of roles that need to be reassigned to avoid doubles
-    """
-    
-    #if staff has already worked that day, then it's a double
-    doubles = []
-    staffDays = set() #set of staff day pairs
-    for role, staff in Schedule.schedule.items():
-        day = role.day
-        staffDay = (staff.name, day)
-
-        if staffDay in staffDays:
-            doubles.append(role)
-        else:
-            staffDays.add(staffDay)
-    return doubles
