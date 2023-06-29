@@ -20,6 +20,7 @@ class Schedule:
 		"""
 		staffCollection = duplicateStaff(self.staff) #This still seems out of place here.
 		#At least leaves schedule.staff as a unique list of staff objects outside of this function
+		#Reason: matching algorithm requires a unique set of staff.
 
 		matching = availabilityMatching(self.roles, staffCollection) # returns complete matching 'left' and 'right'
 
