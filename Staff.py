@@ -64,8 +64,7 @@ class Staff:
 		logger.info(f'{self} daysAvailable: {daysAvailable}')
 
 		return daysAvailable
-	
-	#QUESTION: Does this look correct? I reversed the logic.
+
 	def isOpenFor(self, role: Role, schedule: Schedule):
 		"""
 		Used to create a graph representing which Roles a Staff is 'open to swap with'.

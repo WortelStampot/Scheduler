@@ -19,9 +19,6 @@ def availabilityMatching(roleCollection, staffCollection):
 
 def doublesGraph(schedule):
     """
-    input: schedule object
-    #TODO: schedule: Any => enforce schedule object.
-
     graph is an adjacency matrix, it describes which role-staff pairs are connected to other role-staff pairs
     graph is an dict of dicts, it's structured so that Schedule.graph[role1][role2] tells you if the staff
     working role1 could work role2. When that's true, staff1 can be reassigned to role2 without breaking

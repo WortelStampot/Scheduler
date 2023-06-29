@@ -34,7 +34,7 @@ def repairDouble(schedule, doubleRole):
         schedule.graph = graphFunctions.doublesGraph(schedule)
         
     #This is really where the function starts...
-    MAX_LENGTH = 6 #greater than 6 starts to take longer. TODO: list time in seconds for reference.
+    MAX_LENGTH = 6 #greater than 6 starts to take longer.
     for length in range(2,MAX_LENGTH):
         logger.info(f"finding all cycles of length: {length}")
         allCycles = cycleFunctions.allCyclesOfLength(schedule, doubleRole, length)

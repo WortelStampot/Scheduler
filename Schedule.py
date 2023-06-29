@@ -18,9 +18,8 @@ class Schedule:
 		"""
 		Create a starting schedule by matching Roles with Staff based on availability
 		"""
-		staffCollection = duplicateStaff(self.staff) #This still seems out of place here.
-		#At least leaves schedule.staff as a unique list of staff objects outside of this function
-		#Reason: matching algorithm requires a unique set of staff.
+		staffCollection = duplicateStaff(self.staff) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
+		#duplicating here leaves schedule.staff as a list of individual staff objects outside of this function
 
 		matching = availabilityMatching(self.roles, staffCollection) # returns complete matching 'left' and 'right'
 
