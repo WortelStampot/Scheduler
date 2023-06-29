@@ -1,5 +1,4 @@
 import networkx as nx
-from Weekdays import Weekdays
 
 def availabilityMatching(roleCollection, staffCollection):
     Graph = nx.Graph()
