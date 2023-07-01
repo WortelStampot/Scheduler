@@ -11,3 +11,10 @@ class Role:
 
 	def __str__(self):
 		return f"{self.name},{self.day.name}"
+	
+	def toJSON (self):
+		return {
+			"name": self.name,
+			"day": self.day.name,
+			"callTime": self.callTime.strftime('%H:%M')
+		}
