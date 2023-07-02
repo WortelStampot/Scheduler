@@ -32,6 +32,12 @@ with open(ROLE_STAFF_FILE_NAME) as payload:
 
     """Test for 0 doubles in schedule"""
     assert len(schedule.identifyDoubles()) == 0
+    print('doubles check: pass')
+
+    """Test for each staff paired with a role they are available for"""
+    for role, staff in schedule.schedule.items():
+        assert staff.isAvailable(role)
+    print('availabiliy check: pass')
 
 
 
