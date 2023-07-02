@@ -8,11 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class Schedule:
-	def __init__(self, roles, staff):
+	def __init__(self, roles, staff, schedule=None):
 		self.roles = roles
 		self.staff = staff
-		self.schedule = self.startingSchedule()
-		self.unassignedRoles = [Role for Role in self.roles if Role not in self.schedule]
+		self.schedule = schedule
 		self.unrepairedDoubles = []
 	
 	def startingSchedule(self):

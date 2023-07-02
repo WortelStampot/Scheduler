@@ -19,6 +19,7 @@ with open(ROLE_STAFF_FILE_NAME) as payload:
         role = parsingFunctions.parseRole(pair[0])
         staff = parsingFunctions.parseStaff(pair[1])
         schedule[role] = staff #this represents a schedule. How to have this be an instance of Schedule?
+        #move startSchedule out of __init__
     
 
     """test main.createSchedule returns a Schedule object"""
