@@ -2,6 +2,7 @@ import logging
 from Weekdays import Weekdays
 from graphFunctions import availabilityMatching
 import copy
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -47,15 +48,11 @@ class Schedule:
 		return doubles
 	
 	def toJSON(self):
-		scheduleJSON = []
-		for role, staff in self.schedule.items():
-			jsonObject = {}
-			jsonObject['name'] = role.name
-			jsonObject['staff'] = staff.name
-			jsonObject['day'] = role.day.name
-			jsonObject['callTime'] = role.callTime.strftime('%H:%M')
-			scheduleJSON.append(jsonObject)
-		return scheduleJSON
+		"""
+		return a list of jsonify'd (Role, Staff) pairs
+		"""
+		return [ (role.toJSON(), staff.toJSON()) for role, staff in self.schedule.items() ]
+	
 
 def duplicateStaff(staffCollection):
     '''

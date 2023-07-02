@@ -77,3 +77,20 @@ class Staff:
 			staffDoesNotWorkThisRole = False
 
 		return (role.day in openDays and staffDoesNotWorkThisRole) and self.isAvailable(role)
+	
+	def toJSON(self):
+		return {
+			"name": self.name,
+			"maxShifts": self.maxShifts,
+			"availability": availabilityToJSON(self.availability)
+		}
+
+def availabilityToJSON(availability):
+	jsonAvailability = {}
+	for day, callTimes in availability.items():
+		callTimeList = []
+		for callTime in callTimes:
+			callTimeList.append(callTime.strftime('%H:%M'))
+		jsonAvailability[day.name] = callTimeList
+	return jsonAvailability
+		
