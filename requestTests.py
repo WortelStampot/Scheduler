@@ -1,5 +1,6 @@
 import requests # using requests post to localhost.
 import parsingFunctions
+from Schedule import Schedule
 # this means flask needs to be running: flask --debug run
 # TODO https://flask.palletsprojects.com/en/2.3.x/testing/
 
@@ -14,12 +15,29 @@ with open(ROLE_STAFF_FILE_NAME) as payload:
 
     """Setup to get the schedule into a dictionary {Role: Staff} format"""
     scheduleJSON = response.json()
-    schedule = {}
+    roleList = []
+    staffList = []
+    pairedSchedule = {}
     for pair in scheduleJSON:
         role = parsingFunctions.parseRole(pair[0])
+        roleList.append(role)
         staff = parsingFunctions.parseStaff(pair[1])
-        schedule[role] = staff #this represents a schedule. How to have this be an instance of Schedule?
-        #move startSchedule out of __init__
+        staffList.append(staff)
+        pairedSchedule[role] = staff
+
+    schedule = Schedule(roles=roleList, staff=staffList)
+    schedule.schedule = pairedSchedule
+
+    """Testing begins"""
+
+    """Test for 0 doubles in schedule"""
+    assert len(schedule.identifyDoubles()) == 0
+
+
+
+
+
+    
     
 
     """test main.createSchedule returns a Schedule object"""
@@ -31,7 +49,6 @@ with open(ROLE_STAFF_FILE_NAME) as payload:
 
 #Tests for:
 # createSchedule returns a Schedule object
-# the returned schedule contains 0 doubles
 # each staff is paired with roles they are available for
 
 #Other tests:
