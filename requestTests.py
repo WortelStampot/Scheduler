@@ -1,5 +1,5 @@
 import requests # using requests post to localhost.
-import json
+import parsingFunctions
 # this means flask needs to be running: flask --debug run
 # TODO https://flask.palletsprojects.com/en/2.3.x/testing/
 
@@ -12,10 +12,14 @@ with open(ROLE_STAFF_FILE_NAME) as payload:
     """test the post command received a response."""
     assert response.status_code == 200
 
-    """test app.createSchedule returns json string"""
-    schedule = response.json()
-    json.load(schedule)
-    #TODO: get schedule as dictionary.
+    """Setup to get the schedule into a dictionary {Role: Staff} format"""
+    scheduleJSON = response.json()
+    schedule = {}
+    for pair in scheduleJSON:
+        role = parsingFunctions.parseRole(pair[0])
+        staff = parsingFunctions.parseStaff(pair[1])
+        schedule[role] = staff #this represents a schedule. How to have this be an instance of Schedule?
+    
 
     """test main.createSchedule returns a Schedule object"""
         # I don't see how this setup allows me to test for this.
