@@ -12,6 +12,8 @@ class Schedule:
 		self.roles = roles
 		self.staff = staff
 		self.schedule = schedule
+		if self.schedule == None:
+			self.schedule = self.startingSchedule()
 		self.unrepairedDoubles = []
 	
 	def startingSchedule(self):

@@ -25,8 +25,7 @@ with open(ROLE_STAFF_FILE_NAME) as payload:
         staffList.append(staff)
         pairedSchedule[role] = staff
 
-    schedule = Schedule(roles=roleList, staff=staffList)
-    schedule.schedule = pairedSchedule
+    schedule = Schedule(roles=roleList, staff=staffList, schedule=pairedSchedule)
 
     """Testing begins"""
 
