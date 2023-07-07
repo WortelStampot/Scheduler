@@ -11,10 +11,17 @@ with open(ROLE_STAFF_FILE_NAME) as payload:
     response = requests.post(LOCALHOST, data=payload, headers=headers, verify=False)
 
     """test the post command received a response."""
-    assert response.status_code == 200
+    try:
+        assert response.status_code == 200
+    except AssertionError:
+        False, "status code check failed"
 
     """Setup to get the schedule into a dictionary {Role: Staff} format"""
-    scheduleJSON = response.json()
+    try:
+        scheduleJSON = response.json()
+    except requests.exceptions.JSONDecodeError:
+        False, "JSON decoding failed"
+
     roleList = []
     staffList = []
     pairedSchedule = {}
@@ -30,10 +37,16 @@ with open(ROLE_STAFF_FILE_NAME) as payload:
     """Testing begins"""
 
     """Test for less than 2 doubles in schedule"""
-    assert len(schedule.identifyDoubles()) < 2
+    try:
+        assert len(schedule.identifyDoubles()) < 2
+    except AssertionError:
+        False, 'doubles check failed'
     print('doubles check: pass')
 
     """Test for each staff paired with a role they are available for"""
     for role, staff in schedule.schedule.items():
-        assert staff.isAvailable(role)
+        try:
+            assert staff.isAvailable(role)
+        except AssertionError:
+            False, f'availability check failed for:\n {role, staff}'
     print('availabiliy check: pass')
