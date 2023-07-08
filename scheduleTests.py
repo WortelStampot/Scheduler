@@ -5,13 +5,14 @@ import os
 # this means flask needs to be running: flask --debug run
 # TODO https://flask.palletsprojects.com/en/2.3.x/testing/
 
-LOCALHOST = "http://127.0.0.1:5000/schedule"
+LOCALHOST = "http://127.0.0.1:5000/testSchedule"
 INPUT_PATH = "tests/input"
 
 def testSchedule(scheduleData):
     with open(scheduleData) as payload:
         headers = {"content-type": "application/json"}
         response = requests.post(LOCALHOST, data=payload, headers=headers, verify=False)
+        #TODO: list reason for verify=False
 
         """test the post command received a response."""
         try:
