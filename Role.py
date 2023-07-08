@@ -13,6 +13,7 @@ class Role:
 		return f"{self.name},{self.day.name}"
 	
 	def toJSON (self):
+		"""return a JSON representation of the role"""
 		return {
 			"name": self.name,
 			"day": self.day.name,
