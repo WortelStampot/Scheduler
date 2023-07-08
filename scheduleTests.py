@@ -64,5 +64,5 @@ def getLatest(path):
     return sorted(paths, key = os.path.getctime)
 
 testInput = getLatest(INPUT_PATH)
-for scheduleData in testInput[0:2]: #use latest two files
+for scheduleData in testInput[0]: #use latest file
     testSchedule(scheduleData)
