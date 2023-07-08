@@ -59,11 +59,10 @@ def testSchedule(scheduleData):
 
 
 def getLatest(path):
-    """return list of files from path sorted by file's last change time"""
+    """return the latest file from path based on file's last change time"""
     files = os.listdir(path)
     paths = [os.path.join(path, fileName) for fileName in files]
-    return sorted(paths, key = os.path.getctime)
+    return min(paths, key = os.path.getctime)
 
-testInput = getLatest(INPUT_PATH)
-for scheduleData in testInput[0]: #use latest file
-    testSchedule(scheduleData)
+scheduleData = getLatest(INPUT_PATH)
+testSchedule(scheduleData)
