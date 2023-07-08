@@ -50,10 +50,17 @@ class Schedule:
 	
 	def toJSON(self):
 		"""
-		return a list of jsonify'd (Role, Staff) pairs
+		return a JSON representation of the schedule as a list of 'shifts'
+		a shift is made of a role name, day, calltime, and staff name
 		"""
-		return [ (role.toJSON(), staff.toJSON()) for role, staff in self.schedule.items() ]
-	
+		return [
+			{
+			'role': role.name,
+			'day': role.day.name,
+			'callTime': role.callTime.strftime('%H:%M'),
+			'staff': staff.name
+			} 
+			 for role, staff in self.schedule.items()]
 
 def duplicateStaff(staffCollection):
     '''
