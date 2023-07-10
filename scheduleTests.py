@@ -12,7 +12,13 @@ def testSchedule(scheduleData):
     with open(scheduleData) as payload:
         headers = {"content-type": "application/json"}
         response = requests.post(LOCALHOST, data=payload, headers=headers, verify=False)
-        #TODO: list reason for verify=False
+        """
+        Reason for verify=False:
+        'when verify is set to False, requests will accept any TLS certificate presented by the server,
+        and will ignore hostname mismatches and/or expired certificates,
+        which will make your application vulnerable to man-in-the-middle (MitM) attacks.
+        Setting verify to False may be useful during local development or testing.'
+        """
 
         """test the post command received a response."""
         try:
