@@ -36,21 +36,3 @@ def createSchedule():
     scheduleJSON = schedule.toJSON()
 
     return scheduleJSON
-
-@app.route('/testSchedule', methods=["POST"])
-def testSchedule():
-    """return a dictionary of Role: Staff objects"""
-    roleStaffData = request.get_json() #TODO: this as a function
-    roleStaffSchema = app.config["SCHEMA"]
-    if roleStaffData == None:
-        return 'Alert: Check payload header'
-    try:
-        parsingFunctions.validatePayload(roleStaffData,roleStaffSchema)
-    except ValueError as err:
-        return {"error": str(err)}
-
-    roleCollection = [parsingFunctions.parseRole(role) for role in roleStaffData["roles"]]
-    staffCollection = [parsingFunctions.parseStaff(staff) for staff in roleStaffData["staff"]]
-
-    schedule = main.createSchedule(roleCollection, staffCollection)
-    return schedule.schedule
