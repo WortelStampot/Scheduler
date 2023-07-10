@@ -39,7 +39,7 @@ def createSchedule():
 
 @app.route('/testSchedule', methods=["POST"])
 def testSchedule():
-    """return a 'raw' Schedule object. a dictionary of Role: Staff pairs"""
+    """return a dictionary of Role: Staff objects"""
     roleStaffData = request.get_json() #TODO: this as a function
     roleStaffSchema = app.config["SCHEMA"]
     if roleStaffData == None:
@@ -51,5 +51,6 @@ def testSchedule():
 
     roleCollection = [parsingFunctions.parseRole(role) for role in roleStaffData["roles"]]
     staffCollection = [parsingFunctions.parseStaff(staff) for staff in roleStaffData["staff"]]
-    
-    return main.createSchedule(roleCollection, staffCollection)
+
+    schedule = main.createSchedule(roleCollection, staffCollection)
+    return schedule.schedule
