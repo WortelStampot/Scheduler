@@ -2,10 +2,11 @@ import requests # using requests post to localhost.
 import parsingFunctions
 from Schedule import Schedule
 import os
+import json
 # this means flask needs to be running: flask --debug run
 # TODO https://flask.palletsprojects.com/en/2.3.x/testing/
 
-LOCALHOST = "http://127.0.0.1:5000/testSchedule"
+LOCALHOST = "http://127.0.0.1:5000/schedule"
 INPUT_PATH = "tests/input"
 
 def testSchedule(scheduleData):
@@ -26,23 +27,24 @@ def testSchedule(scheduleData):
         except AssertionError:
             return False, "status code check failed"
 
-        """Setup to get the schedule into a dictionary {Role: Staff} format"""
         try:
             scheduleJSON = response.json()
         except requests.exceptions.JSONDecodeError:
             return False, "JSON decoding failed"
 
-        roleList = []
-        staffList = []
-        pairedSchedule = {}
-        for pair in scheduleJSON:
-            role = parsingFunctions.parseRole(pair[0])
-            roleList.append(role)
-            staff = parsingFunctions.parseStaff(pair[1])
-            staffList.append(staff)
-            pairedSchedule[role] = staff
+        """Setup to recreate schedule from json data"""
+        payload.seek(0) # set reference point to beginning of the file
+        roleStaffData = json.load(payload) # so that json.load can read it again
+        roleCollection = [parsingFunctions.parseRole(role) for role in roleStaffData["roles"]]
+        staffCollection = [parsingFunctions.parseStaff(staff) for staff in roleStaffData["staff"]]
 
-        schedule = Schedule(roles=roleList, staff=staffList, schedule=pairedSchedule)
+        scheduleFromShifts = {}
+        for shift in scheduleJSON:
+            role = roleFromShift(shift, roleCollection)
+            staff = staffFromShift(shift, staffCollection)
+            scheduleFromShifts[role] = staff
+
+        schedule = Schedule(roles=roleCollection, staff=staffCollection, schedule=scheduleFromShifts)
 
         """Testing begins"""
 
@@ -69,6 +71,19 @@ def getLatest(path):
     files = os.listdir(path)
     paths = [os.path.join(path, fileName) for fileName in files]
     return min(paths, key = os.path.getctime)
+
+
+def roleFromShift(shift, roleCollection):
+    for role in roleCollection:
+        if shift['role'] == role.name and \
+        shift['day'] == role.day.name and \
+        shift['callTime'] == role.callTime.strftime('%H:%M'):
+            return role
+
+def staffFromShift(shift, staffCollection):
+     for staff in staffCollection:
+        if shift['staff'] == staff.name:
+            return staff
 
 scheduleData = getLatest(INPUT_PATH)
 testSchedule(scheduleData)
