@@ -1,5 +1,0 @@
-Arranging Branch:
-classes split into their own files
-functions split into related files
-
-schedul.graph bug fixed. I think.
