@@ -1,6 +1,6 @@
 import logging
 from Weekdays import Weekdays
-from graphFunctions import availabilityMatching
+from graphFunctions import maximumMatching
 import copy
 import json
 
@@ -23,7 +23,7 @@ class Schedule:
 		staffCollection = duplicateStaff(self.staff) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
 		#duplicating here leaves schedule.staff as a list of individual staff objects outside of this function
 
-		matching = availabilityMatching(self.roles, staffCollection) # returns complete matching 'left' and 'right'
+		matching = maximumMatching(self.roles, staffCollection) # returns complete matching 'left' and 'right'
 
 		return {Role: Staff for Role, Staff in matching.items() if Role in self.roles} # get half of the matching dictionary
 	
