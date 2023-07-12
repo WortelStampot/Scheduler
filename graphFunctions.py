@@ -1,15 +1,18 @@
 import networkx as nx
 
-def maximumMatching(roleCollection, staffCollection):
+def maximumMatching(roleCollection, staffCollection, matchingQualities):
     Graph = nx.Graph()
     Graph.add_nodes_from(roleCollection, bipartite=0)
-    Graph.add_nodes_from(staffCollection, bipartite=1)  
+    Graph.add_nodes_from(staffCollection, bipartite=1)
+
 
     edges = []  
-    for Staff in staffCollection:
-        for Role in roleCollection:
-            if Staff.isAvailable(Role):
-                edges.append((Role, Staff))
+    for staff in staffCollection:
+        for role in roleCollection:
+            if staff.isAvailable(role) and staff.isQualified(role): #hardcoding for now
+            # if matchingQuality1 and matchingQuality2 and... for len(matchingQualities?)
+            #how to write this?
+                edges.append((role, staff))
 
     Graph.add_edges_from(edges)
 
