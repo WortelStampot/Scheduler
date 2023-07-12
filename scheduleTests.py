@@ -70,7 +70,7 @@ def getLatest(path):
     """return the latest file from path based on file's last change time"""
     files = os.listdir(path)
     paths = [os.path.join(path, fileName) for fileName in files]
-    return min(paths, key = os.path.getctime)
+    return max(paths, key = os.path.getctime)
 
 
 def roleFromShift(shift, roleCollection):
