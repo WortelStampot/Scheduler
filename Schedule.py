@@ -2,7 +2,6 @@ import logging
 from Weekdays import Weekdays
 from graphFunctions import maximumMatching
 import copy
-import json
 
 logger = logging.getLogger(__name__)
 
