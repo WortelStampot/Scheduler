@@ -4,7 +4,10 @@ class DefaultConfig(object):
             {
                 "name": str(),
                 "callTime": str(),
-                "day": str()
+                "day": str(),
+                "qualifiedStaff": [
+                    str()
+                ]
             }
         ],
         "staff": [
