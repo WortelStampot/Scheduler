@@ -44,7 +44,8 @@ def parseRole(role):
         weekday = Weekdays[day]
     except KeyError:
         raise ValueError(f"Day: {day} for Role: {name} not in valid format.")
-    return Role(name=name, day=weekday, callTime=callTime)
+    qualifiedStaff = role["qualifiedStaff"]
+    return Role(name=name, day=weekday, callTime=callTime, qualifiedStaff=qualifiedStaff)
 
 
 def parseStaff(staff):
