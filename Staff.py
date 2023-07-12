@@ -23,6 +23,13 @@ class Staff:
 		if role.callTime not in dayAvailability:
 			return False
 		return True
+	
+	def isQualified(self, role):
+		"""
+		check staff is qualified for role
+		NOTE: staff.name used as staff identifier
+		"""
+		return self.name in role.qualifiedStaff
 
 	def shifts(self, schedule):
 		"""
