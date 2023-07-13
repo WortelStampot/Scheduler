@@ -1,23 +1,25 @@
 import networkx as nx
 
-def maximumMatching(roleCollection, staffCollection, matchingQualities):
+def maximumMatching(roleCollection, staffCollection):
+    
     Graph = nx.Graph()
     Graph.add_nodes_from(roleCollection, bipartite=0)
     Graph.add_nodes_from(staffCollection, bipartite=1)
 
-
-    edges = []  
-    for staff in staffCollection:
-        for role in roleCollection:
-            if staff.isAvailable(role) and staff.isQualified(role): #hardcoding for now
-            # if matchingQuality1 and matchingQuality2 and... for len(matchingQualities?)
-            #how to write this?
-                edges.append((role, staff))
+    edges = findEdges(roleCollection, staffCollection)
 
     Graph.add_edges_from(edges)
 
     return nx.bipartite.maximum_matching(Graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
     #TODO: set role nodes as top nodes
+
+def findEdges(roleNodes, staffNodes):
+    """
+    return a list of connections between a set of role and staff nodes.
+    role connects to staff when staff.isAvailable and staff.isQualified
+    """ 
+    return [ (role,staff) for staff in staffNodes for role in roleNodes
+        if staff.isAvailable(role) and staff.isQualified(role) ]
 
 def doublesGraph(schedule):
     """

@@ -22,13 +22,8 @@ class Schedule:
 		"""
 		staffCollection = duplicateStaff(self.staff) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
 		#duplicating here leaves schedule.staff as a list of individual staff objects outside of this function
-
-		matchingQualities = [ #the idea is to implement multiple 'matchingQualities' in a readable fashion.
-			Staff.isAvailable,
-			Staff.isQualified
-			]
 		
-		matching = maximumMatching(self.roles, staffCollection, matchingQualities) # returns complete matching 'left' and 'right'
+		matching = maximumMatching(self.roles, staffCollection) # returns complete matching 'left' and 'right'
 
 		return {Role: Staff for Role, Staff in matching.items() if Role in self.roles} # get half of the matching dictionary
 	
