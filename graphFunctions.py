@@ -18,8 +18,21 @@ def findEdges(roleNodes, staffNodes):
     return a list of connections between a set of role and staff nodes.
     role connects to staff when staff.isAvailable and staff.isQualified
     """ 
-    return [ (role,staff) for staff in staffNodes for role in roleNodes
+    return [ (role,staff, {'weight': roleStaffRating(role, staff)})
+            for staff in staffNodes for role in roleNodes
         if staff.isAvailable(role) and staff.isQualified(role) ]
+
+def roleStaffRating(role, staff):
+    """
+    return number represeting likely hood for role and staff to be paired
+    higher is better.
+    """
+    #role.preference as a dictionary of {staff.name: int(0-100)} for each staff in the schedule.
+
+    rolePrefernceWeightParamter = 1
+    isQualifiedWeightParamter = 1
+    return role.preference[staff.name] + 100 * staff.isQualified(role)
+
 
 def doublesGraph(schedule):
     """
