@@ -13,6 +13,13 @@ def maximumMatching(roleCollection, staffCollection):
     return nx.bipartite.maximum_matching(Graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
     #TODO: set role nodes as top nodes
 
+def maxWeightMatching(roleCollection, staffCollection):
+    graph = nx.Graph()
+    edges = findEdges(roleCollection, staffCollection)
+    graph.add_edges_from(edges)
+    
+    return nx.max_weight_matching(graph)
+
 def findEdges(roleNodes, staffNodes):
     """
     return a list of connections between a set of role and staff nodes.
