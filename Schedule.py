@@ -1,6 +1,6 @@
 import logging
 from Weekdays import Weekdays
-from graphFunctions import maximumMatching
+from graphFunctions import maximumMatching, maxWeightMatching
 import copy
 from Staff import Staff
 
@@ -23,9 +23,7 @@ class Schedule:
 		staffCollection = duplicateStaff(self.staff) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
 		#duplicating here leaves schedule.staff as a list of individual staff objects outside of this function
 		
-		matching = maximumMatching(self.roles, staffCollection) # returns complete matching 'left' and 'right'
-
-		return {Role: Staff for Role, Staff in matching.items() if Role in self.roles} # get half of the matching dictionary
+		return maxWeightMatching(self.roles, staffCollection) # returns complete matching 'left' and 'right'
 	
 
 	def logSchedule(self):
