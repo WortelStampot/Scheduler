@@ -21,7 +21,8 @@ def testSchedule(filePath):
         try:
             assert len(schedule.identifyDoubles()) < 2
         except AssertionError:
-            return False, 'doubles check failed'
+            print(f'doubles check failed: {len(schedule.identifyDoubles())}')
+            return False
         print('doubles check: pass')
 
         """Test for each staff paired with a role they are available for"""
@@ -29,8 +30,18 @@ def testSchedule(filePath):
             try:
                 assert staff.isAvailable(role)
             except AssertionError:
-                return False, f'availability check failed for:\n {role, staff}'
+                print(f'availability check failed for:\n {role, staff}')
+                return False
         print('availabiliy check: pass')
+
+        """Test each staff is qualified for their matched role"""
+        for role, staff in schedule.schedule.items():
+            try:
+                assert staff.isQualified(role)
+            except AssertionError:
+                print(f'qualified check failed for:\n {role, staff}')
+                return False
+        print('qualified check: pass')
 
     print(f'test passed for {file.name}')
     return True
