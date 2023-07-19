@@ -17,7 +17,7 @@ def maxWeightMatching(roleCollection, staffCollection):
     graph = nx.Graph()
     edges = findEdges(roleCollection, staffCollection)
     graph.add_edges_from(edges)
-    
+
     return nx.max_weight_matching(graph)
 
 def findEdges(roleNodes, staffNodes):
@@ -27,7 +27,7 @@ def findEdges(roleNodes, staffNodes):
     """ 
     return [ (role,staff, {'weight': roleStaffRating(role, staff)})
             for staff in staffNodes for role in roleNodes
-        if staff.isAvailable(role) and staff.isQualified(role) ]
+        if staff.isAvailable(role) ]
 
 def roleStaffRating(role, staff):
     """
