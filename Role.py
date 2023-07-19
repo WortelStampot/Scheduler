@@ -1,10 +1,10 @@
 class Role:
-	def __init__(self, name, day, callTime=None, qualifiedStaff=None, preferredStaff=None):
+	def __init__(self, name, day, callTime=None, qualifiedStaff=None, preference=None):
 		self.name = name
 		self.day = day
 		self.callTime = callTime
 		self.qualifiedStaff = qualifiedStaff
-		self.preferredStaff = preferredStaff
+		self.preference = preference
 		
 	def __repr__(self):
 		return "{self.__class__.__name__}({self.name},{self.day.name})".format(self=self)
