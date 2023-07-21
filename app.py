@@ -26,7 +26,7 @@ def createSchedule():
     try:
         parsingFunctions.validatePayload(roleStaffData,roleStaffSchema)
     except ValueError as err:
-        return {"error": str(err)}
+        return {"payload validation error": str(err)}
 
     roleCollection = [parsingFunctions.parseRole(role) for role in roleStaffData["roles"]]
     staffCollection = [parsingFunctions.parseStaff(staff) for staff in roleStaffData["staff"]]

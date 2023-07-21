@@ -16,6 +16,16 @@ def validatePayload(payload, schema):
         if set(schema.keys()) != set(payload.keys()):
             raise ValueError(f'payload: {payload.keys()} does not match schema: {schema.keys()}')
         for key in schema.keys():
+            if key == "preference": # catching the 'preference' key here is actually a bit too late
+                # since the set of keys will always mis-match
+                # How to do this and keep
+                #'if set(schema.keys()) != set(payload.keys())' ?
+                for preferenceKey, preferenceValue in payload[key].items():
+                    if type(preferenceKey) != str:
+                        raise ValueError(f'preference key: {preferenceKey} is not type string')
+                    if type(preferenceValue) != int:
+                        raise ValueError(f'preference value: {preferenceValue} is not type int')
+                return True
             payloadValue, schemaValue = payload[key], schema[key]
             validatePayload(payloadValue, schemaValue)
     

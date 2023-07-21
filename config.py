@@ -8,9 +8,9 @@ class DefaultConfig(object):
                 "qualifiedStaff": [
                     str()
                 ],
-                "preference": [
-                    {str(): int()}
-                ]
+                "preference": {
+                    str(): int()
+                    }
             }
         ],
         "staff": [
