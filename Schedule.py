@@ -1,8 +1,7 @@
 import logging
 from Weekdays import Weekdays
-from graphFunctions import maximumMatching, maxWeightMatching
+from graphFunctions import maxWeightMatching
 import copy
-from Staff import Staff
 
 logger = logging.getLogger(__name__)
 
