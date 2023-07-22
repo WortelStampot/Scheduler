@@ -4,7 +4,7 @@ def maxWeightMatching(roleCollection, staffCollection):
     graph = nx.Graph()
     edges = findEdges(roleCollection, staffCollection)
     graph.add_edges_from(edges)
-    matching = nx.max_weight_matching(graph)
+    matching = nx.max_weight_matching(graph, maxcardinality=True)
     
     return {pair[1]: pair[0] for pair in matching} # return matching as dict of role: staff pairs
 
