@@ -10,17 +10,16 @@ def maxWeightMatching(roleCollection, staffCollection):
 
 def findEdges(roleNodes, staffNodes):
     """
-    return a list of connections between a set of role and staff nodes.
-    role connects to staff when staff.isAvailable and staff.isQualified
+    return a list of edges between role and staff nodes based on staff.isAvailable
+    each edge has a weight calculated by roleStaffRating()
     """ 
-    return [ (role,staff, {'weight': roleStaffRating(role, staff)})
-            for staff in staffNodes for role in roleNodes
-        if staff.isAvailable(role) ]
+    return [ ( role,staff, {'weight': roleStaffRating(role, staff)} )
+            for role in roleNodes for staff in staffNodes
+            if staff.isAvailable(role) ]
 
 def roleStaffRating(role, staff):
     """
-    return number represeting likely hood for role and staff to be paired
-    higher is better.
+    return a number representing the weight of a role,staff connection
     """
     
     return 10 * staff.isQualified(role)
