@@ -1,18 +1,5 @@
 import networkx as nx
 
-def maximumMatching(roleCollection, staffCollection):
-    
-    Graph = nx.Graph()
-    Graph.add_nodes_from(roleCollection, bipartite=0)
-    Graph.add_nodes_from(staffCollection, bipartite=1)
-
-    edges = findEdges(roleCollection, staffCollection)
-
-    Graph.add_edges_from(edges)
-
-    return nx.bipartite.maximum_matching(Graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
-    #TODO: set role nodes as top nodes
-
 def maxWeightMatching(roleCollection, staffCollection):
     graph = nx.Graph()
     edges = findEdges(roleCollection, staffCollection)
