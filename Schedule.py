@@ -11,7 +11,7 @@ class Schedule:
 		self.staff = staff
 		self.schedule = schedule
 		if self.schedule == None:
-			self.schedule = bipartiteMatching(self.roles, self.staff)
+			self.schedule = weightedMatching(self.roles, self.staff)
 		self.unrepairedDoubles = []
 
 	def logSchedule(self):
