@@ -3,7 +3,7 @@ import logging
 import copy
 logger = logging.getLogger(__name__)
 
-def maxWeightMatching(roleCollection, staffCollection):
+def weightedMatching(roleCollection, staffCollection):
     """
     matching with general graph, weighted
     """
@@ -20,7 +20,7 @@ def maxWeightMatching(roleCollection, staffCollection):
     return schedule
 
 
-def maximumMatching(roleCollection, staffCollection):
+def bipartiteMatching(roleCollection, staffCollection):
     """
     matching with bipartite graph, non weighted
     """

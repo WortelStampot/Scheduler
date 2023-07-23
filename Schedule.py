@@ -1,6 +1,6 @@
 import logging
 from Weekdays import Weekdays
-from graphFunctions import maxWeightMatching
+from graphFunctions import weightedMatching, bipartiteMatching
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +11,7 @@ class Schedule:
 		self.staff = staff
 		self.schedule = schedule
 		if self.schedule == None:
-			self.schedule = maxWeightMatching(self.roles, self.staff)
+			self.schedule = bipartiteMatching(self.roles, self.staff)
 		self.unrepairedDoubles = []
 
 	def logSchedule(self):
