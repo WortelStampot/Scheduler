@@ -10,8 +10,10 @@ def maxWeightMatching(roleCollection, staffCollection):
     edges = findEdges(roleCollection, staffCollection)
     graph.add_edges_from(edges)
     matching = nx.max_weight_matching(graph, maxcardinality=True)
+
+    schedule = {pair[0]: pair[1] for pair in matching} # matching as dict of role: staff pairs
     
-    return {pair[1]: pair[0] for pair in matching} # return matching as dict of role: staff pairs
+    return schedule
 
 def duplicateStaff(staffCollection):
     '''
