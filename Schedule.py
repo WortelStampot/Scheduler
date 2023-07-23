@@ -41,14 +41,20 @@ class Schedule:
 	
 	def toJSON(self):
 		"""
-		return a JSON representation of the schedule as a list of 'shifts'
-		a shift is made of a role name, day, calltime, and staff name
+		return a JSON representation of the schedule's information.
+		'schedule' is a list of shifts
+		'unassignedRoles' a list of unassigned roles 
 		"""
-		return [
-			{
-			'role': role.name,
-			'day': role.day.name,
-			'callTime': role.callTime.strftime('%H:%M'),
-			'staff': staff.name
-			} 
-			 for role, staff in self.schedule.items()]
+		return {
+			'schedule': [
+				{
+				'role': role.name,
+				'day': role.day.name,
+				'callTime': role.callTime.strftime('%H:%M'),
+				'staff': staff.name
+				} for role, staff in self.schedule.items()],
+
+			'unassignedRoles': [
+				role for role in self.unassignedRoles
+			]
+		}
