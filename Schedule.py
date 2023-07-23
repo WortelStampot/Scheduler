@@ -1,7 +1,6 @@
 import logging
 from Weekdays import Weekdays
 from graphFunctions import maxWeightMatching
-import copy
 
 logger = logging.getLogger(__name__)
 
@@ -12,18 +11,8 @@ class Schedule:
 		self.staff = staff
 		self.schedule = schedule
 		if self.schedule == None:
-			self.schedule = self.startingSchedule()
+			self.schedule = maxWeightMatching(self.roles, self.staff)
 		self.unrepairedDoubles = []
-	
-	def startingSchedule(self):
-		"""
-		Create a starting schedule by matching Roles with Staff based on availability
-		"""
-		staffCollection = duplicateStaff(self.staff) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
-		#duplicating here leaves schedule.staff as a list of individual staff objects outside of this function
-		
-		return maxWeightMatching(self.roles, staffCollection) # returns complete matching 'left' and 'right'
-	
 
 	def logSchedule(self):
 		for weekday in Weekdays:
@@ -58,16 +47,3 @@ class Schedule:
 			'staff': staff.name
 			} 
 			 for role, staff in self.schedule.items()]
-
-def duplicateStaff(staffCollection):
-    '''
-    duplicate Staff by the number of shifts they are available to work
-    '''
-    staffByShifts = []
-    for Staff in staffCollection:
-        shiftsRemaining = min(Staff.maxShifts, Staff.daysAvailable())
-        for shiftCount in range(shiftsRemaining):
-            staffByShifts.append(copy.deepcopy(Staff))
-        logger.debug(f'{Staff} duplicated by: {shiftCount}')
-
-    return staffByShifts
