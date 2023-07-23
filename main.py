@@ -7,7 +7,6 @@ logger = logging.getLogger(__name__)
 def createSchedule(roleCollection, staffCollection):
 
     schedule = Schedule(roles=roleCollection, staff=staffCollection)
-    schedule.unassignedRoles = [role for role in schedule.roles if role not in schedule.schedule]
     schedule.logSchedule()
 
     repairDoubles.repairDoubles(schedule)

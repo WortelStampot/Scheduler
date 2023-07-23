@@ -12,11 +12,16 @@ class Schedule:
 		self.schedule = schedule
 		if self.schedule == None:
 			self.schedule = weightedMatching(self.roles, self.staff)
+			self.unassignedRoles = [role for role in self.roles if role not in self.schedule]
 		self.unrepairedDoubles = []
 
 	def logSchedule(self):
+		logger.info('---- Schedule ----')
 		for weekday in Weekdays:
 			logger.info([(role, staff) for role, staff in self.schedule.items() if role.day == weekday])
+		logger.info('---- Unassigned Roles ----')
+		for role in self.unassignedRoles:
+			logger.info(role)
 
 	def identifyDoubles(self):
 		"""
