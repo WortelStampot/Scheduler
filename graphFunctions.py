@@ -14,7 +14,14 @@ def weightedMatching(roleCollection, staffCollection):
     graph.add_edges_from(edges)
     matching = nx.max_weight_matching(graph, maxcardinality=True)
 
-    schedule = {pair[0]: pair[1] for pair in matching} # matching as dict of role: staff pairs
+    #For some reason, three pairs in the matching returned as a swaped (staff,role) tuple
+    #this is quick fix
+    sortedMatching = [
+        pair if pair[0] in roleCollection
+        else tuple(reversed(pair))
+        for pair in matching ]
+
+    schedule = {pair[0]: pair[1] for pair in sortedMatching} # matching as dict of role: staff pairs
     
     return schedule
 
