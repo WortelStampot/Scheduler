@@ -4,6 +4,10 @@ import copy
 logger = logging.getLogger(__name__)
 
 def maxWeightMatching(roleCollection, staffCollection):
+    """
+    matching with general graph, weighted
+    """
+
     graph = nx.Graph()
 
     staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
@@ -13,6 +17,25 @@ def maxWeightMatching(roleCollection, staffCollection):
 
     schedule = {pair[0]: pair[1] for pair in matching} # matching as dict of role: staff pairs
     
+    return schedule
+
+
+def maximumMatching(roleCollection, staffCollection):
+    """
+    matching with bipartite graph, non weighted
+    """
+    
+    Graph = nx.Graph()
+    staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
+
+    Graph.add_nodes_from(roleCollection, bipartite=0)
+    Graph.add_nodes_from(staffCollection, bipartite=1)
+    edges = findEdges(roleCollection, staffCollection)
+    Graph.add_edges_from(edges)
+
+    matching = nx.bipartite.maximum_matching(Graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
+    schedule = {Role: Staff for Role, Staff in matching.items() if Role in roleCollection} # get half of the matching dictionary
+
     return schedule
 
 def duplicateStaff(staffCollection):
