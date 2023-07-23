@@ -1,12 +1,30 @@
 import networkx as nx
+import logging
+import copy
+logger = logging.getLogger(__name__)
 
 def maxWeightMatching(roleCollection, staffCollection):
     graph = nx.Graph()
+
+    staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
     edges = findEdges(roleCollection, staffCollection)
     graph.add_edges_from(edges)
     matching = nx.max_weight_matching(graph, maxcardinality=True)
     
     return {pair[1]: pair[0] for pair in matching} # return matching as dict of role: staff pairs
+
+def duplicateStaff(staffCollection):
+    '''
+    duplicate Staff by the number of shifts they are available to work
+    '''
+    staffByShifts = []
+    for Staff in staffCollection:
+        shiftsRemaining = min(Staff.maxShifts, Staff.daysAvailable())
+        for shiftCount in range(shiftsRemaining):
+            staffByShifts.append(copy.deepcopy(Staff))
+        logger.debug(f'{Staff} duplicated by: {shiftCount}')
+
+    return staffByShifts
 
 def findEdges(roleNodes, staffNodes):
     """
