@@ -7,7 +7,6 @@ def weightedMatching(roleCollection, staffCollection):
     """
     matching with general graph, weighted
     """
-
     graph = nx.Graph()
 
     staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
@@ -24,17 +23,16 @@ def bipartiteMatching(roleCollection, staffCollection):
     """
     matching with bipartite graph, non weighted
     """
-    
-    Graph = nx.Graph()
+    graph = nx.Graph()
     staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
 
-    Graph.add_nodes_from(roleCollection, bipartite=0)
-    Graph.add_nodes_from(staffCollection, bipartite=1)
+    graph.add_nodes_from(roleCollection, bipartite=0)
+    graph.add_nodes_from(staffCollection, bipartite=1)
     edges = findEdges(roleCollection, staffCollection)
-    Graph.add_edges_from(edges)
+    graph.add_edges_from(edges)
 
-    matching = nx.bipartite.maximum_matching(Graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
-    schedule = {Role: Staff for Role, Staff in matching.items() if Role in roleCollection} # get half of the matching dictionary
+    matching = nx.bipartite.maximum_matching(graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
+    schedule = {role: staff for role, staff in matching.items() if role in roleCollection} # get half of the matching dictionary
 
     return schedule
 
