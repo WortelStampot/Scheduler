@@ -55,6 +55,6 @@ class Schedule:
 				} for role, staff in self.schedule.items()],
 
 			'unassignedRoles': [
-				role for role in self.unassignedRoles
+				role.toJSON() for role in self.unassignedRoles
 			]
 		}
