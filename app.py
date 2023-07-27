@@ -33,6 +33,4 @@ def createSchedule():
 
     schedule = main.createSchedule(roleCollection, staffCollection)
 
-    scheduleJSON = schedule.toJSON()
-
-    return scheduleJSON
+    return schedule.toJSON()
