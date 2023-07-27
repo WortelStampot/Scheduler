@@ -60,22 +60,24 @@ def getLatest(path):
     return max(paths, key = os.path.getctime)
 
 
-def saveSchedule(schedule):
+def saveSchedule(schedule, inputName):
     """
-    save schedule JSON representation to a file
+    save schedule JSON to tests/output directory
+    output file name is based on name of input file
     """
     OUTPUT_PATH = 'tests/output'
-    outputFileName = 'scheduleData.json'
+    outputFileName = inputName.replace('roleStaff','schedule')
     outputPath = os.path.join(OUTPUT_PATH, outputFileName)
 
     with open(outputPath, 'w') as file:
         json.dump(schedule.toJSON(), file, indent=4)
 
 
-# create schedule
 INPUT_PATH = "tests/input"
 inputFilePath = getLatest(INPUT_PATH)
-testSchedule = createSchedule(inputFilePath)
+
+# create schedule
+schedule = createSchedule(inputFilePath)
 
 """
 This is a bit messy, set up to separate running tests and saving the schedule data
@@ -83,8 +85,9 @@ can 'toggle' between the two by commenting out the other function...
 """
 
 # run tests
-scheduleTests(testSchedule)
+scheduleTests(schedule)
 
 # save schedule data
-saveSchedule(testSchedule)
+basename = os.path.basename(inputFilePath)
+saveSchedule(schedule, basename)
 
