@@ -1,15 +1,8 @@
 from graphFunctions import weightedMatching, bipartiteMatching # this can change
+from parsingFunctions import parseRole, parseStaff
 from Weekdays import Weekdays
+import json
 import csv
-roles = 'roleCollection'
-staff = 'staffCollection'
-
-
-class algorithmTest(roles, staff):
-
-    def input(roles, staff, algorithm):
-
-        return algorithm(roles, staff)
 
 def toCSV(matching):
     """
@@ -18,7 +11,7 @@ def toCSV(matching):
 
     '''Display the roles in groupings per day, ordered by role callTimes-
     multiple of the same role names grouped together'''
-    with open('matching.cvs', 'w', newline='') as csvFile:
+    with open('tests/output/matching.csv', 'w', newline='') as csvFile:
         shiftWriter = csv.writer(csvFile)
 
         for day in Weekdays:
@@ -31,15 +24,18 @@ def toCSV(matching):
     '''Display the number times a staff is scheduled for the same role in a week'''
 
 
+filePath = 'tests/input/roleStaff_5_29_pref.json'
+#copied from test_local createSchedule
+with open(filePath) as file:
+    scheduleData = file.read()
+    schedule = json.loads(scheduleData)
+    roles = [parseRole(role) for role in schedule["roles"]]
+    staff = [parseStaff(staff) for staff in schedule["staff"]]
+
 matching = bipartiteMatching(roles, staff)
+
 toCSV(matching)
 
-
-# bipartiteMatching(roles, staff)
-
-
-# algorithmTest(roles, staff, weightedMatching).toCSV()
-# algorithmTest(roles, staff, bipartiteMatching).toCSV() # no not quite.
 
 
 
