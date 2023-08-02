@@ -1,27 +1,44 @@
 from graphFunctions import weightedMatching, bipartiteMatching # this can change
 from parsingFunctions import parseRole, parseStaff
 from Weekdays import Weekdays
+from Schedule import Schedule
 import json
 import csv
 
-def toCSV(matching):
+def toCSV(schedule):
     """
-    create a csv displaying the matching results of role and staff data
+    create a csv displaying a schedule's schedule     
     """
 
     '''Display the roles in groupings per day, ordered by role callTimes-
     multiple of the same role names grouped together'''
     with open('tests/output/matching.csv', 'w', newline='') as csvFile:
-        shiftWriter = csv.writer(csvFile)
+        csvWriter = csv.writer(csvFile)
 
+        topRow = [day for day in Weekdays]
+        csvWriter.writerow(topRow)
+
+        '''Display shifts per staff, ordered by weekday'''
+        for staff in schedule.staff:
+            row = [staff.name] + staff.shifts(schedule)
+            csvWriter.writerow(row)
+
+        '''
+        Display the roles in groupings, ordered by weekday
         for day in Weekdays:
-            dayShifts = [shift for shift in matching if shift.day == day]
-            shiftWriter.writerow(dayShifts)
+            dayShifts = [shift for shift in schedule if shift.day == day]
+            csvWriter.writerow(dayShifts)
+        '''
 
 
-    '''Display the roles in groupings per staff, ordered by weekday'''
+    ''' TODO:
+    Display the roles in groupings per day, ordered by role callTimes-
+    multiple of the same role names grouped together
+    '''
 
-    '''Display the number times a staff is scheduled for the same role in a week'''
+    ''' TODO:
+    Display the number times a staff is scheduled for the same role in a week
+    '''
 
 
 filePath = 'tests/input/roleStaff_5_29_pref.json'
@@ -31,10 +48,10 @@ with open(filePath) as file:
     schedule = json.loads(scheduleData)
     roles = [parseRole(role) for role in schedule["roles"]]
     staff = [parseStaff(staff) for staff in schedule["staff"]]
+    schedule = Schedule(roles=roles, staff=staff, schedule=bipartiteMatching(roles, staff)) # 'None' would be suitable here. Currently triggers a matching process
 
-matching = bipartiteMatching(roles, staff)
 
-toCSV(matching)
+toCSV(schedule)
 
 
 
