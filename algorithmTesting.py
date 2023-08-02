@@ -15,7 +15,7 @@ def toCSV(schedule):
     with open('tests/output/matching.csv', 'w', newline='') as csvFile:
         csvWriter = csv.writer(csvFile)
 
-        topRow = [day for day in Weekdays]
+        topRow = ['staff'] + [day.name for day in Weekdays]
         csvWriter.writerow(topRow)
 
         '''Display shifts per staff, ordered by weekday'''
@@ -48,7 +48,7 @@ with open(filePath) as file:
     schedule = json.loads(scheduleData)
     roles = [parseRole(role) for role in schedule["roles"]]
     staff = [parseStaff(staff) for staff in schedule["staff"]]
-    schedule = Schedule(roles=roles, staff=staff, schedule=bipartiteMatching(roles, staff)) # 'None' would be suitable here. Currently triggers a matching process
+    schedule = Schedule(roles=roles, staff=staff, schedule=weightedMatching(roles, staff)) # 'None' would be suitable here. Currently triggers a matching process
 
 
 toCSV(schedule)
