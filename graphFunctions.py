@@ -1,47 +1,51 @@
 import networkx as nx
-import logging
 import copy
+import logging
 logger = logging.getLogger(__name__)
 
-def weightedMatching(roleCollection, staffCollection):
-    """
-    matching with general graph, weighted
-    """
-    graph = nx.Graph()
 
-    staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
-    edges = findEdges(roleCollection, staffCollection)
-    graph.add_edges_from(edges)
-    matching = nx.max_weight_matching(graph, maxcardinality=True)
+class matchingAlgorithms:
+    """ collection of algorithms used to match the roles and staff of a schedule """
 
-    #For some reason, three pairs in the matching returned as a swaped (staff,role) tuple
-    #this is quick fix
-    sortedMatching = [
-        pair if pair[0] in roleCollection
-        else tuple(reversed(pair))
-        for pair in matching ]
+    def weightedMatching(roleCollection, staffCollection):
+        """
+        matching with general graph, weighted
+        """
+        graph = nx.Graph()
 
-    schedule = {pair[0]: pair[1] for pair in sortedMatching} # matching as dict of role: staff pairs
-    
-    return schedule
+        staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
+        edges = findEdges(roleCollection, staffCollection)
+        graph.add_edges_from(edges)
+        matching = nx.max_weight_matching(graph, maxcardinality=True)
+
+        #For some reason, three pairs in the matching returned as a swaped (staff,role) tuple
+        #this is quick fix
+        sortedMatching = [
+            pair if pair[0] in roleCollection
+            else tuple(reversed(pair))
+            for pair in matching ]
+
+        schedule = {pair[0]: pair[1] for pair in sortedMatching} # matching as dict of role: staff pairs
+        
+        return schedule
 
 
-def bipartiteMatching(roleCollection, staffCollection):
-    """
-    matching with bipartite graph, non weighted
-    """
-    graph = nx.Graph()
-    staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
+    def bipartiteMatching(roleCollection, staffCollection):
+        """
+        matching with bipartite graph, non weighted
+        """
+        graph = nx.Graph()
+        staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
 
-    graph.add_nodes_from(roleCollection, bipartite=0)
-    graph.add_nodes_from(staffCollection, bipartite=1)
-    edges = findEdges(roleCollection, staffCollection)
-    graph.add_edges_from(edges)
+        graph.add_nodes_from(roleCollection, bipartite=0)
+        graph.add_nodes_from(staffCollection, bipartite=1)
+        edges = findEdges(roleCollection, staffCollection)
+        graph.add_edges_from(edges)
 
-    matching = nx.bipartite.maximum_matching(graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
-    schedule = {role: staff for role, staff in matching.items() if role in roleCollection} # get half of the matching dictionary
+        matching = nx.bipartite.maximum_matching(graph) # returns a combined dictionary of 'left' and 'right' matches with 'None' stripped out.
+        schedule = {role: staff for role, staff in matching.items() if role in roleCollection} # get half of the matching dictionary
 
-    return schedule
+        return schedule
 
 def duplicateStaff(staffCollection):
     '''

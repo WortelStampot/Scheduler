@@ -1,18 +1,20 @@
-import logging
 from Weekdays import Weekdays
-from graphFunctions import weightedMatching, bipartiteMatching
-
+import logging
 logger = logging.getLogger(__name__)
 
 
 class Schedule:
-	def __init__(self, roles, staff, schedule=None):
+	def __init__(self, roles, staff, matchingAlgorithm):
+		"""
+		initialize a schedule object with input consisting of
+		roles: a list of role objects
+		staff: a list of staff objects
+		matchingAlgorithm: a function from the class matchingAlgorithms
+		"""
 		self.roles = roles
 		self.staff = staff
-		self.schedule = schedule
-		if self.schedule == None:
-			self.schedule = weightedMatching(self.roles, self.staff)
-			self.unassignedRoles = [role for role in self.roles if role not in self.schedule]
+		self.schedule = matchingAlgorithm(self.roles, self.staff)
+		self.unassignedRoles = [role for role in self.roles if role not in self.schedule]
 		self.unrepairedDoubles = []
 
 	def logSchedule(self):
