@@ -41,15 +41,22 @@ def toCSV(schedule):
     '''
 
 
-filePath = 'tests/input/roleStaff_5_29_pref.json'
-#copied from test_local createSchedule
-with open(filePath) as file:
-    scheduleData = file.read()
-    schedule = json.loads(scheduleData)
-    roles = [parseRole(role) for role in schedule["roles"]]
-    staff = [parseStaff(staff) for staff in schedule["staff"]]
-    schedule = Schedule(roles=roles, staff=staff, schedule=weightedMatching(roles, staff)) # 'None' would be suitable here. Currently triggers a matching process
+def scheduleFrom(jsonFile, matchingAlgorithm):
+    """
+    create a schedule object from json input with specified matching algorithm
+    """
+    with open(jsonFile) as file:
+        scheduleData = file.read()
+        schedule = json.loads(scheduleData)
+        roles = [parseRole(role) for role in schedule["roles"]]
+        staff = [parseStaff(staff) for staff in schedule["staff"]]
 
+        return Schedule(roles=roles, staff=staff, matchingAlgorithm=matchingAlgorithm )
+
+jsonFile = 'tests/input/roleStaff_5_29_pref.json'
+algorithm = MatchingAlgorithms.bipartiteMatching
+
+schedule = scheduleFrom(jsonFile, algorithm)
 
 toCSV(schedule)
 
