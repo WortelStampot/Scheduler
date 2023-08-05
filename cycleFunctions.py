@@ -1,5 +1,4 @@
 import logging
-import graphFunctions
 
 logger = logging.getLogger(__name__)
 
@@ -89,4 +88,14 @@ def swap(schedule, role1, role2):
     schedule.schedule[role2], schedule.schedule[role1] = schedule.schedule[role1], schedule.schedule[role2]
 
     #update the graph to reflect the swap. 
-    schedule.graph = graphFunctions.doublesGraph(schedule)
+    schedule.graph = doublesGraph(schedule)
+
+
+def doublesGraph(schedule):
+    """
+    graph is an adjacency matrix, it describes which role-staff pairs are connected to other role-staff pairs
+    graph is an dict of dicts, it's structured so that Schedule.graph[role1][role2] tells you if the staff
+    working role1 could work role2. When that's true, staff1 can be reassigned to role2 without breaking
+    doubles/availability.
+    """
+    return {role1: {role2: staff.isOpenFor(role2, schedule) for role2 in schedule.schedule} for role1, staff in schedule.schedule.items()}
