@@ -1,4 +1,4 @@
-from graphFunctions import weightedMatching, bipartiteMatching # this can change
+from MatchingAlgorithms import MatchingAlgorithms
 from parsingFunctions import parseRole, parseStaff
 from Weekdays import Weekdays
 from Schedule import Schedule

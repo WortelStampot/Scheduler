@@ -1,7 +1,6 @@
 import logging
 import random
 import cycleFunctions
-import graphFunctions
 logger =  logging.getLogger(__name__)
 
 def repairDoubles(schedule):
@@ -31,7 +30,7 @@ def repairDouble(schedule, doubleRole):
     try:
         schedule.graph
     except AttributeError:
-        schedule.graph = graphFunctions.doublesGraph(schedule)
+        schedule.graph = cycleFunctions.doublesGraph(schedule)
         
     #This is really where the function starts...
     MAX_LENGTH = 6 #greater than 6 starts to take longer.
