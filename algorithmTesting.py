@@ -3,6 +3,7 @@ from parsingFunctions import parseRole, parseStaff
 from Weekdays import Weekdays
 from Schedule import Schedule
 from pathlib import Path
+from repairDoubles import repairDoubles
 import json
 import csv
 
@@ -29,6 +30,15 @@ def toCSV(schedule, outputName):
         for staff in schedule.staff:
             row = [staff.name] + staff.shifts(schedule)
             csvWriter.writerow(row)
+
+        csvWriter.writerow('') # two empty rows
+        csvWriter.writerow('') # to separate bottom rows
+
+        unassignedRow = ['unassigned'] + schedule.unassignedRoles
+        csvWriter.writerow(unassignedRow)
+
+        if schedule.unrepairedDoubles:
+            doublesRow = ['doubles'] + schedule.unrepairedDoubles
 
         '''
         Display the roles in groupings, ordered by weekday
@@ -60,10 +70,12 @@ def scheduleFrom(jsonFile, matchingAlgorithm):
 
         return Schedule(roles=roles, staff=staff, matchingAlgorithm=matchingAlgorithm )
 
-jsonFile = 'Input/roleStaff_5_29_max3.json'
+jsonFile = 'Input/roleStaff_5_29_pref.json'
 algorithm = MatchingAlgorithms.bipartiteMatching
 
 schedule = scheduleFrom(jsonFile, algorithm)
+
+repairDoubles(schedule)
 
 '''create output file name from input'''
 inputPath = Path(jsonFile)
