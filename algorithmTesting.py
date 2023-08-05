@@ -2,17 +2,24 @@ from MatchingAlgorithms import MatchingAlgorithms
 from parsingFunctions import parseRole, parseStaff
 from Weekdays import Weekdays
 from Schedule import Schedule
+from pathlib import Path
 import json
 import csv
 
-def toCSV(schedule):
+
+def toCSV(schedule, outputName):
     """
-    create a csv displaying a schedule's schedule     
+    output a schedule's schedule to csv file with specified output name
+      #TODO: schedule input information inside Schedule?
+      e.g. schedule.Date from incomming json    
     """
+
+    OUTPUT_DIR = 'Output/'
+    file = ''.join([OUTPUT_DIR, outputName,'.csv'])
 
     '''Display the roles in groupings per day, ordered by role callTimes-
     multiple of the same role names grouped together'''
-    with open('tests/output/matching.csv', 'w', newline='') as csvFile:
+    with open(file, 'w', newline='') as csvFile:
         csvWriter = csv.writer(csvFile)
 
         topRow = ['staff'] + [day.name for day in Weekdays]
@@ -53,12 +60,17 @@ def scheduleFrom(jsonFile, matchingAlgorithm):
 
         return Schedule(roles=roles, staff=staff, matchingAlgorithm=matchingAlgorithm )
 
-jsonFile = 'tests/input/roleStaff_5_29_pref.json'
+jsonFile = 'Input/roleStaff_5_29_max3.json'
 algorithm = MatchingAlgorithms.bipartiteMatching
 
 schedule = scheduleFrom(jsonFile, algorithm)
 
-toCSV(schedule)
+'''create output file name from input'''
+inputPath = Path(jsonFile)
+outputFile = inputPath.stem.replace('roleStaff','matching')
+outputFile += '_' + algorithm.__name__
+
+toCSV(schedule, outputFile)
 
 
 
