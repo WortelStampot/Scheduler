@@ -28,7 +28,17 @@ def toCSV(schedule, outputName):
 
         '''Display shifts per staff, ordered by weekday'''
         for staff in schedule.staff:
-            row = [staff.name] + staff.shifts(schedule)
+            row = [staff.name]
+            shifts = staff.shifts(schedule)
+            for weekday in Weekdays:
+                for role in shifts:
+                    if role.day == weekday:
+                        row.append(role)
+                        shifts.remove(role)
+                        break
+                    else:
+                        row.append('')
+                        break
             csvWriter.writerow(row)
 
         csvWriter.writerow('') # two empty rows
@@ -37,8 +47,9 @@ def toCSV(schedule, outputName):
         unassignedRow = ['unassigned'] + schedule.unassignedRoles
         csvWriter.writerow(unassignedRow)
 
-        if schedule.unrepairedDoubles:
+        if hasattr(schedule, 'unrepairedDoubles'):
             doublesRow = ['doubles'] + schedule.unrepairedDoubles
+            csvWriter.writerow(doublesRow)
 
         '''
         Display the roles in groupings, ordered by weekday
@@ -83,6 +94,7 @@ outputFile = inputPath.stem.replace('roleStaff','matching')
 outputFile += '_' + algorithm.__name__
 
 toCSV(schedule, outputFile)
+pass
 
 
 
