@@ -36,7 +36,7 @@ def writeCSV(schedule, outputName):
 
 ''' ---- set input here ---- '''
 jsonFile = 'Input/roleStaff_5_29_pref.json'
-algorithm = MatchingAlgorithms.weightedMatching
+algorithm = MatchingAlgorithms.bipartiteMatching
 
 '''create output file name from input'''
 inputPath = Path(jsonFile)
