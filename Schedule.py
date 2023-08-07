@@ -60,3 +60,39 @@ class Schedule:
 				role.toJSON() for role in self.unassignedRoles
 			]
 		}
+	
+	def toCSV(self):
+		"""
+		return a schedule's schedule in csv format
+		each list is a row to be printed with csvWriter
+		NOTE: this only works after repairDoubles has been run on the schedule,
+			otherwise the spacing gets messed up.
+		QUESTION: How to write this so that issue is handled?
+		"""
+		csvLists = []
+		topRow = ['staff'] + [day.name for day in Weekdays]
+		csvLists.append(topRow)
+
+		for staff in self.staff:
+			staffRow = [staff.name]
+			shifts = staff.shifts(self)
+			for weekday in Weekdays:
+				for role in shifts:
+					if role.day == weekday:
+						staffRow.append(role)
+						shifts.remove(role)
+						break
+					else:
+						staffRow.append('')
+						break
+			csvLists.append(staffRow)
+
+		if hasattr(self, 'unassignedRoles'):
+			unassignedRow = ['unassigned'] + self.unassignedRoles
+			csvLists.append(unassignedRow)
+			
+		if hasattr(self, 'unrepairedDoubles'):
+			doublesRow = ['doubles'] + self.unrepairedDoubles
+			csvLists.append(doublesRow)
+			
+		return csvLists
