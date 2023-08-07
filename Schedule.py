@@ -79,7 +79,7 @@ class Schedule:
 			for weekday in Weekdays:
 				for role in shifts:
 					if role.day == weekday:
-						staffRow.append(role)
+						staffRow.append(role.name)
 						shifts.remove(role)
 						break
 					else:
