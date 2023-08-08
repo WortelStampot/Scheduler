@@ -4,6 +4,7 @@ import cycleFunctions
 logger =  logging.getLogger(__name__)
 
 def repairDoubles(schedule):
+    schedule.unrepairedDoubles = []
     doubles = schedule.identifyDoubles()
     logger.info(f"repairDoubles starting count: {len(doubles)}\n{doubles}")
 

@@ -15,7 +15,6 @@ class Schedule:
 		self.staff = staff
 		self.schedule = matchingAlgorithm(self.roles, self.staff)
 		self.unassignedRoles = [role for role in self.roles if role not in self.schedule]
-		self.unrepairedDoubles = []
 
 	def logSchedule(self):
 		logger.info('---- Schedule ----')
@@ -87,10 +86,11 @@ class Schedule:
 						break
 			csvLists.append(staffRow)
 
-		if hasattr(self, 'unassignedRoles'):
-			unassignedRow = ['unassigned'] + self.unassignedRoles
-			csvLists.append(unassignedRow)
-			
+		unassignedRow = ['unassigned'] + self.unassignedRoles
+		csvLists.append(unassignedRow)
+		
+		# reason for attribute check,
+		# when this row prints- it means the schedule has gone through the 'repairDoubles' process
 		if hasattr(self, 'unrepairedDoubles'):
 			doublesRow = ['doubles'] + self.unrepairedDoubles
 			csvLists.append(doublesRow)
