@@ -5,12 +5,23 @@ import json
 import csv
 
 """
-functions for creating and interacting with a schedule object locally
+NOTE made a mess here while attempting to sort these functions into an 'input/output' class
+these functions are useable, this layout is not.
+
+The aim is to group these functions together so they can share common information between them
+input_dir
+output_dir
+Path(of input string)
+and for functions that write output to have access to the input string for file naming
 """
+
 
 class Tests:
     """
     verify and validate process results on a schedule object
+    TODO:
+        separate each test into its own function
+        separate file, since tests for a schedule object are a separate idea
     """
 
     def scheduleTests(schedule):
@@ -54,7 +65,7 @@ class Input:
     Functions take input data to create a Schedule object
     """
 
-    INPUT_DIR = 'Input/'
+    DIR = 'Input/'
 
     def scheduleFrom(jsonFile, matchingAlgorithm):
         """
@@ -82,16 +93,15 @@ class Output:
     Functions that save schedule data to the output directory
     """
 
-    OUTPUT_DIR = 'Output/'
+    DIR = 'Output/'
 
     def saveJSON(schedule, inputName):
         """
         save schedule JSON to tests/output directory
         output file name is based on name of input file
         """
-        OUTPUT_PATH = 'tests/output'
         outputFileName = inputName.replace('roleStaff','schedule')
-        outputPath = os.path.join(Output.OUTPUT_DIR, outputFileName)
+        outputPath = os.path.join(Output.DIR, outputFileName)
 
         with open(outputPath, 'w') as file:
             json.dump(schedule.toJSON(), file, indent=4)
@@ -102,7 +112,7 @@ class Output:
         #TODO: schedule input information inside Schedule?
         e.g. schedule.Date from incomming json    
         """
-        file = ''.join([Output.OUTPUT_DIR, outputName,'.csv'])
+        file = ''.join([Output.DIR, outputName,'.csv'])
 
         with open(file, 'w', newline='') as csvFile:
             csvWriter = csv.writer(csvFile)
@@ -112,10 +122,10 @@ class Output:
                 csvWriter.writerow(row)
 
 
-inputFilePath = getLatest(Input.INPUT_PATH)
+latestJSON = getLatest(Input.DIR)
 
 # create schedule
-schedule = createSchedule(inputFilePath)
+schedule = Input.scheduleFrom(latestJSON, algorithm)
 
 """
 This is a bit messy, set up to separate running tests and saving the schedule data
