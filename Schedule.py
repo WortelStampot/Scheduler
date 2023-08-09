@@ -13,6 +13,7 @@ class Schedule:
 		"""
 		self.roles = roles
 		self.staff = staff
+		self.matchingAlgorithm = matchingAlgorithm
 		self.schedule = matchingAlgorithm(self.roles, self.staff)
 		self.unassignedRoles = [role for role in self.roles if role not in self.schedule]
 
