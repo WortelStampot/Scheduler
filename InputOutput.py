@@ -19,7 +19,7 @@ class InputOutput:
         self.inputFile = Path(InputOutput.INPUT_DIR, jsonFile)
 
 
-    def scheduleFrom(self, matchingAlgorithm):
+    def scheduleWith(self, matchingAlgorithm):
         """
         create a schedule object from json input with specified matching algorithm
         """

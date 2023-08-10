@@ -6,7 +6,7 @@ from repairDoubles import repairDoubles
 jsonFile = InputOutput('roleStaff_5_29_pref.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
-schedule = jsonFile.scheduleFrom(algorithm)
+schedule = jsonFile.scheduleWith(algorithm)
 repairDoubles(schedule)
 
 jsonFile.writeCSV(schedule)
