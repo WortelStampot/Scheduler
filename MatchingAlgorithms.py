@@ -67,7 +67,7 @@ def findEdges(roleNodes, staffNodes):
     """ 
     return [ ( role,staff, {'weight': roleStaffRating(role, staff)} )
             for role in roleNodes for staff in staffNodes
-            if staff.isAvailable(role) ]
+            if staff.isAvailable(role) and staff.isQualified(role) ]
 
 def roleStaffRating(role, staff):
     """
