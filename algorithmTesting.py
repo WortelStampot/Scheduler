@@ -3,7 +3,7 @@ from MatchingAlgorithms import MatchingAlgorithms
 from repairDoubles import repairDoubles
 
 
-jsonFile = InputOutput('roleStaff_5_29_pref.json')
+jsonFile = InputOutput('roleStaff_8_7_strict.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
 schedule = jsonFile.scheduleWith(algorithm)
