@@ -74,4 +74,6 @@ def roleStaffRating(role, staff):
     return a number representing the weight of a role,staff connection
     """
     
-    return 10 * staff.isQualified(role)
+    #TODO: verify role preference is a number
+    #TODO: logging
+    return role.preference[staff.name]
