@@ -83,7 +83,7 @@ class Staff:
 		if role in self.shifts(schedule):
 			staffDoesNotWorkThisRole = False
 
-		return (role.day in openDays and staffDoesNotWorkThisRole) and self.isAvailable(role)
+		return (role.day in openDays and staffDoesNotWorkThisRole) and self.isAvailable(role) and self.isQualified(role)
 	
 	def toJSON(self):
 		return {
