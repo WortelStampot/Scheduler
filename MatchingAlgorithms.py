@@ -65,9 +65,16 @@ def findEdges(roleNodes, staffNodes):
     return a list of edges between role and staff nodes based on staff.isAvailable
     each edge has a weight calculated by roleStaffRating()
     """ 
-    return [ ( role,staff, {'weight': roleStaffRating(role, staff)} )
-            for role in roleNodes for staff in staffNodes
-            if staff.isAvailable(role) and staff.isQualified(role) ]
+    
+    edgeList = [ (role,staff, {'weight': roleStaffRating(role,staff)})
+                for role in roleNodes for staff in staffNodes
+                if staff.isAvailable(role) and staff.isQualified(role) ]
+
+    poolSize = len(roleNodes) * len(staffNodes)
+    logger.info( f'{ len(edgeList) } edges in {poolSize} \n \
+                coverage: { round( (len(edgeList) / poolSize * 100), 2) }%')
+    
+    return edgeList
 
 def roleStaffRating(role, staff):
     """
