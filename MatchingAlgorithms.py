@@ -73,8 +73,8 @@ def findEdges(roleNodes, staffNodes):
                 if staff.isAvailable(role) and staff.isQualified(role) ]
 
     poolSize = len(roleNodes) * len(staffNodes)
-    logger.info( f'{ len(edgeList) } edges in {poolSize} \n \
-                coverage: { round( (len(edgeList) / poolSize * 100), 2) }%')
+    logger.info( f'{ len(edgeList) } edges from {poolSize} \
+    coverage: { round( (len(edgeList) / poolSize * 100), 2) }%')
     
     return edgeList
 
