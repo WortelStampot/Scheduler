@@ -66,7 +66,6 @@ class Staff:
 				daysAvailable += 1
 		if daysAvailable == 0:
 			daysAvailable = -10 #don't want someone with no availability to work
-		logger.info(f'{self} daysAvailable: {daysAvailable}')
 
 		return daysAvailable
 
