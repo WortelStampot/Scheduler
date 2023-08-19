@@ -13,7 +13,7 @@ class MatchingAlgorithms:
         """
         graph = nx.Graph()
 
-        staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
+        staffCollection = copyStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
         edges = findEdges(roleCollection, staffCollection)
         graph.add_edges_from(edges)
         matching = nx.max_weight_matching(graph, maxcardinality=True)
@@ -35,7 +35,7 @@ class MatchingAlgorithms:
         matching with bipartite graph, non weighted
         """
         graph = nx.Graph()
-        staffCollection = duplicateStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
+        staffCollection = copyStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
 
         graph.add_nodes_from(roleCollection, bipartite=0)
         graph.add_nodes_from(staffCollection, bipartite=1)
@@ -47,16 +47,18 @@ class MatchingAlgorithms:
 
         return schedule
 
-def duplicateStaff(staffCollection):
+def copyStaff(staffCollection):
     '''
-    duplicate Staff by the number of shifts they are available to work
+    copy staff by the number of shifts they are available to work
     '''
     staffByShifts = []
-    for Staff in staffCollection:
-        shiftsRemaining = min(Staff.maxShifts, Staff.daysAvailable())
-        for shiftCount in range(shiftsRemaining):
-            staffByShifts.append(copy.deepcopy(Staff))
-        logger.debug(f'{Staff} duplicated by: {shiftCount}')
+    for staff in staffCollection:
+        shiftCount = min(staff.maxShifts, staff.daysAvailable())
+        for _ in range(shiftCount):
+            staffByShifts.append(copy.deepcopy(staff))
+
+        logger.info(f'{staff.name} {shiftCount}')
+        logger.debug(f'max shifts: {staff.maxShifts} days available: {staff.daysAvailable()}') 
 
     return staffByShifts
 
