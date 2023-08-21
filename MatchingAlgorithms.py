@@ -16,7 +16,7 @@ class MatchingAlgorithms:
         staffCollection = copyStaff(staffCollection) # REASON: the matching algorithm requires each node in the 'staff set' to be unqiue.
         edges = findEdges(roleCollection, staffCollection)
         graph.add_edges_from(edges)
-        matching = nx.max_weight_matching(graph, maxcardinality=True)
+        matching = nx.max_weight_matching(graph, maxcardinality=True) #maxcardinality is True to for the matching to contain the maximum number of roles assigned to unique staff
 
         #For some reason, three pairs in the matching returned as a swaped (staff,role) tuple
         #this is quick fix
