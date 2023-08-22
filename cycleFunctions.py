@@ -46,7 +46,8 @@ def allCyclesOfLengthHelper(schedule, length, path, visited):
     unvisitedNeighbors = [role for role in visited if schedule.graph[currentNode][role] and not visited[role]]
     #these are the roles which staff1 is 'open for' and have not yet been visited in the search for a cycle at the current length
 
-    logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles\n{unvisitedNeighbors}")
+    logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles")
+    logger.debug(f"{unvisitedNeighbors}")
 
     for neighbor in unvisitedNeighbors:
         #we need a copy of visited because we don't want changes to visited in one function
@@ -73,7 +74,7 @@ def cycleSwap(schedule, cycle):
 
     doubleCount = schedule.identifyDoubles()
     logger.debug(f'doubles before swap: {len(doubleCount), doubleCount}')
-    logger.info(f"Repairing: {cycle[0]}(staff:{schedule.schedule[cycle[0]]}), with cycle: {[(role, schedule.schedule[role]) for role in cycle]}")
+    logger.info(f"Repairing: {cycle[0]}(staff:{schedule.schedule[cycle[0]]}), with cycle: {[(role, schedule.schedule[role]) for role in cycle]}\n")
 
     for i in range(1,len(cycle)):
         swap(schedule, cycle[0], cycle[i])
