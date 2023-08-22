@@ -46,7 +46,7 @@ def allCyclesOfLengthHelper(schedule, length, path, visited):
     unvisitedNeighbors = [role for role in visited if schedule.graph[currentNode][role] and not visited[role]]
     #these are the roles which staff1 is 'open for' and have not yet been visited in the search for a cycle at the current length
 
-    logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles")
+    logger.info(f"{staff} open for: {len(unvisitedNeighbors)} Roles") #NOTE: Unintended block of recursive log lines when a cycle of length can't be found and length is incremented
     logger.debug(f"{unvisitedNeighbors}")
 
     for neighbor in unvisitedNeighbors:
