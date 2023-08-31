@@ -3,8 +3,6 @@ def isCallTimeOverlap(role, schedule):
     True when this role calltime is AM and the assigned staff's preceeding shift is 5pm or later
     exception when role.day is first day of the week, no preceeding shift
     '''
-    if role.day.value == 0:
-        return ValueError ('no preceding shift to first day of the week')
     if role.callTime.hour > 12:
         return False # definition doesn't apply to roles that aren't morning shifts
 
@@ -12,9 +10,10 @@ def isCallTimeOverlap(role, schedule):
     staffShifts = staff.shifts(schedule)
     preceedingDay = role.day.value - 1
 
-    for shift in staffShifts:
+    for shift in staffShifts: #shifts are 'role objects'
         if shift.day.value == preceedingDay:
             precedingRole = shift
+            break
         else:
             precedingRole = None
 
@@ -70,3 +69,8 @@ def isOpenFor(self, role, schedule):
         staffDoesNotWorkThisRole = False
 
     return (role.day in openDays and staffDoesNotWorkThisRole) and self.isAvailable(role) and self.isQualified(role)
+
+
+
+
+schedule.repair(doubles)
