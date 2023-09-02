@@ -16,6 +16,8 @@ class Schedule:
 		self.matchingAlgorithm = matchingAlgorithm
 		self.schedule = matchingAlgorithm(self.roles, self.staff)
 		self.unassignedRoles = [role for role in self.roles if role not in self.schedule]
+		self.staffDays = {staff: {matchedRole.day: matchedRole for matchedRole, matchedStaff in self.schedule.items() 
+							if matchedStaff.name == staff.name } for staff in self.staff}
 
 	def logSchedule(self):
 		logger.info('---- Schedule ----')
