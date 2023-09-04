@@ -90,7 +90,7 @@ def createGraph_Doubles(schedule):
     this graph is a representation of all the shifts a staff is open to swap with
     based on the doubles criteria.
     We call isOpenFor_doubles for each possible role/staff combination of the schedule.
-    the returned True or False value is what makes up the square matrix of this graph.
+    the returned True or False value is what makes up the rectangle matrix of this graph.
     '''
 
     #We call isOpenFor_doubles for each possible role/staff combination of the schedule
@@ -101,7 +101,7 @@ def createGraph_Doubles(schedule):
 
     #we want to store this True/False value
     # we also want to store the role and staff associated with this True False value
-    #as a set, these True/False values make up a square matrix of 'rows and column'
+    #as a set, these True/False values make up a rectangle matrix of 'rows and column'
     # we can now use this matrix as a graph to find chains
     # a staff being open for a role, and the staff of that role being open for another role
     # when the staff of the current end point of a chain is open for the role which started the chain,
