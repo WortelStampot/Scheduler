@@ -94,9 +94,10 @@ def createGraph_Doubles(schedule):
     '''
 
     #We call isOpenFor_doubles for each possible role/staff combination of the schedule
-    for staff in schedule.staff:
-        for role in schedule.roles:
-            isOpenFor_Doubles(staff, role, schedule)
+
+    values = [isOpenFor_Doubles(staff, role, schedule)
+              for staff in schedule.staff
+              for role in schedule.role]
 
     #we want to store this True/False value
     # we also want to store the role and staff associated with this True False value
