@@ -98,7 +98,19 @@ def createGraph_Doubles(schedule):
     values = [isOpenFor_Doubles(staff, role, schedule)
               for staff in schedule.staff
               for role in schedule.role]
+    
+    dictionaryValues = {role: isOpenFor_Doubles(staff, role, schedule)
+                        for staff in schedule.staff
+                        for role in schedule.role}
 
+    dictionaryValues = {staff: (isOpenFor_Doubles(staff, role, schedule), role)
+                    for staff in schedule.staff
+                    for role in schedule.role}
+    
+    dictionaryValues = {role: (isOpenFor_Doubles(staff, role, schedule), staff)
+                for staff in schedule.staff
+                for role in schedule.role}
+    
     #we want to store this True/False value
     # we also want to store the role and staff associated with this True False value
     #as a set, these True/False values make up a rectangle matrix of 'rows and column'
