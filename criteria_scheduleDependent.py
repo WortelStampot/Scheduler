@@ -95,6 +95,61 @@ def createGraph_Doubles(schedule):
 
     #We call isOpenFor_doubles for each possible role/staff combination of the schedule
 
+    #schedule.staff = [staff1, staff2, staff3, ...]
+    #schedule.roles = [role1, role2, role3, ...]
+
+    rowOfValues = []
+    for staff in schedule.staff:
+        for role in schedule.roles:
+            rowOfValues.append( isOpenFor_Doubles(staff, role, schedule) )
+
+    #looping through each staff, starting with staff1,
+    #  loop through role1, role2, role3, ...
+    #then staff2,
+    #   loop through role1, role2, role3, ...
+    
+    #this gives us the isOpenFor True/False value
+    #for each role/staff combination of the schedule
+    # and this is the rectangular matrix?
+    # it seems like a large row instead of a row/column grid.
+
+    #for a grid, we need an outcome like this
+        # each row represents a staff's isOpenFor values per role
+        # [T, F, T, F, F, ...]
+        # [F, T, T, F, F, ...]
+        # [F, F, T, T, F, ...]
+
+    gridOfValues = []
+    for staff in schedule.staff:
+        staffOpenForValues = []
+        for role in schedule.roles:
+            staffOpenForValues.append( isOpenFor_Doubles(staff, role, schedule) )
+        gridOfValues.append( staffOpenForValues )
+
+    #writing that as a list comp:
+
+    gridOfValues_ListComp = [ [isOpenFor_Doubles(staff, role, schedule)
+     for staff in schedule.staff ]
+     for role in schedule.roles ]
+
+    #is this the adjacency graph?
+    #the reason a dictionary is used, is to store the associated role with each True/False value
+    #a dictionary allows us to look up the value with a role as the key.
+
+    #so why are we using roles as keys when the first role represents the staff of that role?
+
+    adjcMatrix_staffKey = { staff: {role: isOpenFor_Doubles(staff, role, schedule)
+                  for staff in schedule.staff } # this is the row dictionary
+                  for role in schedule.roles} # this is the dict which stores the rows, creating columns
+    
+    adjcMatrix_roleKey = { role1: {role2: staff.isOpenFor(role2, schedule)
+                         for role2 in schedule.schedule }
+                         for role1, staff in schedule.schedule.items()}
+    
+    #apart from swapping role1 for staff, are these the same?
+    #when yes, then I can move on.
+
+    '''
     values = [isOpenFor_Doubles(staff, role, schedule)
               for staff in schedule.staff
               for role in schedule.role]
@@ -110,6 +165,8 @@ def createGraph_Doubles(schedule):
     dictionaryValues = {role: (isOpenFor_Doubles(staff, role, schedule), staff)
                 for staff in schedule.staff
                 for role in schedule.role}
+    '''
+    
     
     #we want to store this True/False value
     # we also want to store the role and staff associated with this True False value
@@ -126,9 +183,6 @@ def createGraph_Doubles(schedule):
     #the returned True or False value is what makes up the square matrix of this graph
 
 
-
-
-    pass
 
 '''
 schedule.repair(doubles) is: 
