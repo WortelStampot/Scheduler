@@ -24,9 +24,17 @@ def isCallTimeOverlap(role, schedule):
 
 def isDouble(role, schedule):
     '''
-    True this role is the second shift a staff is assigned to on the same day
+    True when the staff of this role is matched to another role on this role's day
     '''
-    pass
+    staff = schedule.schedule[role]
+
+    matchedRoles = set(staff.shifts(schedule)) #get the role objects staff is currently matched with
+    #as a set for subtraction
+    matchedRoles -= set(role) #subtract the role in question
+
+    daysScheduled = [role.day for role in matchedRoles]
+
+    return role.day in daysScheduled
 
 
 
@@ -78,7 +86,7 @@ def isOpenFor_Doubles(staff, role, schedule):
         False when staff is already matched with a role on this role's day
     '''
     staffDaysWorking = [shift.day for shift in staff.shifts(schedule)] 
-    
+
     return role.day not in staffDaysWorking \
     and staff.isAvailable(role) and staff.isQualified(role)
         #TODO: pull isAvailable and isQualiified from a single source.
