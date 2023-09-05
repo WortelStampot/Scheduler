@@ -18,7 +18,7 @@ def repairDoubles(schedule):
 
 
 def repairDouble(schedule, doubleRole):
-    staff = schedule.schedule[doubleRole]
+    staff = schedule.matching[doubleRole]
     logger.info(f"Double role to repair: {doubleRole}, {staff}")
 
     #DEBUG - log staff schedule and availability

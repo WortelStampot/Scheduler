@@ -26,8 +26,8 @@ def createGraph_Doubles(schedule):
     
     #compared with current structure:
     adjcMatrix_roleKey = { role1: {role2: staff.isOpenFor(role2, schedule)
-                        for role2 in schedule.schedule }
-                        for role1, staff in schedule.schedule.items()}
+                        for role2 in schedule.matching }
+                        for role1, staff in schedule.matching.items()}
     
     #the roleKey graph is a square 95 x 95 roles pulled from the matching
     #the staffKey graph is a rectangle 25 x 101, roles and staff pulled from the schedule's role/staff input
@@ -44,7 +44,7 @@ def isDouble(role, schedule):
     '''
     True when the staff of this role is matched to another role on this role's day
     '''
-    staff = schedule.schedule[role]
+    staff = schedule.matching[role]
 
     matchedRoles = set(staff.shifts(schedule)) #get the role objects staff is currently matched with
     #as a set for subtraction
@@ -56,4 +56,4 @@ def isDouble(role, schedule):
 
 #example usage:
 schedule = {}
-doubles = [role for role in schedule.schedule if isDouble(role, schedule)]
+doubles = [role for role in schedule.matching if isDouble(role, schedule)]

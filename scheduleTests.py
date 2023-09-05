@@ -56,7 +56,7 @@ def testSchedule(scheduleData):
         print('doubles check: pass')
 
         """Test for each staff paired with a role they are available for"""
-        for role, staff in schedule.schedule.items():
+        for role, staff in schedule.matching.items():
             try:
                 assert staff.isAvailable(role)
             except AssertionError:

@@ -24,7 +24,7 @@ class ScheduleTests:
         print('doubles check: pass')
 
         """Test for each staff paired with a role they are available for"""
-        for role, staff in schedule.schedule.items():
+        for role, staff in schedule.matching.items():
             try:
                 assert staff.isAvailable(role)
             except AssertionError:
@@ -33,7 +33,7 @@ class ScheduleTests:
         print('availabiliy check: pass')
 
         """Test each staff is qualified for their matched role"""
-        for role, staff in schedule.schedule.items():
+        for role, staff in schedule.matching.items():
             try:
                 assert staff.isQualified(role)
             except AssertionError:

@@ -37,7 +37,7 @@ class Staff:
 		NOTE: a scheduled role is found from the schedule using staff.name
 		"""
 		shifts = []
-		for role, staff in schedule.schedule.items():
+		for role, staff in schedule.matching.items():
 			if staff.name == self.name:
 				shifts.append(role)
 		shifts.sort(key=lambda role: role.day.value)
@@ -49,7 +49,7 @@ class Staff:
 		NOTE: a matching shift is found from the schedule using staff.name 
 		"""
 		shiftCount = 0
-		for role, staff in schedule.schedule.items():
+		for role, staff in schedule.matching.items():
 			if staff != None:
 				if staff.name == self.name:
 					shiftCount += 1

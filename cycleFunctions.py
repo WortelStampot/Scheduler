@@ -35,7 +35,7 @@ def allCyclesOfLengthHelper(schedule, length, path, visited):
     """
     cycles = []
     currentNode = path[-1]
-    staff = schedule.schedule[currentNode] # staff variable for logging
+    staff = schedule.matching[currentNode] # staff variable for logging
 
     if length == 1:
         startNode = path[0]
@@ -74,7 +74,7 @@ def cycleSwap(schedule, cycle):
 
     doubleCount = schedule.identifyDoubles()
     logger.debug(f'doubles before swap: {len(doubleCount), doubleCount}')
-    logger.info(f"Repairing: {cycle[0]}(staff:{schedule.schedule[cycle[0]]}), with cycle: {[(role, schedule.schedule[role]) for role in cycle]}\n")
+    logger.info(f"Repairing: {cycle[0]}(staff:{schedule.matching[cycle[0]]}), with cycle: {[(role, schedule.matching[role]) for role in cycle]}\n")
 
     for i in range(1,len(cycle)):
         swap(schedule, cycle[0], cycle[i])
@@ -86,7 +86,7 @@ def cycleSwap(schedule, cycle):
     
 def swap(schedule, role1, role2):
     #swap the staff in the schedule
-    schedule.schedule[role2], schedule.schedule[role1] = schedule.schedule[role1], schedule.schedule[role2]
+    schedule.matching[role2], schedule.matching[role1] = schedule.matching[role1], schedule.matching[role2]
 
     #update the graph to reflect the swap. 
     schedule.graph = doublesGraph(schedule)
@@ -99,4 +99,4 @@ def doublesGraph(schedule):
     working role1 could work role2. When that's true, staff1 can be reassigned to role2 without breaking
     doubles/availability.
     """
-    return {role1: {role2: staff.isOpenFor(role2, schedule) for role2 in schedule.schedule} for role1, staff in schedule.schedule.items()}
+    return {role1: {role2: staff.isOpenFor(role2, schedule) for role2 in schedule.matching} for role1, staff in schedule.matching.items()}

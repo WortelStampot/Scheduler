@@ -14,15 +14,15 @@ class Schedule:
 		self.roles = roles
 		self.staff = staff
 		self.matchingAlgorithm = matchingAlgorithm
-		self.schedule = matchingAlgorithm(self.roles, self.staff)
-		self.unassignedRoles = [role for role in self.roles if role not in self.schedule]
-		self.staffDays = {staff: {matchedRole.day: matchedRole for matchedRole, matchedStaff in self.schedule.items() 
+		self.matching = matchingAlgorithm(self.roles, self.staff)
+		self.unassignedRoles = [role for role in self.roles if role not in self.matching]
+		self.staffDays = {staff: {matchedRole.day: matchedRole for matchedRole, matchedStaff in self.matching.items() 
 							if matchedStaff.name == staff.name } for staff in self.staff}
 
 	def logSchedule(self):
 		logger.info('---- Schedule ----')
 		for weekday in Weekdays:
-			logger.info([(role, staff) for role, staff in self.schedule.items() if role.day == weekday])
+			logger.info([(role, staff) for role, staff in self.matching.items() if role.day == weekday])
 		logger.info('---- Unassigned Roles ----')
 		for role in self.unassignedRoles:
 			logger.info(role)
@@ -33,7 +33,7 @@ class Schedule:
 		"""
 		doubles = []
 		staffDays = set()
-		for role, staff in self.schedule.items():
+		for role, staff in self.matching.items():
 			day = role.day
 			staffDay = (staff.name, day)
 
@@ -56,7 +56,7 @@ class Schedule:
 				'day': role.day.name,
 				'callTime': role.callTime.strftime('%H:%M'),
 				'staff': staff.name
-				} for role, staff in self.schedule.items()],
+				} for role, staff in self.matching.items()],
 
 			'unassignedRoles': [
 				role.toJSON() for role in self.unassignedRoles

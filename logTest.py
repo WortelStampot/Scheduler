@@ -12,11 +12,11 @@ algorithm = MatchingAlgorithms.weightedMatching
 schedule = scheduleFrom(jsonInput, algorithm)
 schedule.logSchedule()
 
-for role, staff in schedule.schedule.items():
+for role, staff in schedule.matching.items():
     isCallTimeOverlap(role, schedule)
 
 repairDoubles(schedule)
 schedule.logSchedule()
 
-for role, staff in schedule.schedule.items():
+for role, staff in schedule.matching.items():
     isCallTimeOverlap(role, schedule)

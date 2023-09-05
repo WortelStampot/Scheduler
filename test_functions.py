@@ -20,7 +20,7 @@ class Test_isOpenFor:
         role = Role(name='Aux', day=Weekdays.TUESDAY, callTime=datetime.time(hour=18, minute=00))
         role.qualifiedStaff = ['atlas']
         schedule = Schedule(roles=[], staff=[], matchingAlgorithm=MatchingAlgorithms.test_emptyMatching)
-        schedule.schedule = {}
+        schedule.matching = {}
 
         isAvailabile = {Weekdays.MONDAY: [],
                 Weekdays.TUESDAY: [datetime.time(18,0)],
@@ -46,7 +46,7 @@ class Test_isOpenFor:
         anotherTuesdayRole = Role(name='Front', day=Weekdays.TUESDAY, callTime=datetime.time(4,30))
         anotherTuesdayRole.qualifiedStaff=['atlas']
         schedule = Schedule(roles=[], staff=[], matchingAlgorithm=MatchingAlgorithms.test_emptyMatching)
-        schedule.schedule = {anotherTuesdayRole: staff}
+        schedule.matching = {anotherTuesdayRole: staff}
 
         isAvailabile = {Weekdays.MONDAY: [],
                 Weekdays.TUESDAY: [datetime.time(18,0)],
@@ -70,7 +70,7 @@ class Test_isOpenFor:
         role = Role(name='Aux', day=Weekdays.TUESDAY, callTime=datetime.time(hour=18, minute=00))
         role.qualifiedStaff=['atlas']
         schedule = Schedule(roles=[], staff=[], matchingAlgorithm=MatchingAlgorithms.test_emptyMatching)
-        schedule.schedule = {}
+        schedule.matching = {}
 
         notAvailabile = {Weekdays.MONDAY: [],
                 Weekdays.TUESDAY: [],
@@ -94,7 +94,7 @@ class Test_isOpenFor:
         role = Role(name='Aux', day=Weekdays.TUESDAY, callTime=datetime.time(hour=18, minute=00))
         role.qualifiedStaff=['atlas']
         schedule = Schedule(roles=[], staff=[], matchingAlgorithm=MatchingAlgorithms.test_emptyMatching)
-        schedule.schedule = {role: staff}
+        schedule.matching = {role: staff}
 
         isAvailabile = {Weekdays.MONDAY: [],
                 Weekdays.TUESDAY: [datetime.time(18,0)],

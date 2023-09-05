@@ -6,7 +6,7 @@ def isCallTimeOverlap(role, schedule):
     if role.callTime.hour > 12:
         return False # definition doesn't apply to roles that aren't morning shifts
 
-    staff = schedule.schedule[role]
+    staff = schedule.matching[role]
     staffShifts = staff.shifts(schedule)
     preceedingDay = role.day.value - 1
 
@@ -26,7 +26,7 @@ def isDouble(role, schedule):
     '''
     True when the staff of this role is matched to another role on this role's day
     '''
-    staff = schedule.schedule[role]
+    staff = schedule.matching[role]
 
     matchedRoles = set(staff.shifts(schedule)) #get the role objects staff is currently matched with
     #as a set for subtraction
@@ -44,7 +44,7 @@ def identifyDoubles(self):
     """
     doubles = []
     staffDays = set()
-    for role, staff in self.schedule.items():
+    for role, staff in schedule.matching.items():
         day = role.day
         staffDay = (staff.name, day)
 
@@ -61,7 +61,7 @@ def doublesGraph(schedule):
     working role1 could work role2. When that's true, staff1 can be reassigned to role2 without breaking
     doubles/availability.
     """
-    return {role1: {role2: staff.isOpenFor(role2, schedule) for role2 in schedule.schedule} for role1, staff in schedule.schedule.items()}
+    return {role1: {role2: staff.isOpenFor(role2, schedule) for role2 in schedule.matching} for role1, staff in schedule.matching.items()}
 
 def isOpenFor(self, role, schedule):
     """
@@ -151,8 +151,8 @@ def createGraph_Doubles(schedule):
                   for staff in schedule.staff} # this is the dict which stores the rows, creating columns
     
     adjcMatrix_roleKey = { role1: {role2: staff.isOpenFor(role2, schedule)
-                         for role2 in schedule.schedule }
-                         for role1, staff in schedule.schedule.items()}
+                         for role2 in schedule.matching }
+                         for role1, staff in schedule.matching.items()}
     
     #apart from swapping role1 for staff, are these the same?
     #when yes, then I can move on.
@@ -197,7 +197,7 @@ schedule.repair(doubles) is:
 
 to dentify double shifts
     doubles definition - isDouble(shift) True/False
-    doubleRoles = [role for role, staff in schedule.schedule.items() if isDouble(role)]
+    doubleRoles = [role for role, staff in schedule.matching.items() if isDouble(role)]
 
 to make the graph
     graph is a dictionary of True/False values for each staff

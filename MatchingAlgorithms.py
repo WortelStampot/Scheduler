@@ -46,6 +46,11 @@ class MatchingAlgorithms:
         schedule = {role: staff for role, staff in matching.items() if role in roleCollection} # get half of the matching dictionary
 
         return schedule
+    
+    def test_emptyMatching(roles, staff):
+        schedule = {} #empty schedule by default
+
+        return schedule
 
 def copyStaff(staffCollection):
     '''

@@ -14,7 +14,7 @@ def isCallTimeOverlap(role, schedule):
         logger.info(f'{role} is not morning role')
         return False # definition doesn't apply to roles that aren't morning shifts
 
-    staff = schedule.schedule[role]
+    staff = schedule.matching[role]
     staffShifts = staff.shifts(schedule)
     preceedingDay = role.day.value - 1
 
@@ -72,6 +72,8 @@ def isOpenForOverlap(staff, role, schedule):
     
     return False
 
+'''
 overlappingRoles = [isCallTimeOverlap(shift)]
 
 schedule.repair(overlap)
+'''
