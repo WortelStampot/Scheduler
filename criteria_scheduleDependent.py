@@ -44,7 +44,7 @@ def identifyDoubles(self):
     """
     doubles = []
     staffDays = set()
-    for role, staff in schedule.matching.items():
+    for role, staff in self.matching.items():
         day = role.day
         staffDay = (staff.name, day)
 
