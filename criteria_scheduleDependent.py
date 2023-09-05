@@ -139,8 +139,8 @@ def createGraph_Doubles(schedule):
     #so why are we using roles as keys when the first role represents the staff of that role?
 
     adjcMatrix_staffKey = { staff: {role: isOpenFor_Doubles(staff, role, schedule)
-                  for staff in schedule.staff } # this is the row dictionary
-                  for role in schedule.roles} # this is the dict which stores the rows, creating columns
+                  for role in schedule.roles } # this is the row dictionary
+                  for staff in schedule.staff} # this is the dict which stores the rows, creating columns
     
     adjcMatrix_roleKey = { role1: {role2: staff.isOpenFor(role2, schedule)
                          for role2 in schedule.schedule }
