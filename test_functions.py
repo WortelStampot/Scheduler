@@ -42,7 +42,9 @@ class Test_isOpenFor:
 
         staff = Staff(name='atlas', maxShifts=4, availability=None)
         role = Role(name='Aux', day=Weekdays.TUESDAY, callTime=datetime.time(hour=18, minute=00))
+        role.qualifiedStaff=['atlas']
         anotherTuesdayRole = Role(name='Front', day=Weekdays.TUESDAY, callTime=datetime.time(4,30))
+        anotherTuesdayRole.qualifiedStaff=['atlas']
         schedule = Schedule(roles=[], staff=[], matchingAlgorithm=MatchingAlgorithms.test_emptyMatching)
         schedule.schedule = {anotherTuesdayRole: staff}
 
@@ -66,6 +68,7 @@ class Test_isOpenFor:
 
         staff = Staff(name='atlas', maxShifts=4, availability=None)
         role = Role(name='Aux', day=Weekdays.TUESDAY, callTime=datetime.time(hour=18, minute=00))
+        role.qualifiedStaff=['atlas']
         schedule = Schedule(roles=[], staff=[], matchingAlgorithm=MatchingAlgorithms.test_emptyMatching)
         schedule.schedule = {}
 
@@ -89,6 +92,7 @@ class Test_isOpenFor:
 
         staff = Staff(name='atlas', maxShifts=4, availability=None)
         role = Role(name='Aux', day=Weekdays.TUESDAY, callTime=datetime.time(hour=18, minute=00))
+        role.qualifiedStaff=['atlas']
         schedule = Schedule(roles=[], staff=[], matchingAlgorithm=MatchingAlgorithms.test_emptyMatching)
         schedule.schedule = {role: staff}
 

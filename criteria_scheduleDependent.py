@@ -82,7 +82,8 @@ def isOpenFor_Doubles(staff, role, schedule):
     
     #with all the staff's shifts, we have all the days they are scheduled-
     #now we can check when this role's day is in the staff's working days.
-    return role.day not in staffDaysWorking
+
+    return role.day not in staffDaysWorking and staff.isAvailable(role)
 
 
 def createGraph_Doubles(schedule):
