@@ -48,12 +48,11 @@ def isDouble(role, schedule):
 
     matchedRoles = set(staff.shifts(schedule)) #get the role objects staff is currently matched with
     #as a set for subtraction
-    matchedRoles -= set(role) #subtract the role in question
+    matchedRoles -= set([role]) #subtract the role in question
 
     daysScheduled = [role.day for role in matchedRoles]
 
     return role.day in daysScheduled
 
 #example usage:
-schedule = {}
-doubles = [role for role in schedule.matching if isDouble(role, schedule)]
+# doubles = [role for role in schedule.matching if isDouble(role, schedule)]
