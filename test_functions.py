@@ -3,6 +3,7 @@ from Role import Role
 from Schedule import Schedule
 from Weekdays import Weekdays
 from MatchingAlgorithms import MatchingAlgorithms
+from criteria_scheduleDependent import isOpenFor_Doubles
 import datetime
 
 
@@ -31,6 +32,7 @@ class Test_isOpenFor:
 
         staff.availability = isAvailabile
         assert staff.isOpenFor(role, schedule)
+        assert isOpenFor_Doubles(staff, role, schedule)
 
     def test02(self):
         """
@@ -54,6 +56,7 @@ class Test_isOpenFor:
         
         staff.availability = isAvailabile
         assert not staff.isOpenFor(role, schedule)
+        assert not isOpenFor_Doubles(staff, role, schedule)
 
     def test03(self):
         """
@@ -76,6 +79,7 @@ class Test_isOpenFor:
         
         staff.availability = notAvailabile
         assert not staff.isOpenFor(role, schedule)
+        assert not isOpenFor_Doubles(staff, role, schedule)
 
     def test04(self):
         """
@@ -98,3 +102,4 @@ class Test_isOpenFor:
 
         staff.availability = isAvailabile
         assert not staff.isOpenFor(role, schedule)
+        assert not isOpenFor_Doubles(staff, role, schedule)
