@@ -77,13 +77,12 @@ def isOpenFor_Doubles(staff, role, schedule):
     'open' defined by doubles criteria
         False when staff is already matched with a role on this role's day
     '''
-    staffDaysWorking = [shift.day for shift in staff.shifts(schedule)] #get the days that this staff is working.
-        #we iterate through the schedule to find all of this staff's shifts.
+    staffDaysWorking = [shift.day for shift in staff.shifts(schedule)] 
     
-    #with all the staff's shifts, we have all the days they are scheduled-
-    #now we can check when this role's day is in the staff's working days.
-
-    return role.day not in staffDaysWorking and staff.isAvailable(role)
+    return role.day not in staffDaysWorking \
+    and staff.isAvailable(role) and staff.isQualified(role)
+        #TODO: pull isAvailable and isQualiified from a single source.
+        #They first appear in findEdges()
 
 
 def createGraph_Doubles(schedule):
