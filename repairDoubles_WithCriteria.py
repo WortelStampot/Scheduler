@@ -5,7 +5,7 @@ from doublesCriteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
 from InputOutput import InputFile, scheduleFrom #from ScheduleTesting import TestSchedule?
 from MatchingAlgorithms import MatchingAlgorithms
 import logging
-logging.basicConfig(filename='activity.log', filemode='w', level=logging.INFO, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
+logging.basicConfig(filename='activity.log', filemode='w', level=logging.DEBUG, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger(__name__)
 
 jsonInput = InputFile('roleStaff_8_7_open.json')
@@ -90,3 +90,31 @@ doublesGraph = createGraph_Doubles(schedule)
 
 # so we have the graph and now we set out to find cycles.
 #how does this work?
+
+staff = schedule.matching[double]
+staffGraph = doublesGraph[staff]
+
+#this gives us a dictionary with True/False values of each role this staff is able to open to swap with.
+# now we have options-
+
+# we can find connections by length, starting with 2,
+# for each role this staff is open to swap with, go to that role's staff dictionary.
+    #when that staff is open to swap with this double role, the connection cricles around and is 'a cycle'
+
+#where we'd like to go is:
+# find all the cycles for this double and select the one with the heightest weight.
+# this requires the roleStaffRating in the graph, which we currently don't have.
+# adding the weight is another iteration
+
+# so, we find a cycle by length.
+
+'''for each role this staff is open to swap with, go to that role's staff dictionary.'''
+logger.debug(f'double role: {double}, double staff: {staff}')
+for targetRole in staffGraph:
+    if staffGraph[targetRole] == True:
+        logger.debug(f'{staff} open for {targetRole}')
+        targetStaff = schedule.matching[targetRole] #look up in the matching dictionary seems logical?
+        if doublesGraph[targetStaff][double]:
+            logger.debug(f'cylce found: {targetRole}, {targetStaff}')
+
+#okay, this seems like all the cycles of length 2 for this double role.
