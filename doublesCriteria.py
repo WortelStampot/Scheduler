@@ -25,7 +25,7 @@ def createGraph_Doubles(schedule):
     the returned True or False value is what makes up the rectangle matrix of this graph.
     '''
     adjcMatrix_staffKey = { staff: {role: isOpenFor_Doubles(staff, role, schedule)
-                  for role in schedule.roles } # this is the row dictionary
+                  for role in schedule.matching } # this is the row dictionary
                   for staff in schedule.staff} # this is the dict which stores the rows, creating columns
     
     #compared with current structure:
@@ -34,7 +34,7 @@ def createGraph_Doubles(schedule):
                         for role1, staff in schedule.matching.items()}
     
     #the roleKey graph is a square 95 x 95 roles pulled from the matching
-    #the staffKey graph is a rectangle 25 x 101, roles and staff pulled from the schedule's role/staff input
+    #the staffKey graph is a rectangle 25 x 95, roles and staff pulled from the schedule's role/staff input
     
     #don't know yet when one version is suited over the other. For readabiltiy I prefer the staffKey
         #since the staffKey seems to be represent what we're saying. 'is this staff open for this role'
