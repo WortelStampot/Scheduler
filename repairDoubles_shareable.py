@@ -8,22 +8,11 @@ jsonInput = InputFile('roleStaff_8_7_open.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
 schedule = scheduleFrom(jsonInput, algorithm)
+
 # --- importing logging after to skip the initial schedule logs ---
 import logging
 logging.basicConfig(filename='activity.log', filemode='w', level=logging.DEBUG, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger(__name__)
-
-
-# here showing a difference between the two approaches
-# isDoubles identifies both the 'first' and succeeding doubles for a staff 
-
-doubles = [role for role in schedule.matching if isDouble(role, schedule)]
-logger.debug(f'isDouble: {doubles}\n isDouble count: {len(doubles)}')
-# identifies 28 'doubles'
-
-scheduleDoubles = schedule.identifyDoubles()
-logger.debug(f'identifyDoubles: {scheduleDoubles}\n identifyDoubles count: {len(scheduleDoubles)}')
-# identifies 16 'doubles'
 
 
 #at this point there's a matching which represents a schedule.
