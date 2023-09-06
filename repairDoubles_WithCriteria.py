@@ -119,3 +119,12 @@ for targetRole in staffGraph:
             logger.info(f'cylce found: {targetRole}, {targetStaff}, {value}')
 
 #okay, this seems like all the cycles of length 2 for this double role.
+
+#NOTE: KeyError comes up commonly with several roles.
+#something to look into
+'''
+Traceback (most recent call last):
+  File "/Users/Sil/pythonCode/KikiScheduler/repairDoubles_WithCriteria.py", line 117, in <module>
+    targetStaff = schedule.matching[targetRole] #look up in the matching dictionary seems logical?
+KeyError: Role(middle430,SUNDAY)
+'''
