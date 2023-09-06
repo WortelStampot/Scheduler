@@ -111,10 +111,11 @@ staffGraph = doublesGraph[staff]
 '''for each role this staff is open to swap with, go to that role's staff dictionary.'''
 logger.debug(f'double role: {double}, double staff: {staff}')
 for targetRole in staffGraph:
-    if staffGraph[targetRole] == True:
+    value = staffGraph[targetRole] # current options are int, float, or False
+    if type(value) == float or type(value) == int:
         logger.debug(f'{staff} open for {targetRole}')
         targetStaff = schedule.matching[targetRole] #look up in the matching dictionary seems logical?
         if doublesGraph[targetStaff][double]:
-            logger.debug(f'cylce found: {targetRole}, {targetStaff}')
+            logger.info(f'cylce found: {targetRole}, {targetStaff}, {value}')
 
 #okay, this seems like all the cycles of length 2 for this double role.

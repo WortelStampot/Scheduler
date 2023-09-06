@@ -1,4 +1,5 @@
 # --- Doubles Graph creation ----
+from MatchingAlgorithms import roleStaffRating
 
 def isOpenFor_Doubles(staff, role, schedule):
     '''
@@ -8,10 +9,13 @@ def isOpenFor_Doubles(staff, role, schedule):
     '''
     staffDaysWorking = [shift.day for shift in staff.shifts(schedule)] 
     
-    return role.day not in staffDaysWorking \
-    and staff.isAvailable(role) and staff.isQualified(role)
+    if role.day not in staffDaysWorking \
+    and staff.isAvailable(role) and staff.isQualified(role):
         #TODO: pull isAvailable and isQualiified from a single source.
         #They first appear in findEdges()
+        return roleStaffRating(role, staff)
+    
+    return False
 
 def createGraph_Doubles(schedule):
     '''
