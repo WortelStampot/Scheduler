@@ -15,7 +15,7 @@ def isOpenFor_Doubles(staff, role, schedule):
         #They first appear in findEdges()
         return roleStaffRating(role, staff)
     
-    return False
+    return 0
 
 def createGraph_Doubles(schedule):
     '''
@@ -52,7 +52,7 @@ def isDouble(role, schedule):
 
     matchedRoles = set(staff.shifts(schedule)) #get the role objects staff is currently matched with
     #as a set for subtraction
-    matchedRoles -= set([role]) #subtract the role in question
+    matchedRoles -= set([role]) #subtract the role in question #TODO: remove
 
     daysScheduled = [role.day for role in matchedRoles]
 
