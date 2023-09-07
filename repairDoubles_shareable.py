@@ -69,14 +69,28 @@ staffGraph = doublesGraph[staff]
 
 
 #here's finding cycles 'of length 2':
+cycles = []
+
 logger.debug(f'double role: {double}, double staff: {staff}')
 for targetRole in staffGraph:
-    value = staffGraph[targetRole] # current options are int, float, or False
-    if type(value) == float or type(value) == int:
+    if staffGraph[targetRole] > 0: # greater than 0 is equal to 'True: this staff is open for this role'
         logger.debug(f'{staff} open for {targetRole}')
-        targetStaff = schedule.matching[targetRole] #look up in the matching dictionary seems logical?
+        targetStaff = schedule.matching[targetRole]
         if doublesGraph[targetStaff][double]:
-            logger.info(f'cylce found: {targetRole}, {targetStaff}, {value}')
+            doubleStaffRating = staffGraph[targetRole]
+            targetStaffRating = doublesGraph[targetStaff][double]
+            cycleWeight = (doubleStaffRating + targetStaffRating) / 2
+            logger.info(f'cylce found: {targetRole}, {targetStaff}, {cycleWeight}')
+            #this is messy, too much going on here.
+            #moving on to keep toward the general structure of a 'repair cycle'
+            cycle = [(staff, double), (targetStaff, targetRole)]
+            cycles.append(cycle)
+
+#so now we're saying that cycles are made up of a tuple staff, role pairs.
+#declaring a type 'shift' as shown today seems appealing-
+#to write 'shift.role' and 'shift.staff'
+#TODO: store cycles like that
+
 
 print('check log')
 
