@@ -92,7 +92,23 @@ for targetRole in staffGraph:
 #TODO: store cycles like that
 
 
-print('check log')
+#select a cycle, the one with the highest weight
+#lets contain this in a function:
+
+# TODO: write selectCyle
+def selectCycle(cycles: list[tuple] ) -> tuple:
+    '''
+    from a list of cycles select the one with highest weight
+    relative to it's length
+    '''
+    # we have a list of cycles, and we want to compute the weight for each.
+    # then store that weight alongside the cycle to know which cycle the weight is referencing.
+    # then we can select the 'heaviest' cycle
+
+    # is there a neater way to do this?
+    pass
+
+cycle = cycles[0] # selecting the first cycle to keep moving.
 
 
 # to continue the remaining process for the double is:
