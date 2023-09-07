@@ -95,8 +95,8 @@ for targetRole in staffGraph:
 #select a cycle, the one with the highest weight
 #lets contain this in a function:
 
-# TODO: write selectCyle
-def selectCycle(cycles: list[tuple] ) -> tuple:
+# TODO: write selectCycle
+def selectCycle(cycles: list[list[tuple]] ) -> list[tuple]:
     '''
     from a list of cycles select the one with highest weight
     relative to it's length
@@ -110,11 +110,16 @@ def selectCycle(cycles: list[tuple] ) -> tuple:
 
 cycle = cycles[0] # selecting the first cycle to keep moving.
 
+# make the swap in the matching
+def swap(cycle: list[tuple]):
+    '''
+    swap the staff involved in each cycle
+    '''
+    pass
 
-# to continue the remaining process for the double is:
-    # select a cycle, the one with the highest weight
-    # make the swap in the matching
-    # update the graph for the role/staff involved in the swap
+#TODO: update the graph,
+# write it outside of a function for now.
+
 #and that brings us out from one 'cycle' of the process.
 
 #from there I'm thinking to follow the same process with callTimeOverlap-
