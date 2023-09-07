@@ -90,4 +90,4 @@ def roleStaffRating(role, staff):
     
     #TODO: verify role preference is a number
     #TODO: logging
-    return role.preference[staff.name]
+    return  1 + role.preference[staff.name]
