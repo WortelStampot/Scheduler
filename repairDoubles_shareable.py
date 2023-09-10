@@ -83,7 +83,7 @@ for targetRole in staffGraph:
             cycleWeight = (doubleStaffRating + targetStaffRating) / 2 # adding the ratings and dividing by the length of the cycle
             logger.info(f'cylce found: {targetRole}, {targetStaff}, {cycleWeight}')
 
-            cycle = [(staff, double), (targetStaff, targetRole)]
+            cycle = [(double, staff), (targetRole, targetStaff)]
             cycles.append(cycle)
 
 #so now we're saying that cycles are made up of a tuple staff, role pairs.
