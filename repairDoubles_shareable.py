@@ -3,7 +3,7 @@ from doublesCriteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
 
 #---boilerplate to a make schedule ----
 from InputOutput import InputFile, scheduleFrom #from Schedule import TestSchedule?
-from MatchingAlgorithms import MatchingAlgorithms
+from MatchingAlgorithms import MatchingAlgorithms, roleStaffRating
 jsonInput = InputFile('roleStaff_8_7_open.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
@@ -83,7 +83,37 @@ for targetRole in staffGraph:
             cycleWeight = (doubleStaffRating + targetStaffRating) / 2 # adding the ratings and dividing by the length of the cycle
             logger.info(f'cylce found: {targetRole}, {targetStaff}, {cycleWeight}')
 
+
+            #Okay, hold on.
+            # finding cycles, the information we store are the (role, staff) pairs for the role/staff involved.
+            # the pairs are stored in a list, and the pairs are ordered in their 'directed order':
+                # 'staff of pair_1 is to swap into role of pair_2'
+                # 'staff of pair_2 is to swap into role of pair_1'
+                # this being a 'length 2' cycle
+
+            # Another way to phrase this is:
+                #starting with pair[0]- this pair's staff swaps into the role of the following pair
+                # this goes on until we reach the end of the list, pair[-1]
+                # then the staff of pair[-1] swaps into the role of pair[0],
+                # turning the chain into a cycle.
             cycle = [(double, staff), (targetRole, targetStaff)]
+
+            #the point being, the RoleStaffRating we're interested in here,
+            # is the role staff rating of (role1, staff0), (role0, staff1)
+
+            #the value of this rating is already what's stored in the graph.
+            #that's how the graph is setup.
+            #so we're reading this value now-
+            #which has me thinking, this is the place to store it as well.
+
+            # when that is the case,
+            # we need to associate the - 'rating of (role1, staff0), (role0, staff1)'
+            # with a cycle made of (role0, staff0), (role1, staff1)
+
+            #this 'three-length-tuple' seems to accomplish this,
+            # though I don't think it's the way to go.
+            # what's a standard way to do this?
+            cycleWithRatings = [(double, staff, doubleStaffRating), (targetRole, targetStaff, targetStaffRating)]
             cycles.append(cycle)
 
 #so now we're saying that cycles are made up of a tuple staff, role pairs.
@@ -92,9 +122,6 @@ for targetRole in staffGraph:
 #that mean cycles can written as : [doubleShift, shift2, shift3, ...]
 #TODO: store cycles like that
 
-
-#select a cycle, the one with the highest weight
-#lets contain this in a function:
 
 # TODO: write selectCycle
 def selectCycle(cycles: list[list[tuple]] ) -> list[tuple]:
