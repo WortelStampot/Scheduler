@@ -76,19 +76,20 @@ for targetRole in staffGraph:
     if staffGraph[targetRole] > 0: # greater than 0 is equal to 'True: this staff is open for this role'
         logger.debug(f'{staff} open for {targetRole}')
         targetStaff = schedule.matching[targetRole]
-        if doublesGraph[targetStaff][double]:
+        if doublesGraph[targetStaff][double]: # if targetStaff is open to swap with the double role
+            #get the roleStaffRating for the role/staff involved in the swap
             doubleStaffRating = staffGraph[targetRole]
             targetStaffRating = doublesGraph[targetStaff][double]
-            cycleWeight = (doubleStaffRating + targetStaffRating) / 2
+            cycleWeight = (doubleStaffRating + targetStaffRating) / 2 # adding the ratings and dividing by the length of the cycle
             logger.info(f'cylce found: {targetRole}, {targetStaff}, {cycleWeight}')
-            #this is messy, too much going on here.
-            #moving on to keep toward the general structure of a 'repair cycle'
+
             cycle = [(staff, double), (targetStaff, targetRole)]
             cycles.append(cycle)
 
 #so now we're saying that cycles are made up of a tuple staff, role pairs.
 #declaring a type 'shift' as shown today seems appealing-
 #to write 'shift.role' and 'shift.staff'
+#that mean cycles can written as : [doubleShift, shift2, shift3, ...]
 #TODO: store cycles like that
 
 
