@@ -35,12 +35,11 @@ doublesGraph = createGraph_Doubles(schedule)
     # doublesGraph[staff][role]
 #the outer dictionary contains graph[staff], for each staff in schedule.staff
 #the inner dictionary is the value of isOpenFor_Doubles(staff, role) for each role in schedule.matching
-    #isOpenFor_Doubles returns a number from roleStaffRating(role, staff) when 'True' or False
 
-#I think this creates a rectangle 25 x ~90, staff by roles
+#this creates a rectangle 25 x ~90, staff by roles
 
 
-#ah, there's an issue with the graph lookup.
+#there's an issue with the graph lookup.
 #when dupelicating staff for the matching, we make a deepcopy per staff-
 #since the matching algorithm requires each role/staff node to be unique.
 
@@ -77,50 +76,17 @@ for targetRole in staffGraph:
         logger.debug(f'{staff} open for {targetRole}')
         targetStaff = schedule.matching[targetRole]
         if doublesGraph[targetStaff][double]: # if targetStaff is open to swap with the double role
-            #get the roleStaffRating for the role/staff involved in the swap
-            doubleStaffRating = staffGraph[targetRole]
-            targetStaffRating = doublesGraph[targetStaff][double]
-            cycleWeight = (doubleStaffRating + targetStaffRating) / 2 # adding the ratings and dividing by the length of the cycle
-            logger.info(f'cylce found: {targetRole}, {targetStaff}, {cycleWeight}')
-
-
-            #Okay, hold on.
-            # finding cycles, the information we store are the (role, staff) pairs for the role/staff involved.
-            # the pairs are stored in a list, and the pairs are ordered in their 'directed order':
-                # 'staff of pair_1 is to swap into role of pair_2'
-                # 'staff of pair_2 is to swap into role of pair_1'
-                # this being a 'length 2' cycle
-
-            # Another way to phrase this is:
-                #starting with pair[0]- this pair's staff swaps into the role of the following pair
-                # this goes on until we reach the end of the list, pair[-1]
-                # then the staff of pair[-1] swaps into the role of pair[0],
-                # turning the chain into a cycle.
+            logger.info(f'cylce found: {targetRole}, {targetStaff}')
             cycle = [(double, staff), (targetRole, targetStaff)]
-
-            #the point being, the RoleStaffRating we're interested in here,
-            # is the role staff rating of (role1, staff0), (role0, staff1)
-
-            #the value of this rating is already what's stored in the graph.
-            #that's how the graph is setup.
-            #so we're reading this value now-
-            #which has me thinking, this is the place to store it as well.
-
-            # when that is the case,
-            # we need to associate the - 'rating of (role1, staff0), (role0, staff1)'
-            # with a cycle made of (role0, staff0), (role1, staff1)
-
-            #this 'three-length-tuple' seems to accomplish this,
-            # though I don't think it's the way to go.
-            # what's a standard way to do this?
-            cycleWithRatings = [(double, staff, doubleStaffRating), (targetRole, targetStaff, targetStaffRating)]
             cycles.append(cycle)
 
-#so now we're saying that cycles are made up of a tuple staff, role pairs.
-#declaring a type 'shift' as shown today seems appealing-
-#to write 'shift.role' and 'shift.staff'
-#that mean cycles can written as : [doubleShift, shift2, shift3, ...]
-#TODO: store cycles like that
+#with a list of cycles we can select one for a swap.
+cycle = cycles[0] #selecting the first cycle is an option.
+
+#what I'm interested in is selecting a cycle by it's 'weight'
+#where the weight is the roleStaffRating.
+#this is because taking into account the roleStaffRating, takes into account the 'schedule independent criteria'
+# while adjusting the matching based on this schedule dependent criteria- doubles.
 
 
 # TODO: write selectCycle
@@ -130,13 +96,13 @@ def selectCycle(cycles: list[list[tuple]] ) -> list[tuple]:
     relative to it's length
     '''
     # we have a list of cycles, and we want to compute the weight for each.
-    # then store that weight alongside the cycle to know which cycle the weight is referencing.
     # then we can select the 'heaviest' cycle
 
-    # is there a neater way to do this?
+    #get the roleStaffRating for the role/staff involved in the swap
+    doubleStaffRating = staffGraph[targetRole]
+    targetStaffRating = doublesGraph[targetStaff][double]
+    cycleWeight = (doubleStaffRating + targetStaffRating) / 2 # adding the ratings and dividing by the length of the cycle
     pass
-
-cycle = cycles[0] # selecting the first cycle to keep moving.
 
 # make the swap in the matching
 def swap(cycle: list[tuple]):
