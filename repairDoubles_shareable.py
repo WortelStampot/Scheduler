@@ -78,39 +78,46 @@ for targetRole in staffGraph:
         if doublesGraph[targetStaff][double]: # if targetStaff is open to swap with the double role
             logger.info(f'cylce found: {targetRole}, {targetStaff}')
             cycle = [(double, staff), (targetRole, targetStaff)]
-            cycles.append(cycle)
 
-#with a list of cycles we can select one for a swap.
-cycle = cycles[0] #selecting the first cycle is an option.
+            #get the weight of this cycle:
+            rootSwapRating = staffGraph[targetRole]
+            secondSwapRating = doublesGraph[targetStaff][double]
+            cycleWeight = (rootSwapRating + secondSwapRating) / 2
 
-#what I'm interested in is selecting a cycle by it's 'weight'
-#where the weight is the roleStaffRating.
-#this is because taking into account the roleStaffRating, takes into account the 'schedule independent criteria'
-# while adjusting the matching based on this schedule dependent criteria- doubles.
+            #add found cycle with it's weight to the list
+            cycles.append( (cycle, {'weight': cycleWeight }) ) #copying this structure from nx 'NodeView'
+            #https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.nodes.html
 
+#with a list of cycles we can select one for a swap:
 
-# TODO: write selectCycle
-def selectCycle(cycles: list[list[tuple]] ) -> list[tuple]:
-    '''
-    from a list of cycles select the one with highest weight
-    relative to it's length
-    '''
-    # we have a list of cycles, and we want to compute the weight for each.
-    # then we can select the 'heaviest' cycle
+#selecting the first cycle is an option.
+firstFoundCycle = cycles[0]
 
-    #get the roleStaffRating for the role/staff involved in the swap
-    doubleStaffRating = staffGraph[targetRole]
-    targetStaffRating = doublesGraph[targetStaff][double]
-    cycleWeight = (doubleStaffRating + targetStaffRating) / 2 # adding the ratings and dividing by the length of the cycle
-    pass
+#we can also select a cycle by it's 'weight'
+    # the weight is the roleStaffRating of each role the staff is set to swap into-
+    # divided by the length of the cycle
+heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
+
 
 # make the swap in the matching
-def swap(cycle: list[tuple]):
-    '''
-    swap the staff involved in each cycle
-    '''
-    pass
+def swap(cycle) -> None :
+    shifts = cycle[0] #the list of (role, staff) pairs
 
+    for i in range(1, len(shifts)):
+        shift1 = shifts[0]
+        shift2 = shifts[i]
+
+
+        #swap the staff of each shift
+        schedule.matching[shift1.role], schedule.matching[shift2.role] = \
+        schedule.matching[shift2.role], schedule.matching[shift1.role]
+
+        shift1.staff, shift2.staff = shift1.staff, shift2.staff
+
+        schedule.matching[shift1.role] = shift2.staff
+        schedule.matching[shift2.role] = shift1.role 
+
+        
 #TODO: update the graph,
 # write it outside of a function for now.
 
