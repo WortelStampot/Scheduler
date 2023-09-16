@@ -100,26 +100,22 @@ heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
 
 
 # make the swap in the matching
-def swap(cycle) -> None :
-    shifts = cycle[0] #the list of (role, staff) pairs
+def swap(schedule, cycle) -> None :
+    cyclePairs = cycle[0] #the list of (role, staff) pairs
 
-    for i in range(1, len(shifts)):
-        shift1 = shifts[0]
-        shift2 = shifts[i]
+    for i in range(1, len(cyclePairs)):
+        role0 = cyclePairs[0][0] #.role
+        rolei = cyclePairs[i][0] #.role
 
+        logger.info(f'staff of {role0}: {schedule.matching[role0]}')
+        #swap object 0 with object i
+        schedule.matching[role0], schedule.matching[rolei] = schedule.matching[rolei], schedule.matching[role0]
+        logger.info(f'staff of {role0}: {schedule.matching[role0]}')
 
-        #swap the staff of each shift
-        schedule.matching[shift1.role], schedule.matching[shift2.role] = \
-        schedule.matching[shift2.role], schedule.matching[shift1.role]
+#perform the swap
+swap(schedule, heaviestCycle)
 
-        shift1.staff, shift2.staff = shift1.staff, shift2.staff
-
-        schedule.matching[shift1.role] = shift2.staff
-        schedule.matching[shift2.role] = shift1.role 
-
-        
-#TODO: update the graph,
-# write it outside of a function for now.
+schedule.matching # measure the adjust and update the graph
 
 #and that brings us out from one 'cycle' of the process.
 
