@@ -25,7 +25,7 @@ for role in schedule.matching:
     if isDouble(role, schedule):
         logger.debug(f'double found: {role}')
         print(f'double found {role}')
-        double = role
+        doubleRole = role
         break
 
 # with a double we have grounds to build the graph.
@@ -59,7 +59,7 @@ swapOriginalStaff(schedule)
 doublesGraph = createGraph_Doubles(schedule)
 
 #now we can:
-staff = schedule.matching[double]
+staff = schedule.matching[doubleRole]
 staffGraph = doublesGraph[staff]
 
 #and we're set up to find cycles.
@@ -70,18 +70,18 @@ staffGraph = doublesGraph[staff]
 #here's finding cycles 'of length 2':
 cycles = []
 
-logger.debug(f'double role: {double}, double staff: {staff}')
+logger.debug(f'double role: {doubleRole}, double staff: {staff}')
 for targetRole in staffGraph:
     if staffGraph[targetRole] > 0: # greater than 0 is equal to 'True: this staff is open for this role'
         logger.debug(f'{staff} open for {targetRole}')
         targetStaff = schedule.matching[targetRole]
-        if doublesGraph[targetStaff][double]: # if targetStaff is open to swap with the double role
+        if doublesGraph[targetStaff][doubleRole]: # if targetStaff is open to swap with the double role
             logger.info(f'cylce found: {targetRole}, {targetStaff}')
-            cycle = [(double, staff), (targetRole, targetStaff)]
+            cycle = [(doubleRole, staff), (targetRole, targetStaff)]
 
             #get the weight of this cycle:
             rootSwapRating = staffGraph[targetRole]
-            secondSwapRating = doublesGraph[targetStaff][double]
+            secondSwapRating = doublesGraph[targetStaff][doubleRole]
             cycleWeight = (rootSwapRating + secondSwapRating) / 2
 
             #add found cycle with it's weight to the list
