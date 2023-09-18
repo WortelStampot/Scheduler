@@ -115,6 +115,36 @@ def swap(schedule, cycle) -> None :
 #perform the swap
 swap(schedule, heaviestCycle)
 
+#measure the adjustment
+swappedShifts = heaviestCycle[0]
+
+#logging the rating before the swap
+for shift in swappedShifts:
+    role = shift[0] #.role
+    staff_before = shift[1] #.staff
+    rating_before = roleStaffRating(role, staff_before)
+
+    staff_after = schedule.matching[role]
+    rating_after = roleStaffRating(role, staff_after)
+
+    difference = (rating_after - rating_before)
+    valueChange = difference / rating_before
+
+    logger.info(f'{shift} rating before: {rating_before}\n \
+                {(role, staff_after)} rating after: {rating_after}\n \
+                    percent change: {round(valueChange, 4) * 100}')
+    
+#the idea here is to measure the difference from before the swap and after
+# the math seems correct, while what the numbers are representing seems off.
+
+# the formula I'm following is the 'Percent Change' between the two values
+    # ( (value 2 - value 1) / value 1 ) * 100
+    #TODO: example 1.1 - 1.075 and 0.1 - .075
+
+
+
+
+
 schedule.matching # measure the adjust and update the graph
 
 #and that brings us out from one 'cycle' of the process.
