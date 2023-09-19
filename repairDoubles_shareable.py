@@ -14,7 +14,16 @@ import logging
 logging.basicConfig(filename='activity.log', filemode='w', level=logging.DEBUG, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger(__name__)
 
+'''
+Points of Content:
+    * Identify a double
+    * Make the double graph
+    * Find cycles for double
+    * Select cycle
+    * Perform Swap to repair the double
+'''
 
+#Identify a Double:
 #at this point there's a matching which represents a schedule.
 #there may be doubles in this matching
 #the idea is to do some sort of 'criteria' check
@@ -28,22 +37,7 @@ for role in schedule.matching:
         doubleRole = role
         break
 
-# with a double we have grounds to build the graph.
-doublesGraph = createGraph_Doubles(schedule)
-
-#the graph is set up with two dictionaries:
-    # doublesGraph[staff][role]
-#the outer dictionary contains graph[staff], for each staff in schedule.staff
-#the inner dictionary is the value of isOpenFor_Doubles(staff, role) for each role in schedule.matching
-
-#this creates a rectangle 25 x ~90, staff by roles
-
-
-#there's an issue with the graph lookup.
-#when dupelicating staff for the matching, we make a deepcopy per staff-
-#since the matching algorithm requires each role/staff node to be unique.
-
-#here's a fix for the moment.
+#setup for making the graph
 def swapOriginalStaff(schedule):
     '''
     swap dupelicated staff objects with a reference to the 'original' one from schedule.staff
@@ -57,17 +51,16 @@ def swapOriginalStaff(schedule):
 
 swapOriginalStaff(schedule)
 doublesGraph = createGraph_Doubles(schedule)
+#the graph is set up with two dictionaries:
+    # doublesGraph[staff][role]
+#the outer dictionary contains graph[staff], for each staff in schedule.staff
+#the inner dictionary is the value of isOpenFor_Doubles(staff, role) for each role in schedule.matching
 
-#now we can:
 staff = schedule.matching[doubleRole]
 staffGraph = doublesGraph[staff]
 
-#and we're set up to find cycles.
-# for each role this staff is open to swap with, go to that role's staff dictionary.
-    # when that staff 'isOpenFor' this double role, the connection cricles around and is 'a cycle'
-
-
-#here's finding cycles 'of length 2':
+#finding cycles in the graph for the double that's been identified 
+    #here's finding cycles 'of length 2':
 cycles = []
 
 logger.debug(f'double role: {doubleRole}, double staff: {staff}')
@@ -99,7 +92,8 @@ firstFoundCycle = cycles[0]
 heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
 
 
-# make the swap in the matching
+# referencing pairs in the selected cycle,
+# we can mak swaps to repair the double shift.
 def swap(schedule, cycle) -> None :
     cyclePairs = cycle[0] #the list of (role, staff) pairs
 
@@ -115,10 +109,13 @@ def swap(schedule, cycle) -> None :
 #perform the swap
 swap(schedule, heaviestCycle)
 
-#measure the adjustment
-swappedShifts = heaviestCycle[0]
+#since the each role,staff pair has a value in the graph,
+# we can measure the rating difference in swaps
+    # how this is practically useful, I don't yet know-
+    # something to keep in mind.
 
 #logging the rating before the swap
+swappedShifts = heaviestCycle[0]
 for shift in swappedShifts:
     role = shift[0] #.role
     staff_before = shift[1] #.staff
@@ -133,28 +130,33 @@ for shift in swappedShifts:
     logger.info(f'{shift} rating before: {rating_before}\n \
                 {(role, staff_after)} rating after: {rating_after}\n \
                     percent change: {round(valueChange, 4) * 100}')
-    
-#the idea here is to measure the difference from before the swap and after
-# the math seems correct, while what the numbers are representing seems off.
 
-# the formula I'm following is the 'Percent Change' between the two values
-    # ( (value 2 - value 1) / value 1 ) * 100
+    '''
+    the idea here is to measure the difference from before the swap and after
+    the math seems correct, while what the numbers are representing seems off.
 
-# since we've added 1 to the roleStaffRating as a default for the graph,
-# the percent change from 1.1 to 1.075 comes out to -2.27
-# when, in my eyes, what we're measuring is the change of .1 to .075,
-# which is -25.
+    the formula I'm following is the 'Percent Change' between the two values
+        ( (value 2 - value 1) / value 1 ) * 100
 
-# for now, subtracting 1 when calculating the before and after ratings
+    since we've added 1 to the roleStaffRating as a default for the graph,
+    the percent change from 1.1 to 1.075 comes out to -2.27
+    when, in my eyes, what we're measuring is the change of .1 to .075,
+    which is -25.
 
+    for now, subtracting 1 when calculating the before and after ratings
+    '''
 
 #updating the graph:
+    #seems we don't need to 'update the graph' since the [staff][role] values-
+    # stay the same regardless of the pairings made in the matching?
+     
+    '''
+    DoublesGraph contains the values of a staff being able to work another role,
+    and their preference for the role.
 
-# DoublesGraph contains the values of a staff being able to work another role,
-# and their preference for the role.
-
-# these values don't change when swaps are made to the matching, right?
-# Where did this idea of updating the graph come from?
+    these values don't change when swaps are made to the matching, right?
+    Where did this idea of updating the graph come from?
+    '''
 
 
 schedule = schedule.matching
