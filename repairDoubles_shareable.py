@@ -148,10 +148,16 @@ for shift in swappedShifts:
 # for now, subtracting 1 when calculating the before and after ratings
 
 
+#updating the graph:
+
+# DoublesGraph contains the values of a staff being able to work another role,
+# and their preference for the role.
+
+# these values don't change when swaps are made to the matching, right?
+# Where did this idea of updating the graph come from?
 
 
-
-schedule.matching # measure the adjust and update the graph
+schedule = schedule.matching
 
 #and that brings us out from one 'cycle' of the process.
 
