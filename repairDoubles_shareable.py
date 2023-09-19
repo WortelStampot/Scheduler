@@ -122,10 +122,10 @@ swappedShifts = heaviestCycle[0]
 for shift in swappedShifts:
     role = shift[0] #.role
     staff_before = shift[1] #.staff
-    rating_before = roleStaffRating(role, staff_before)
+    rating_before = roleStaffRating(role, staff_before) - 1 # - 1 to keep the representation of roleStaffRating consistant?
 
     staff_after = schedule.matching[role]
-    rating_after = roleStaffRating(role, staff_after)
+    rating_after = roleStaffRating(role, staff_after) - 1
 
     difference = (rating_after - rating_before)
     valueChange = difference / rating_before
@@ -139,7 +139,13 @@ for shift in swappedShifts:
 
 # the formula I'm following is the 'Percent Change' between the two values
     # ( (value 2 - value 1) / value 1 ) * 100
-    #TODO: example 1.1 - 1.075 and 0.1 - .075
+
+# since we've added 1 to the roleStaffRating as a default for the graph,
+# the percent change from 1.1 to 1.075 comes out to -2.27
+# when, in my eyes, what we're measuring is the change of .1 to .075,
+# which is -25.
+
+# for now, subtracting 1 when calculating the before and after ratings
 
 
 
