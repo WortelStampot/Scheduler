@@ -1,5 +1,6 @@
 #repairing with 'doubles' criteria
 from doublesCriteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
+import networkx as nx
 
 #---boilerplate to a make schedule ----
 from InputOutput import InputFile, scheduleFrom #from Schedule import TestSchedule?
@@ -107,29 +108,18 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     swapOriginalStaff(schedule)
     doublesGraph = createGraph_Doubles(schedule)
 
-    #find cycles including the double role
-    #here's finding cycles 'of length 2':
-    staff = schedule.matching[doubleRole]
-    staffGraph = doublesGraph[staff]
+    #TODO: find edges based on isOpenFor_Doubles()
 
-    cycles = []
-    logger.debug(f'double role: {doubleRole}, double staff: {staff}')
-    for targetRole in staffGraph:
-        if staffGraph[targetRole] > 0: # greater than 0 is equal to 'True: this staff is open for this role'
-            logger.debug(f'{staff} open for {targetRole}')
-            targetStaff = schedule.matching[targetRole]
-            if doublesGraph[targetStaff][doubleRole]: # if targetStaff is open to swap with the double role
-                logger.info(f'cylce found: {targetRole}, {targetStaff}')
-                cycle = [(doubleRole, staff), (targetRole, targetStaff)]
+    #find edges for nx graph
+    edges = []
+    for role1 in schedule.matching:
+        staff = schedule.matching[role1]
+        for role2 in doublesGraph[staff]:
+            if doublesGraph[staff][role2] > 0:
+                edges.append((role1, role2))
 
-                #get the weight of this cycle:
-                rootSwapRating = staffGraph[targetRole]
-                secondSwapRating = doublesGraph[targetStaff][doubleRole]
-                cycleWeight = (rootSwapRating + secondSwapRating) / 2
-
-                #add found cycle with it's weight to the list
-                cycles.append( (cycle, {'weight': cycleWeight }) ) #copying this structure from nx 'NodeView'
-                #https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.nodes.html
+    nxGraph = nx.DiGraph(edges)
+    cycles = nx.simple_cycles(nxGraph, length_bound=2)
 
     #select a cycle by weight
     heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
