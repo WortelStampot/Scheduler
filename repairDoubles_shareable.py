@@ -26,14 +26,6 @@ Points of Content:
     # update the graph - seems unneccesary?
 '''
 
-#Identify a Double:
-for role in schedule.matching:
-    if isDouble(role, schedule):
-        logger.debug(f'double found: {role}')
-        print(f'double found {role}')
-        doubleRole = role
-        break
-
 #setup for making the graph
 def swapOriginalStaff(schedule):
     '''
@@ -45,6 +37,20 @@ def swapOriginalStaff(schedule):
 
         schedule.matching[role] = originalStaff[0] # replace the copy with the original
 
+def identifyCriteria(schedule, criteria):
+    for role in schedule.matching:
+        if criteria(role, schedule):
+            logger.info(f'{criteria.__name__} match found: {role}')
+            print(f'match found for {criteria.__name__}: {role}')
+            return True
+    logger.info(f'no match found for {criteria.__name__}')
+    print(f'no match found for {criteria.__name__}')
+    return False
+
+#check for a double, when true- continue
+if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
+    doubles = [role for role in schedule.matching if isDouble(role, schedule)]
+    doubleRole = doubles[0] #select first from the list, for now.
 
 #create the graph
 swapOriginalStaff(schedule)
