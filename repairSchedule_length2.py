@@ -47,49 +47,6 @@ def identifyCriteria(schedule, criteria):
     print(f'no match found for {criteria.__name__}')
     return False
 
-#check for a double, when true- continue
-if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
-    doubles = [role for role in schedule.matching if isDouble(role, schedule)]
-    doubleRole = doubles[0] #select first from the list, for now.
-
-#create the graph
-swapOriginalStaff(schedule)
-doublesGraph = createGraph_Doubles(schedule)
-
-
-#select the staff paired to the double
-#get the staff's graph to find cycles -
-    # is using the 'staffGraph' only viable for cycles of length 2?
-staff = schedule.matching[doubleRole]
-staffGraph = doublesGraph[staff]
-
-#finding cycles in the graph for the double that's been identified 
-    #here's finding cycles 'of length 2':
-cycles = []
-
-logger.debug(f'double role: {doubleRole}, double staff: {staff}')
-for targetRole in staffGraph:
-    if staffGraph[targetRole] > 0: # greater than 0 is equal to 'True: this staff is open for this role'
-        logger.debug(f'{staff} open for {targetRole}')
-        targetStaff = schedule.matching[targetRole]
-        if doublesGraph[targetStaff][doubleRole]: # if targetStaff is open to swap with the double role
-            logger.info(f'cylce found: {targetRole}, {targetStaff}')
-            cycle = [(doubleRole, staff), (targetRole, targetStaff)]
-
-            #get the weight of this cycle:
-            rootSwapRating = staffGraph[targetRole]
-            secondSwapRating = doublesGraph[targetStaff][doubleRole]
-            cycleWeight = (rootSwapRating + secondSwapRating) / 2
-
-            #add found cycle with it's weight to the list
-            cycles.append( (cycle, {'weight': cycleWeight }) ) #copying this structure from nx 'NodeView'
-            #https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.nodes.html
-
-#select a cycle by weight
-heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
-
-# referencing pairs in the selected cycle,
-# we can mak swaps to repair the double shift.
 def swap(schedule, cycle) -> None :
     cyclePairs = cycle[0] #the list of (role, staff) pairs
 
@@ -102,34 +59,28 @@ def swap(schedule, cycle) -> None :
         schedule.matching[role0], schedule.matching[rolei] = schedule.matching[rolei], schedule.matching[role0]
         logger.info(f'staff of {role0}: {schedule.matching[role0]}')
 
-#perform the swap
-swap(schedule, heaviestCycle)
-
-
-
 #Measuring adjustments
+def measureSwaps(cycle):
+    '''
+    Since the each role,staff pair has a value in the graph,
+    we can measure the rating difference in swaps
+        how this is practically useful, I don't yet know-
+    '''
+    swappedShifts = cycle[0]
+    for shift in swappedShifts:
+        role = shift[0] #.role
+        staff_before = shift[1] #.staff
+        rating_before = roleStaffRating(role, staff_before) - 1 # - 1 to keep the representation of roleStaffRating consistant?
 
-#since the each role,staff pair has a value in the graph,
-# we can measure the rating difference in swaps
-    # how this is practically useful, I don't yet know-
-    # something to keep in mind.
+        staff_after = schedule.matching[role]
+        rating_after = roleStaffRating(role, staff_after) - 1
 
-#logging the rating before the swap
-swappedShifts = heaviestCycle[0]
-for shift in swappedShifts:
-    role = shift[0] #.role
-    staff_before = shift[1] #.staff
-    rating_before = roleStaffRating(role, staff_before) - 1 # - 1 to keep the representation of roleStaffRating consistant?
+        difference = (rating_after - rating_before)
+        valueChange = difference / rating_before
 
-    staff_after = schedule.matching[role]
-    rating_after = roleStaffRating(role, staff_after) - 1
-
-    difference = (rating_after - rating_before)
-    valueChange = difference / rating_before
-
-    logger.info(f'{shift} rating before: {rating_before}\n \
-                {(role, staff_after)} rating after: {rating_after}\n \
-                    percent change: {round(valueChange, 4) * 100}')
+        logger.info(f'{shift} rating before: {rating_before}\n \
+                    {(role, staff_after)} rating after: {rating_after}\n \
+                        percent change: {round(valueChange, 4) * 100}')
 
     '''
     the idea here is to measure the difference from before the swap and after
@@ -146,16 +97,60 @@ for shift in swappedShifts:
     for now, subtracting 1 when calculating the before and after ratings
     '''
 
+### a version of 'repairSchedule' ###
+
+if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
+    doubles = [role for role in schedule.matching if isDouble(role, schedule)]
+    doubleRole = doubles[0] #select first from the list, for now.
+
+    #create the graph
+    swapOriginalStaff(schedule)
+    doublesGraph = createGraph_Doubles(schedule)
+
+    #find cycles including the double role
+    #here's finding cycles 'of length 2':
+    staff = schedule.matching[doubleRole]
+    staffGraph = doublesGraph[staff]
+
+    cycles = []
+    logger.debug(f'double role: {doubleRole}, double staff: {staff}')
+    for targetRole in staffGraph:
+        if staffGraph[targetRole] > 0: # greater than 0 is equal to 'True: this staff is open for this role'
+            logger.debug(f'{staff} open for {targetRole}')
+            targetStaff = schedule.matching[targetRole]
+            if doublesGraph[targetStaff][doubleRole]: # if targetStaff is open to swap with the double role
+                logger.info(f'cylce found: {targetRole}, {targetStaff}')
+                cycle = [(doubleRole, staff), (targetRole, targetStaff)]
+
+                #get the weight of this cycle:
+                rootSwapRating = staffGraph[targetRole]
+                secondSwapRating = doublesGraph[targetStaff][doubleRole]
+                cycleWeight = (rootSwapRating + secondSwapRating) / 2
+
+                #add found cycle with it's weight to the list
+                cycles.append( (cycle, {'weight': cycleWeight }) ) #copying this structure from nx 'NodeView'
+                #https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.nodes.html
+
+    #select a cycle by weight
+    heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
+
+    #perform the swap
+    swap(schedule, heaviestCycle)
+
+    measureSwaps(heaviestCycle)
+
 #updating the graph:
+def updateTheGraph():
     #seems we don't need to 'update the graph' since the [staff][role] values-
-    # stay the same regardless of the pairings made in the matching?
-     
+    #stay the same regardless of the pairings made in the matching?
+
     '''
     DoublesGraph contains the values of a staff being able to work another role,
     and their preference for the role.
 
     these values don't change when swaps are made to the matching
     Where did this idea of updating the graph come from?
-    '''
+    '''  
+    pass
 
 schedule = schedule.matching
