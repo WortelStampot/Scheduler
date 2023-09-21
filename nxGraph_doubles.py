@@ -109,17 +109,11 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     swapOriginalStaff(schedule)
     doublesGraph = createGraph_Doubles(schedule)
 
-    #TODO: find edges based on isOpenFor_Doubles()
-    edges = []
-    for role1 in schedule.matching:
-        staff = schedule.matching[role1]
-        for role2 in doublesGraph[staff]:
-            if doublesGraph[staff][role2] > 0:
-                edges.append((role1, role2))
+    #finding edges based on isOpenFor_Doubles()
 
     # a node is a (role,staff) pair
     # an edge is ( (role1, staff1), (role2, staff2), {'weight': roleStaffRating(staff1, role2)} )
-    # the direction is implied by the ordering. (a -> b)
+    # the direction is implied by the ordering. (shift1 -> shift2)
 
     edges_doubles = [
         ( (role1, staff1), (role2, staff2), {'weight': roleStaffRating(role2, staff1)} )
@@ -128,40 +122,27 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
         if isOpenFor_Doubles(staff1, role2, schedule) > 0
         ]
     
-    # when a node is role
+    # when a node is a role
     # and a node is a staff
-    # then an edge can be (role, staff, {weight: roleStaffRating})
+    # then an edge can be (staff, role, {weight: roleStaffRating})
+    # ordering implies the direction (staff -> role)
 
-    edges_doubless = [ (role, staff, {'weight': roleStaffRating(role, staff)} )
+    edges_doubless = [ (staff, role, {'weight': roleStaffRating(role, staff)} )
      for role in schedule.matching
      for staff in schedule.staff
      if isOpenFor_Doubles(staff, role, schedule) > 0]
+    
+    # ^ this approach doesn't seem to work.
 
 
-    nxGraph = nx.DiGraph(edges)
-    cycles = nx.simple_cycles(nxGraph, length_bound=2)
-    print(len(list(cycles)))
-
-    #select a cycle by weight
-    # heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
-
-    #perform the swap
-    # swap(schedule, heaviestCycle)
-
-    # measureSwaps(heaviestCycle)
-
-#updating the graph:
-def updateTheGraph():
-    #seems we don't need to 'update the graph' since the [staff][role] values-
-    #stay the same regardless of the pairings made in the matching?
-
-    '''
-    DoublesGraph contains the values of a staff being able to work another role,
-    and their preference for the role.
-
-    these values don't change when swaps are made to the matching
-    Where did this idea of updating the graph come from?
-    '''  
-    pass
-
-schedule = schedule.matching
+    edges_forRole = [edge for edge in edges_doubles if edge]
+    nxGraph = nx.DiGraph(edges_doubless)
+    startTime = time.time()
+    cycles = nx.simple_cycles(nxGraph, length_bound = 3) 
+    endTime = time.time()
+    print(endTime - startTime)
+    startTime2 = time.time() 
+    print(len(list(cycles))) # returns a generator-
+    endTime2 = time.time()
+    print(endTime2 - startTime)
+    # and generating the list is what takes a lot of time.
