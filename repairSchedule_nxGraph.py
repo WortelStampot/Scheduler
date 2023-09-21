@@ -116,6 +116,7 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
         for role2 in doublesGraph[staff]:
             if doublesGraph[staff][role2] > 0:
                 edges.append((role1, role2))
+    # ^ 2376, 1 more than the doublesGraph 25 x 95
 
     # a node is a (role,staff) pair
     # an edge is ( (role1, staff1), (role2, staff2), {'weight': roleStaffRating(staff1, role2)} )
@@ -127,12 +128,15 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
         for role2, staff2 in schedule.matching.items()
         if isOpenFor_Doubles(staff1, role2, schedule) > 0
         ]
+    # ^ 2376 edges
+        # this is 1 more than the doublesGraph 25 x 95 = 2375
     
     # when a node is role
     # and a node is a staff
     # then an edge can be (role, staff, {weight: roleStaffRating})
 
     edges_doubless = [ (role, staff, {'weight': roleStaffRating(role, staff)} )
+    # ^ 594 edges
      for role in schedule.matching
      for staff in schedule.staff
      if isOpenFor_Doubles(staff, role, schedule) > 0]
