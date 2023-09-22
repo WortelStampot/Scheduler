@@ -1,12 +1,12 @@
 #repairing with 'doubles' criteria
 from doublesCriteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
 import networkx as nx
-import time
+from boundedCycleSearch import _bounded_cycle_search
 
 #---boilerplate to a make schedule ----
 from InputOutput import InputFile, scheduleFrom #from Schedule import TestSchedule?
 from MatchingAlgorithms import MatchingAlgorithms, roleStaffRating
-jsonInput = InputFile('roleStaff_8_7_open.json')
+jsonInput = InputFile('roleStaff_8_7_strict.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
 schedule = scheduleFrom(jsonInput, algorithm)
@@ -123,27 +123,20 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     # the direction is implied by the ordering. (a -> b)
 
     edges_doubles = [
-        ( (role1, staff1), (role2, staff2), {'weight': roleStaffRating(role2, staff1)} )
+        (role1, role2, roleStaffRating(role2, staff1) )
         for role1, staff1 in schedule.matching.items()
-        for role2, staff2 in schedule.matching.items()
+        for role2 in schedule.matching
         if isOpenFor_Doubles(staff1, role2, schedule) > 0
         ]
     # ^ 2376 edges
         # this is 1 more than the doublesGraph 25 x 95 = 2375
-    
-    # when a node is role
-    # and a node is a staff
-    # then an edge can be (role, staff, {weight: roleStaffRating})
 
-    edges_doubless = [ (role, staff, {'weight': roleStaffRating(role, staff)} )
-    # ^ 594 edges
-     for role in schedule.matching
-     for staff in schedule.staff
-     if isOpenFor_Doubles(staff, role, schedule) > 0]
 
 
     nxGraph = nx.DiGraph(edges)
-    cycles = nx.simple_cycles(nxGraph, length_bound=2)
+    path = [doubleRole]
+
+    cycles = _bounded_cycle_search(nxGraph, path, length_bound=2)
     print(len(list(cycles)))
 
     #select a cycle by weight

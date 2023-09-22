@@ -2,6 +2,7 @@
 from doublesCriteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
 import networkx as nx
 import time
+from boundedCycleSearch import _bounded_cycle_search
 
 #---boilerplate to a make schedule ----
 from InputOutput import InputFile, scheduleFrom #from Schedule import TestSchedule?
@@ -138,7 +139,7 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     edges_forRole = [edge for edge in edges_doubles if edge]
     nxGraph = nx.DiGraph(edges_doubless)
     startTime = time.time()
-    cycles = nx.simple_cycles(nxGraph, length_bound = 3) 
+    cycles = nx.simple_cycles(nxGraph, length_bound = 2) 
     endTime = time.time()
     print(endTime - startTime)
     startTime2 = time.time() 
