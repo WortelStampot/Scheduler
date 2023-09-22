@@ -133,12 +133,37 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
 
 
 
-    nxGraph = nx.DiGraph(edges)
+    nxGraph = nx.DiGraph()
+    nxGraph.add_weighted_edges_from(edges_doubles)
     path = [doubleRole]
 
-    cycles = _bounded_cycle_search(nxGraph, path, length_bound=2)
-    print(len(list(cycles)))
+    boundedCycles = _bounded_cycle_search(nxGraph, path, length_bound=2)
+    listCycles = list(boundedCycles)
+    print(f'bounded cycles: {len(listCycles)}\n {listCycles}')
 
+    staff = schedule.matching[doubleRole]
+    staffGraph = doublesGraph[staff]
+
+    cycles = []
+    logger.debug(f'double role: {doubleRole}, double staff: {staff}')
+    for targetRole in staffGraph:
+        if staffGraph[targetRole] > 0: # greater than 0 is equal to 'True: this staff is open for this role'
+            logger.debug(f'{staff} open for {targetRole}')
+            targetStaff = schedule.matching[targetRole]
+            if doublesGraph[targetStaff][doubleRole]: # if targetStaff is open to swap with the double role
+                logger.info(f'cylce found: {targetRole}, {targetStaff}')
+                cycle = [(doubleRole, staff), (targetRole, targetStaff)]
+
+                #get the weight of this cycle:
+                rootSwapRating = staffGraph[targetRole]
+                secondSwapRating = doublesGraph[targetStaff][doubleRole]
+                cycleWeight = (rootSwapRating + secondSwapRating) / 2
+
+                #add found cycle with it's weight to the list
+                cycles.append( (cycle, {'weight': cycleWeight }) ) #copying this structure from nx 'NodeView'
+                #https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.nodes.html
+
+    print(f'diy cycles of length 2: {cycles}')
     #select a cycle by weight
     # heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
 
