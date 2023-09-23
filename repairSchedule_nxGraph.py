@@ -122,12 +122,12 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     path = [doubleRole]
 
     boundedCycles = _bounded_cycle_search(nxGraph, path, length_bound=2)
-    listCycles = list(boundedCycles)
-    print(f'bounded cycles: {len(listCycles)}\n {listCycles}')
+    cycles = list(boundedCycles)
+    print(f'bounded cycles: {len(cycles)}\n {cycles}')
 
 
     #select a cycle by weight
-    def cycleWeight(cycle):
+    def cycleWeight(cycle, schedule): #NOTE: can avoid passing in schedule when using 'shifts' as nodes.
         '''
         return the rating of staff of role1 with the role of role2
         '''    
@@ -138,20 +138,22 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
             role = cycle[i]
             connectedRole = cycle[i+1]
             staff = schedule.matching[role]
-            ratingSum += roleStaffRating(connectedRole, staff, schedule)
+            ratingSum += roleStaffRating(connectedRole, staff)
         #add rating of last and first pair
         lastRole = cycle[-1]
         connectedRole = cycle[0]
         staff = schedule.matching[lastRole]
-        ratingSum += roleStaffRating(connectedRole, staff, schedule)
+        ratingSum += roleStaffRating(connectedRole, staff)
         
         #get relative rating by dividing by length of cycle
-        return ratingSum / len(cycle)
+        cycleWeight = ratingSum / len(cycle)
+        print(f'{cycle}: {cycleWeight}')
+        return cycleWeight
 
 
-    # heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
+    heaviestCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
+    print(heaviestCycle)
 
-    #perform the swap
     # swap(schedule, heaviestCycle)
 
     # measureSwaps(heaviestCycle)
