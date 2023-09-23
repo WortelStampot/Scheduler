@@ -105,22 +105,10 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     doubles = [role for role in schedule.matching if isDouble(role, schedule)]
     doubleRole = doubles[0] #select first from the list, for now.
 
-    #create the graph
-    swapOriginalStaff(schedule)
-    doublesGraph = createGraph_Doubles(schedule)
-
-    #TODO: find edges based on isOpenFor_Doubles()
-    edges = []
-    for role1 in schedule.matching:
-        staff = schedule.matching[role1]
-        for role2 in doublesGraph[staff]:
-            if doublesGraph[staff][role2] > 0:
-                edges.append((role1, role2))
-    # ^ 2376, 1 more than the doublesGraph 25 x 95
-
-    # a node is a (role,staff) pair
-    # an edge is ( (role1, staff1), (role2, staff2), {'weight': roleStaffRating(staff1, role2)} )
-    # the direction is implied by the ordering. (a -> b)
+    # the node is a (role)
+    # the role represents a shift of (staff, role) pair
+    # an edge is [role1, role2, role3, ...]
+    # the direction is implied by the ordering. (a -> b -> c)
 
     edges_doubles = [
         (role1, role2, roleStaffRating(role2, staff1) )
@@ -128,10 +116,6 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
         for role2 in schedule.matching
         if isOpenFor_Doubles(staff1, role2, schedule) > 0
         ]
-    # ^ 2376 edges
-        # this is 1 more than the doublesGraph 25 x 95 = 2375
-
-
 
     nxGraph = nx.DiGraph()
     nxGraph.add_weighted_edges_from(edges_doubles)
@@ -141,30 +125,30 @@ if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     listCycles = list(boundedCycles)
     print(f'bounded cycles: {len(listCycles)}\n {listCycles}')
 
-    staff = schedule.matching[doubleRole]
-    staffGraph = doublesGraph[staff]
 
-    cycles = []
-    logger.debug(f'double role: {doubleRole}, double staff: {staff}')
-    for targetRole in staffGraph:
-        if staffGraph[targetRole] > 0: # greater than 0 is equal to 'True: this staff is open for this role'
-            logger.debug(f'{staff} open for {targetRole}')
-            targetStaff = schedule.matching[targetRole]
-            if doublesGraph[targetStaff][doubleRole]: # if targetStaff is open to swap with the double role
-                logger.info(f'cylce found: {targetRole}, {targetStaff}')
-                cycle = [(doubleRole, staff), (targetRole, targetStaff)]
-
-                #get the weight of this cycle:
-                rootSwapRating = staffGraph[targetRole]
-                secondSwapRating = doublesGraph[targetStaff][doubleRole]
-                cycleWeight = (rootSwapRating + secondSwapRating) / 2
-
-                #add found cycle with it's weight to the list
-                cycles.append( (cycle, {'weight': cycleWeight }) ) #copying this structure from nx 'NodeView'
-                #https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.nodes.html
-
-    print(f'diy cycles of length 2: {cycles}')
     #select a cycle by weight
+    def cycleWeight(cycle):
+        '''
+        return the rating of staff of role1 with the role of role2
+        '''    
+        #for the length of cycle
+        # staff rating of rolei and rolei+1
+        ratingSum = 0
+        for i in range(len(cycle) - 1): # -1 to do last and first role separately 
+            role = cycle[i]
+            connectedRole = cycle[i+1]
+            staff = schedule.matching[role]
+            ratingSum += roleStaffRating(connectedRole, staff, schedule)
+        #add rating of last and first pair
+        lastRole = cycle[-1]
+        connectedRole = cycle[0]
+        staff = schedule.matching[lastRole]
+        ratingSum += roleStaffRating(connectedRole, staff, schedule)
+        
+        #get relative rating by dividing by length of cycle
+        return ratingSum / len(cycle)
+
+
     # heaviestCycle = max(cycles, key= lambda cycle: cycle[1]['weight'] )
 
     #perform the swap
