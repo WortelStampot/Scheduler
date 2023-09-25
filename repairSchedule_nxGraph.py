@@ -49,17 +49,88 @@ def identifyCriteria(schedule, criteria):
     print(f'no match found for {criteria.__name__}')
     return False
 
-def swap(schedule, cycle) -> None :
-    cyclePairs = cycle[0] #the list of (role, staff) pairs
+def cycleWeight(cycle, schedule): #NOTE: can avoid passing in schedule when using 'shifts' as nodes.
+    '''
+    return the rating of staff of role1 with the role of role2
+    '''    
+    #for the length of cycle
+    # staff rating of rolei and rolei+1
+    ratingSum = 0
+    for i in range(len(cycle) - 1): # -1 to do last and first role separately 
+        role = cycle[i]
+        connectedRole = cycle[i+1]
+        staff = schedule.matching[role]
+        ratingSum += roleStaffRating(connectedRole, staff)
+    #add rating of last and first pair
+    lastRole = cycle[-1]
+    connectedRole = cycle[0]
+    staff = schedule.matching[lastRole]
+    ratingSum += roleStaffRating(connectedRole, staff)
+    
+    #get relative rating by dividing by length of cycle
+    cycleWeight = ratingSum / len(cycle)
+    print(f'{cycle}: {cycleWeight}')
+    return cycleWeight
 
-    for i in range(1, len(cyclePairs)):
-        role0 = cyclePairs[0][0] #.role
-        rolei = cyclePairs[i][0] #.role
+def swap(schedule, cycle) -> None : #again, can avoid passing in schedule when nodes are shifts.
+
+    for i in range(1, len(cycle)):
+        role0 = cycle[0] #.role
+        rolei = cycle[i] #.role
 
         logger.info(f'staff of {role0}: {schedule.matching[role0]}')
         #swap object 0 with object i
         schedule.matching[role0], schedule.matching[rolei] = schedule.matching[rolei], schedule.matching[role0]
         logger.info(f'staff of {role0}: {schedule.matching[role0]}')
+
+### a version of 'repairSchedule' ###
+
+if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
+    doubles = [role for role in schedule.matching if isDouble(role, schedule)]
+    doubleRole = doubles[0] #select first from the list, for now.
+
+    edges_doubles = [
+        (role1, role2, roleStaffRating(role2, staff1) )
+        for role1, staff1 in schedule.matching.items()
+        for role2 in schedule.matching
+        if isOpenFor_Doubles(staff1, role2, schedule) > 0
+        ]
+
+    nxGraph = nx.DiGraph()
+    nxGraph.add_weighted_edges_from(edges_doubles)
+    startingNode = [doubleRole]
+
+    boundedCycles = _bounded_cycle_search(nxGraph, startingNode, length_bound=2)
+    cycles = list(boundedCycles)
+    print(f'bounded cycles: {len(cycles)}\n {cycles}')
+
+    #select a cycle by weight
+    heaviestCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
+    print(heaviestCycle)
+
+    swap(schedule, heaviestCycle)
+
+#updating the graph:
+#for the nxGraph, this is updating the edge list.
+    edges_doubles = [
+    (role1, role2, roleStaffRating(role2, staff1) )
+    for role1, staff1 in schedule.matching.items()
+    for role2 in schedule.matching
+    if isOpenFor_Doubles(staff1, role2, schedule) > 0
+    ]
+
+def updateTheGraph():
+    #seems we don't need to 'update the graph' since the [staff][role] values-
+    #stay the same regardless of the pairings made in the matching?
+
+    '''
+    DoublesGraph contains the values of a staff being able to work another role,
+    and their preference for the role.
+
+    these values don't change when swaps are made to the matching
+    Where did this idea of updating the graph come from?
+    '''  
+    pass
 
 #Measuring adjustments
 def measureSwaps(cycle):
@@ -98,78 +169,5 @@ def measureSwaps(cycle):
 
     for now, subtracting 1 when calculating the before and after ratings
     '''
-
-### a version of 'repairSchedule' ###
-
-if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
-    doubles = [role for role in schedule.matching if isDouble(role, schedule)]
-    doubleRole = doubles[0] #select first from the list, for now.
-
-    # the node is a (role)
-    # the role represents a shift of (staff, role) pair
-    # an edge is [role1, role2, role3, ...]
-    # the direction is implied by the ordering. (a -> b -> c)
-
-    edges_doubles = [
-        (role1, role2, roleStaffRating(role2, staff1) )
-        for role1, staff1 in schedule.matching.items()
-        for role2 in schedule.matching
-        if isOpenFor_Doubles(staff1, role2, schedule) > 0
-        ]
-
-    nxGraph = nx.DiGraph()
-    nxGraph.add_weighted_edges_from(edges_doubles)
-    path = [doubleRole]
-
-    boundedCycles = _bounded_cycle_search(nxGraph, path, length_bound=2)
-    cycles = list(boundedCycles)
-    print(f'bounded cycles: {len(cycles)}\n {cycles}')
-
-
-    #select a cycle by weight
-    def cycleWeight(cycle, schedule): #NOTE: can avoid passing in schedule when using 'shifts' as nodes.
-        '''
-        return the rating of staff of role1 with the role of role2
-        '''    
-        #for the length of cycle
-        # staff rating of rolei and rolei+1
-        ratingSum = 0
-        for i in range(len(cycle) - 1): # -1 to do last and first role separately 
-            role = cycle[i]
-            connectedRole = cycle[i+1]
-            staff = schedule.matching[role]
-            ratingSum += roleStaffRating(connectedRole, staff)
-        #add rating of last and first pair
-        lastRole = cycle[-1]
-        connectedRole = cycle[0]
-        staff = schedule.matching[lastRole]
-        ratingSum += roleStaffRating(connectedRole, staff)
-        
-        #get relative rating by dividing by length of cycle
-        cycleWeight = ratingSum / len(cycle)
-        print(f'{cycle}: {cycleWeight}')
-        return cycleWeight
-
-
-    heaviestCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
-    print(heaviestCycle)
-
-    # swap(schedule, heaviestCycle)
-
-    # measureSwaps(heaviestCycle)
-
-#updating the graph:
-def updateTheGraph():
-    #seems we don't need to 'update the graph' since the [staff][role] values-
-    #stay the same regardless of the pairings made in the matching?
-
-    '''
-    DoublesGraph contains the values of a staff being able to work another role,
-    and their preference for the role.
-
-    these values don't change when swaps are made to the matching
-    Where did this idea of updating the graph come from?
-    '''  
-    pass
 
 schedule = schedule.matching
