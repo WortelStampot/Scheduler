@@ -19,13 +19,12 @@ logger = logging.getLogger(__name__)
 '''
 Points of Content:
     * Identify a double
-    * Make the double graph
     * Find cycles for double
     * Select cycle
     * Perform Swap to repair the double
+    * Update the edges of the graph 
 
     # measure the swap adjustments - experimental
-    # update the graph - seems unneccesary?
 '''
 
 #setup for making the graph
@@ -98,28 +97,37 @@ while identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     if isOpenFor_Doubles(staff1, role2, schedule) > 0
     ]
     graph.add_weighted_edges_from(edges)
-    startingNode = [doubleRole]
 
-    MAX_LENGTH = 3
-    for length in range(2,MAX_LENGTH):
-        logger.info(f"finding all cycles of length: {length}")
-        #find cycles
-        boundedCycles = _bounded_cycle_search(graph, path=[doubleRole], length_bound=length)
-        cycles = list(boundedCycles)
+    #here thre are branches for finding cycles
+    # the first approach is finding all cycles that include the problem role, up to length 6
+    # length 6 is chosen as it seems past past that, the process of unpacking all the cycles-
+    # takes a long time.
 
-    if cycles != []:
+    #find cycles
+    boundedCycles = _bounded_cycle_search(graph, path=[doubleRole], length_bound=3)
+    cycles = list(boundedCycles) #'unpack' all the cycles from the generator
+
+    if cycles != []: # if the bounded cycle search has found cycles,
+        #we get to take into account a % of previous criteria, and select the cycle of the highest weight
         print(f'bounded cycles: {len(cycles)}\n {cycles}')
-
-        #select a cycle by weight
         selectedCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
         print(selectedCycle)
 
-    #get first cycle from johnson search.
+    #when the bounded cycle search comes up with no cycles
+    # we do one unbounded search for a single cycle.
+    # this is a way to say, 'a cycle is preferred over no cycle'
+        #NOTE: This may be a poor choice, negating a lot of previous criteria set before.
+        # something to measure.
     if cycles == []:
         jonsonCycles = _johnson_cycle_search(graph, path=[doubleRole])
         if selectedCycle := next(jonsonCycles):
             print(f'jonson cycle found: {selectedCycle}')
-        else: #when no cycles found, move role to unassigned and delete from matching.
+
+        #when no cycle is found from the unbounded search,
+        # the 'problem role' is moved to 'unassigned', and deleted from matching
+        # the idea being that unassigned roles are to be scheduled in by hand-
+        # outside of the scheduler process.
+        else:
             logger.warning(f"{doubleRole}, left unrepaired.")
             schedule.unassignedRoles.append(doubleRole)
             del schedule.matching[doubleRole]
