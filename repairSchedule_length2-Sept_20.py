@@ -1,5 +1,5 @@
 #repairing with 'doubles' criteria
-from doublesCriteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
+from Criteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
 
 #---boilerplate to a make schedule ----
 from InputOutput import InputFile, scheduleFrom #from Schedule import TestSchedule?

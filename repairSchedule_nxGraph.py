@@ -1,5 +1,5 @@
 #repairing with 'doubles' criteria
-from doublesCriteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
+from Criteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
 import networkx as nx
 from boundedCycleSearch import _bounded_cycle_search, _johnson_cycle_search
 
