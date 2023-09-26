@@ -1,4 +1,4 @@
-from Criteria import Doubles
+from Criteria import Doubles, CallTimeOverlap
 from boundedCycleSearch import _bounded_cycle_search
 import networkx as nx
 
@@ -88,3 +88,33 @@ def repairDoubles(schedule):
         swap(schedule, selectedCycle)
     
     print('repair Doubles complete')
+
+
+def repairCallTimeOverlap(schedule):
+    while identifyCriteria(schedule, CallTimeOverlap.isCallTimeOverlap):
+        overlapRoles = [role for role in schedule.matching if CallTimeOverlap.isCallTimeOverlap(role, schedule)]
+        problemRole = overlapRoles[0]
+
+        graph = nx.DiGraph()
+
+        edges = [
+            (role1, role2, roleStaffRating(role2, staff1))
+            for role1, staff1 in schedule.matching.items()
+            for role2 in schedule.matching
+            if CallTimeOverlap.isOpenFor_CallTimeOverlap(staff1, role2, schedule)
+        ]
+        graph.add_weighted_edges_from(edges)
+
+        cycles = _bounded_cycle_search(graph, path=[problemRole], length_bound=3)
+        cycles = list(cycles)
+
+        if cycles == []:
+            logger.warning(f"{problemRole}, left unrepaired.")
+            continue
+
+        logger.info(f'cycles found: {len(cycles)}\n {cycles}')
+        selectedCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
+
+        swap(schedule, selectedCycle)
+
+    print('repair CalltimeOverlap complete.')
