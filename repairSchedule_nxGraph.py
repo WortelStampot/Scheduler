@@ -113,25 +113,15 @@ while identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
         selectedCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
         print(selectedCycle)
 
-    #when the bounded cycle search comes up with no cycles
-    # we do one unbounded search for a single cycle.
-    # this is a way to say, 'a cycle is preferred over no cycle'
-        #NOTE: This may be a poor choice, negating a lot of previous criteria set before.
-        # something to measure.
-    if cycles == []:
-        jonsonCycles = _johnson_cycle_search(graph, path=[doubleRole])
-        if selectedCycle := next(jonsonCycles):
-            print(f'jonson cycle found: {selectedCycle}')
-
+    else:
         #when no cycle is found from the unbounded search,
         # the 'problem role' is moved to 'unassigned', and deleted from matching
         # the idea being that unassigned roles are to be scheduled in by hand-
         # outside of the scheduler process.
-        else:
-            logger.warning(f"{doubleRole}, left unrepaired.")
-            schedule.unassignedRoles.append(doubleRole)
-            del schedule.matching[doubleRole]
-            continue
+        logger.warning(f"{doubleRole}, left unrepaired.")
+        schedule.unassignedRoles.append(doubleRole)
+        del schedule.matching[doubleRole]
+        continue
 
     swap(schedule, selectedCycle)
 
