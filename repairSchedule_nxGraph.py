@@ -1,7 +1,7 @@
 #repairing with 'doubles' criteria
 from doublesCriteria import isDouble, isOpenFor_Doubles, createGraph_Doubles
 import networkx as nx
-from boundedCycleSearch import _bounded_cycle_search
+from boundedCycleSearch import _bounded_cycle_search, _johnson_cycle_search
 
 #---boilerplate to a make schedule ----
 from InputOutput import InputFile, scheduleFrom #from Schedule import TestSchedule?
@@ -100,31 +100,32 @@ while identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     graph.add_weighted_edges_from(edges)
     startingNode = [doubleRole]
 
-    #find cycles
-    boundedCycles = _bounded_cycle_search(graph, startingNode, length_bound=2)
-    cycles = list(boundedCycles)
-    print(f'bounded cycles: {len(cycles)}\n {cycles}')
+    MAX_LENGTH = 3
+    for length in range(2,MAX_LENGTH):
+        logger.info(f"finding all cycles of length: {length}")
+        #find cycles
+        boundedCycles = _bounded_cycle_search(graph, path=[doubleRole], length_bound=length)
+        cycles = list(boundedCycles)
 
-    #when no cycles found, move role to unassigned and delete from matching.
+    if cycles != []:
+        print(f'bounded cycles: {len(cycles)}\n {cycles}')
+
+        #select a cycle by weight
+        selectedCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
+        print(selectedCycle)
+
+    #get first cycle from johnson search.
     if cycles == []:
-        logger.warning(f"{doubleRole}, left unrepaired.")
-        schedule.unassignedRoles.append(doubleRole)
-        del schedule.matching[doubleRole]
-        continue
-
-    selectedCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
-    logger.info(f'selected cycle: {selectedCycle}')
-    print(f'selected cycle: {selectedCycle}')
+        jonsonCycles = _johnson_cycle_search(graph, path=[doubleRole])
+        if selectedCycle := next(jonsonCycles):
+            print(f'jonson cycle found: {selectedCycle}')
+        else: #when no cycles found, move role to unassigned and delete from matching.
+            logger.warning(f"{doubleRole}, left unrepaired.")
+            schedule.unassignedRoles.append(doubleRole)
+            del schedule.matching[doubleRole]
+            continue
 
     swap(schedule, selectedCycle)
-
-    #recompute edges for graph
-    edges_doubles = [
-    (role1, role2, roleStaffRating(role2, staff1) )
-    for role1, staff1 in schedule.matching.items()
-    for role2 in schedule.matching
-    if isOpenFor_Doubles(staff1, role2, schedule) > 0
-    ]
 
 schedule = schedule.matching
 
