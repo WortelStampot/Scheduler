@@ -85,39 +85,48 @@ def swap(schedule, cycle) -> None : #again, can avoid passing in schedule when n
 
 ### a version of 'repairSchedule' ###
 
-if identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
+while identifyCriteria(schedule, isDouble): # schedule.identify(isDouble)?
     doubles = [role for role in schedule.matching if isDouble(role, schedule)]
-    doubleRole = doubles[0] #select first from the list, for now.
+    doubleRole = doubles[0]
 
-    edges_doubles = [
-        (role1, role2, roleStaffRating(role2, staff1) )
-        for role1, staff1 in schedule.matching.items()
-        for role2 in schedule.matching
-        if isOpenFor_Doubles(staff1, role2, schedule) > 0
-        ]
-
-    nxGraph = nx.DiGraph()
-    nxGraph.add_weighted_edges_from(edges_doubles)
+    #create graph and add edges
+    graph = nx.DiGraph()
+    edges = [
+    (role1, role2, roleStaffRating(role2, staff1) )
+    for role1, staff1 in schedule.matching.items()
+    for role2 in schedule.matching
+    if isOpenFor_Doubles(staff1, role2, schedule) > 0
+    ]
+    graph.add_weighted_edges_from(edges)
     startingNode = [doubleRole]
 
-    boundedCycles = _bounded_cycle_search(nxGraph, startingNode, length_bound=2)
+    #find cycles
+    boundedCycles = _bounded_cycle_search(graph, startingNode, length_bound=2)
     cycles = list(boundedCycles)
     print(f'bounded cycles: {len(cycles)}\n {cycles}')
 
-    #select a cycle by weight
-    heaviestCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
-    print(heaviestCycle)
+    #when no cycles found, move role to unassigned and delete from matching.
+    if cycles == []:
+        logger.warning(f"{doubleRole}, left unrepaired.")
+        schedule.unassignedRoles.append(doubleRole)
+        del schedule.matching[doubleRole]
+        continue
 
-    swap(schedule, heaviestCycle)
+    selectedCycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
+    logger.info(f'selected cycle: {selectedCycle}')
+    print(f'selected cycle: {selectedCycle}')
 
-#updating the graph:
-#for the nxGraph, this is updating the edge list.
+    swap(schedule, selectedCycle)
+
+    #recompute edges for graph
     edges_doubles = [
     (role1, role2, roleStaffRating(role2, staff1) )
     for role1, staff1 in schedule.matching.items()
     for role2 in schedule.matching
     if isOpenFor_Doubles(staff1, role2, schedule) > 0
     ]
+
+schedule = schedule.matching
 
 def updateTheGraph():
     #seems we don't need to 'update the graph' since the [staff][role] values-
@@ -169,5 +178,3 @@ def measureSwaps(cycle):
 
     for now, subtracting 1 when calculating the before and after ratings
     '''
-
-schedule = schedule.matching
