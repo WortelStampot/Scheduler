@@ -132,7 +132,7 @@ class CallTimeOverlap:
             for shift in shifts:
                 if shift.day.value == succeedingDay:
                     succeedingRole = shift
-            if succeedingRole is None or precedingRole.callTime.hour >= 12:
+            if succeedingRole is None or succeedingRole.callTime.hour >= 12:
                 return True
         
         return False
