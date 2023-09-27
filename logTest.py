@@ -1,7 +1,7 @@
 from InputOutput import InputFile, scheduleFrom
 from MatchingAlgorithms import MatchingAlgorithms
-from repairDoubles import repairDoubles
-from Criteria import CallTimeOverlap
+from repairSchedule import repairDoubles, repairCallTimeOverlap
+from Criteria import Doubles, CallTimeOverlap
 import logging
 logging.basicConfig(filename='activity.log', filemode='w', level=logging.INFO, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger(__name__)
@@ -12,11 +12,8 @@ algorithm = MatchingAlgorithms.weightedMatching
 schedule = scheduleFrom(jsonInput, algorithm)
 schedule.logSchedule()
 
-for role, staff in schedule.matching.items():
-    CallTimeOverlap.isCallTimeOverlap(role, schedule)
-
-repairDoubles(schedule)
+repairDoubles(schedule, Doubles)
 schedule.logSchedule()
 
-for role, staff in schedule.matching.items():
-    CallTimeOverlap.isCallTimeOverlap(role, schedule)
+repairCallTimeOverlap(schedule, CallTimeOverlap)
+schedule.logSchedule
