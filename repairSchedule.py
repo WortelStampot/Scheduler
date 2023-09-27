@@ -1,4 +1,3 @@
-from Criteria import Doubles, CallTimeOverlap
 from boundedCycleSearch import _bounded_cycle_search
 import networkx as nx
 
@@ -52,12 +51,12 @@ def swap(schedule, cycle) -> None : #again, can avoid passing in schedule when n
         schedule.matching[role0], schedule.matching[rolei] = schedule.matching[rolei], schedule.matching[role0]
         logger.info(f'staff of {role0}: {schedule.matching[role0]}')
 
-def repairDoubles(schedule):
+def repairDoubles(schedule, criteriaClass):
     '''
     repair the schedule.matching with Doubles criteria
     '''
-    while identifyCriteria(schedule, Doubles.isDouble): #what am I doing here?
-        doubles = [role for role in schedule.matching if Doubles.isDouble(role, schedule)]
+    while identifyCriteria(schedule, criteriaClass.isDouble): #what am I doing here?
+        doubles = [role for role in schedule.matching if criteriaClass.isDouble(role, schedule)]
         problemRole = doubles[0]
 
         #set up to find cycles
@@ -67,7 +66,7 @@ def repairDoubles(schedule):
             (role1, role2, roleStaffRating(role2, staff1))
             for role1, staff1 in schedule.matching.items()
             for role2 in schedule.matching
-            if Doubles.isOpenFor_Doubles(staff1, role2, schedule)
+            if criteriaClass.isOpenFor_Doubles(staff1, role2, schedule)
         ]
         graph.add_weighted_edges_from(edges)
 
@@ -90,9 +89,9 @@ def repairDoubles(schedule):
     print('repair Doubles complete')
 
 
-def repairCallTimeOverlap(schedule):
-    while identifyCriteria(schedule, CallTimeOverlap.isCallTimeOverlap):
-        overlapRoles = [role for role in schedule.matching if CallTimeOverlap.isCallTimeOverlap(role, schedule)]
+def repairCallTimeOverlap(schedule, criteriaClass):
+    while identifyCriteria(schedule, criteriaClass.isCallTimeOverlap):
+        overlapRoles = [role for role in schedule.matching if criteriaClass.isCallTimeOverlap(role, schedule)]
         problemRole = overlapRoles[0]
 
         graph = nx.DiGraph()
@@ -101,7 +100,7 @@ def repairCallTimeOverlap(schedule):
             (role1, role2, roleStaffRating(role2, staff1))
             for role1, staff1 in schedule.matching.items()
             for role2 in schedule.matching
-            if CallTimeOverlap.isOpenFor_CallTimeOverlap(staff1, role2, schedule)
+            if criteriaClass.isOpenFor_CallTimeOverlap(staff1, role2, schedule)
         ]
         graph.add_weighted_edges_from(edges)
 
