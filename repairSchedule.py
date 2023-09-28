@@ -51,7 +51,7 @@ def swap(schedule, cycle) -> None : #again, can avoid passing in schedule when n
         schedule.matching[role0], schedule.matching[rolei] = schedule.matching[rolei], schedule.matching[role0]
         logger.info(f'staff of {role0}: {schedule.matching[role0]}')
 
-def repairDoubles(schedule, criteriaClass):
+def repairDoubles_nx(schedule, criteriaClass):
     '''
     repair the schedule.matching with Doubles criteria
     '''
