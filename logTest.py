@@ -1,7 +1,7 @@
 from InputOutput import InputFile, scheduleFrom
 from MatchingAlgorithms import MatchingAlgorithms
 
-from repairSchedule import repairDoubles_nx, repairCallTimeOverlap, repairSchedule
+from repairSchedule import repairSchedule
 from Criteria import Doubles, CallTimeOverlap
 
 from repairDoubles import repairDoubles
