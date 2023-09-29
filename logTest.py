@@ -1,7 +1,7 @@
 from InputOutput import InputFile, scheduleFrom
 from MatchingAlgorithms import MatchingAlgorithms
 
-from repairSchedule import repairDoubles_nx, repairCallTimeOverlap
+from repairSchedule import repairDoubles_nx, repairCallTimeOverlap, repairSchedule
 from Criteria import Doubles, CallTimeOverlap
 
 from repairDoubles import repairDoubles
@@ -15,9 +15,6 @@ algorithm = MatchingAlgorithms.weightedMatching
 schedule = scheduleFrom(jsonInput, algorithm)
 schedule.logSchedule()
 
-repairDoubles(schedule)
-
-repairDoubles_nx(schedule, Doubles)
-
-repairCallTimeOverlap(schedule, CallTimeOverlap)
+repairSchedule(schedule, Doubles)
+repairSchedule(schedule, CallTimeOverlap)
 

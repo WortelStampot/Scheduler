@@ -4,9 +4,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Criteria:
-    #the idea is that the specific citeria below inherit from this 'main' Criteria class...
+    '''not being used-'''
+    #the idea is that the specific citeria below inherit from this 'main' Criteria class
 
-    def check(self, schedule):
+    def inSchedule(self, schedule):
         for role in schedule.matching:
             if self.inSchedule(role, schedule):
                 print(f'match found for {self.__name__}: {role}')
@@ -14,12 +15,20 @@ class Criteria:
         print(f'no match found for {self.__name__}')
         return False
 
-class Doubles(Criteria):
+class Doubles:
     '''
     the criteria which makes up 'doubles'
     '''
 
-    def inSchedule(role, schedule):
+    def inSchedule(schedule):
+        for role in schedule.matching:
+            if Doubles.check(role, schedule):
+                print(f'match found for {Doubles.__name__}: {role}')
+                return True
+        print(f'no match found for {Doubles.__name__}')
+        return False
+
+    def check(role, schedule):
         #TODO: test this
         '''
         True when the staff of this role is matched to another role on this role's day
@@ -51,9 +60,17 @@ class Doubles(Criteria):
         return 0
     
 
-class CallTimeOverlap(Criteria):
+class CallTimeOverlap:
 
-    def inSchedule(role, schedule):
+    def inSchedule(schedule):
+        for role in schedule.matching:
+            if CallTimeOverlap.check(role, schedule):
+                print(f'match found for {CallTimeOverlap.__name__}: {role}')
+                return True
+        print(f'no match found for {CallTimeOverlap.__name__}')
+        return False
+
+    def check(role, schedule):
         '''
         True when this role calltime is AM and the assigned staff's preceeding shift is 5pm or later
         exception when role.day is first day of the week, no preceeding shift
