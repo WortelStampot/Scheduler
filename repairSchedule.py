@@ -23,16 +23,13 @@ def repairSchedule(schedule, criteria):
 
 def findCycles(problemRole, schedule, criteria):
 
-            #set up to find cycles
-        graph = nx.DiGraph()
-        
         edges = [
-            (role1, role2, roleStaffRating(role2, staff1))
+            (role1, role2)
             for role1, staff1 in schedule.matching.items()
             for role2 in schedule.matching
             if criteria.isOpenFor(staff1, role2, schedule)
         ]
-        graph.add_weighted_edges_from(edges)
+        graph = nx.DiGraph(edges)
 
         #find cycles
         cycles = _bounded_cycle_search(graph, path=[problemRole], length_bound=3)
