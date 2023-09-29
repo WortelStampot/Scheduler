@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 def repairSchedule(schedule, criteria):
     while criteria.inSchedule(schedule):
         problemRoles = [role for role in schedule.matching if criteria.check(role, schedule)]
+        logger.info(f"repair {criteria.__name__} starting count: {len(problemRoles)}")
         problemRole = problemRoles[0]
 
         cycles = findCycles(problemRole, schedule, criteria)
