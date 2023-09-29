@@ -6,22 +6,20 @@ logger = logging.getLogger(__name__)
 class Criteria:
     #the idea is that the specific citeria below inherit from this 'main' Criteria class...
 
-    def identifyCriteria(schedule, criteria):
+    def check(self, schedule):
         for role in schedule.matching:
-            if criteria(role, schedule):
-                logger.info(f'{criteria.__name__} match found: {role}')
-                print(f'match found for {criteria.__name__}: {role}')
+            if self.inSchedule(role, schedule):
+                print(f'match found for {self.__name__}: {role}')
                 return True
-        logger.info(f'no match found for {criteria.__name__}')
-        print(f'no match found for {criteria.__name__}')
+        print(f'no match found for {self.__name__}')
         return False
 
-class Doubles:
+class Doubles(Criteria):
     '''
     the criteria which makes up 'doubles'
     '''
 
-    def isDouble(role, schedule):
+    def inSchedule(role, schedule):
         #TODO: test this
         '''
         True when the staff of this role is matched to another role on this role's day
@@ -36,7 +34,7 @@ class Doubles:
         return role.day in daysScheduled
 
 
-    def isOpenFor_Doubles(staff, role, schedule):
+    def isOpenFor(staff, role, schedule):
         '''
         identify if a staff is open to work the role.
         'open' defined by doubles criteria
@@ -53,23 +51,9 @@ class Doubles:
         return 0
     
 
-    def createGraph_Doubles(schedule):
-        '''
-        this graph is a representation of all the shifts a staff is open to swap with
-        based on the doubles criteria.
-        We call isOpenFor_doubles for each possible role/staff combination of the schedule.
-        the returned True or False value is what makes up the rectangle matrix of this graph.
-        '''
-        adjcMatrix_staffKey = { staff: {role: Doubles.isOpenFor_Doubles(staff, role, schedule)
-                    for role in schedule.matching } # this is the row dictionary
-                    for staff in schedule.staff} # this is the dict which stores the rows, creating columns
-        
-        return adjcMatrix_staffKey
-    
+class CallTimeOverlap(Criteria):
 
-class CallTimeOverlap:
-
-    def isCallTimeOverlap(role, schedule):
+    def inSchedule(role, schedule):
         '''
         True when this role calltime is AM and the assigned staff's preceeding shift is 5pm or later
         exception when role.day is first day of the week, no preceeding shift
@@ -100,7 +84,7 @@ class CallTimeOverlap:
         return True
 
 
-    def isOpenFor_CallTimeOverlap(staff, role, schedule):
+    def isOpenFor(staff, role, schedule):
         """
         Return True if staff can be reassigned to role without causing overlapping shifts
         """
