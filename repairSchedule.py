@@ -1,21 +1,25 @@
 from boundedCycleSearch import _bounded_cycle_search
 import networkx as nx
-
 from MatchingAlgorithms import roleStaffRating
 
 import logging
 logging.basicConfig(filename='activity.log', filemode='w', level=logging.DEBUG, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger(__name__)
 
-def identifyCriteria(schedule, criteria):
-    for role in schedule.matching:
-        if criteria(role, schedule):
-            logger.info(f'{criteria.__name__} match found: {role}')
-            print(f'match found for {criteria.__name__}: {role}')
-            return True
-    logger.info(f'no match found for {criteria.__name__}')
-    print(f'no match found for {criteria.__name__}')
-    return False
+def repairSchedule(schedule, criteria):
+    while criteria.inSchedule(schedule):
+        problemRoles = [role for role in schedule.matching if criteria.check(role, schedule)]
+        problemRole = problemRoles[0]
+
+        cycles = findCycles(problemRole, schedule, criteria)
+
+        #select heaviest cycle
+        logger.info(f'cycles found: {len(cycles)}\n {cycles}')
+        cycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
+
+        swap(schedule, cycle)
+    
+    print(f'{criteria} repair complete')
 
 def findCycles(problemRole, schedule, criteria):
 
@@ -76,18 +80,3 @@ def swap(schedule, cycle) -> None : #again, can avoid passing in schedule when n
         #swap object 0 with object i
         schedule.matching[role0], schedule.matching[rolei] = schedule.matching[rolei], schedule.matching[role0]
         logger.info(f'staff of {role0}: {schedule.matching[role0]}')
-
-def repairSchedule(schedule, criteria):
-    while criteria.inSchedule(schedule):
-        problemRoles = [role for role in schedule.matching if criteria.check(role, schedule)]
-        problemRole = problemRoles[0]
-
-        cycles = findCycles(problemRole, schedule, criteria)
-
-        #select heaviest cycle
-        logger.info(f'cycles found: {len(cycles)}\n {cycles}')
-        cycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
-
-        swap(schedule, cycle)
-    
-    print(f'{criteria} repair complete')
