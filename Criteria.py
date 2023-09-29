@@ -3,18 +3,6 @@ from Weekdays import Weekdays
 import logging
 logger = logging.getLogger(__name__)
 
-class Criteria:
-    '''not being used-'''
-    #the idea is that the specific citeria below inherit from this 'main' Criteria class
-
-    def inSchedule(self, schedule):
-        for role in schedule.matching:
-            if self.inSchedule(role, schedule):
-                print(f'match found for {self.__name__}: {role}')
-                return True
-        print(f'no match found for {self.__name__}')
-        return False
-
 class Doubles:
     '''
     the criteria which makes up 'doubles'
