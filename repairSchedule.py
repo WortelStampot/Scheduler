@@ -8,19 +8,29 @@ logger = logging.getLogger(__name__)
 
 def repairSchedule(schedule, criteria):
     while criteria.inSchedule(schedule):
-        problemRoles = [role for role in schedule.matching if criteria.check(role, schedule)]
-        logger.info(f"repair {criteria.__name__} starting count: {len(problemRoles)}")
-        problemRole = problemRoles[0]
+        
+        problemRole = selectRole(schedule, criteria)
 
         cycles = findCycles(problemRole, schedule, criteria)
 
-        #select heaviest cycle
-        logger.info(f'cycles found: {len(cycles)}\n {cycles}')
-        cycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
+        cycle = selectCycle(schedule, cycles)
 
         swap(schedule, cycle)
     
     print(f'{criteria} repair complete')
+
+
+def selectRole(schedule, criteria):
+        
+        problemRoles = [role for role in schedule.matching if criteria.check(role, schedule)]
+        logger.info(f'repair {criteria.__name__} count: {len(problemRoles)}')
+        logger.debug(f'{problemRoles}')
+
+        problemRole = problemRoles[0]
+        logger.info(f'repairing: {problemRole}')
+
+        return problemRole
+
 
 def findCycles(problemRole, schedule, criteria):
 
@@ -67,6 +77,13 @@ def cycleWeight(cycle, schedule): #NOTE: can avoid passing in schedule when usin
     cycleWeight = ratingSum / len(cycle)
     print(f'{cycle}: {cycleWeight}')
     return cycleWeight
+
+
+def selectCycle(schedule, cycles):
+        #select heaviest cycle
+        logger.info(f'cycles found: {len(cycles)}\n {cycles}')
+        return max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
+     
 
 
 def swap(schedule, cycle) -> None : #again, can avoid passing in schedule when nodes are shifts.
