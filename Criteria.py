@@ -11,9 +11,7 @@ class Doubles:
     def inSchedule(schedule):
         for role in schedule.matching:
             if Doubles.check(role, schedule):
-                print(f'match found for {Doubles.__name__}: {role}')
                 return True
-        print(f'no match found for {Doubles.__name__}')
         return False
 
     def check(role, schedule):
@@ -53,9 +51,7 @@ class CallTimeOverlap:
     def inSchedule(schedule):
         for role in schedule.matching:
             if CallTimeOverlap.check(role, schedule):
-                print(f'match found for {CallTimeOverlap.__name__}: {role}')
                 return True
-        print(f'no match found for {CallTimeOverlap.__name__}')
         return False
 
     def check(role, schedule):
@@ -64,11 +60,9 @@ class CallTimeOverlap:
         exception when role.day is first day of the week, no preceeding shift
         '''
         if role.day.value == 0:
-            logger.info('monday role')
-            return False #('no preceding shift to first day of the week')
+            return False # monday role, no preceding shift to first day of the week
         if role.callTime.hour > 12:
-            logger.info(f'{role} is not morning role')
-            return False # definition doesn't apply to roles that aren't morning shifts
+            return False # not a morning role, definition doesn't apply to roles that aren't morning shifts
 
         staff = schedule.matching[role]
         staffShifts = staff.shifts(schedule)

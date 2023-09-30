@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 def repairSchedule(schedule, criteria):
     while criteria.inSchedule(schedule):
+        schedule.unrepaired[criteria.__name__] = []
         
         problemRole = selectRole(schedule, criteria)
 
@@ -17,19 +18,22 @@ def repairSchedule(schedule, criteria):
 
         swap(schedule, cycle)
     
-    print(f'{criteria} repair complete')
+    print(f'{criteria.__name__} repair complete\n \
+    remaining count: {len([role for role in schedule.matching if criteria.check(role, schedule)])} \
+    {schedule.unrepaired.items()}')
 
 
 def selectRole(schedule, criteria):
         
-        problemRoles = [role for role in schedule.matching if criteria.check(role, schedule)]
-        logger.info(f'repair {criteria.__name__} count: {len(problemRoles)}')
-        logger.debug(f'{problemRoles}')
+        rolesToRepair = [role for role in schedule.matching if criteria.check(role, schedule)]
+        logger.info(f'repair {criteria.__name__} count: {len(rolesToRepair)}')
+        logger.debug(f'{rolesToRepair}')
+        print(f'{criteria.__name__} progress: {len(rolesToRepair)}')
 
-        problemRole = problemRoles[0]
-        logger.info(f'repairing: {problemRole}')
+        role = rolesToRepair[0]
+        logger.info(f'repairing: {role}')
 
-        return problemRole
+        return role
 
 
 def findCycles(problemRole, schedule, criteria):
@@ -40,16 +44,31 @@ def findCycles(problemRole, schedule, criteria):
             for role2 in schedule.matching
             if criteria.isOpenFor(staff1, role2, schedule)
         ]
+
+        poolSize = len(schedule.matching) * len(schedule.matching)
+        logger.info(f'number of edges for {criteria.__name__}: {len(edges)} \
+        coverage: { round( (len(edges) / poolSize * 100), 2) }%')
+        
         graph = nx.DiGraph(edges)
 
-        #find cycles
-        cycles = _bounded_cycle_search(graph, path=[problemRole], length_bound=3)
+        #find cycles by length
+        maxLength = 3
+        cycles = _bounded_cycle_search(graph, path=[problemRole], length_bound=maxLength)
         cycles = list(cycles) # 'unpack' the generator
 
+        # number of cycles found
+        logger.info(f'cycles found: {len(cycles)}')
+        # number of cycles at each length
+        for i in range(2, maxLength + 1):
+            cyclesByCount = [cycle for cycle in cycles if len(cycle) == i]
+            logger.info(f'cycles by count {i}: {len(cyclesByCount)}')
+            logger.debug(f'{cyclesByCount}')
+
         if cycles == []: # move problemRole to 'unassigned' and remove from matching
-            logger.warning(f"{problemRole}, left unrepaired.")
-            schedule.unassignedRoles.append(problemRole)
+            schedule.unrepaired[criteria.__name__].append(problemRole)
+            logger.warning(f"{problemRole} left unrepaired.")
             del schedule.matching[problemRole]
+            logger.info(f'{problemRole} removed from matching')
             return
         
         return cycles  
@@ -75,15 +94,14 @@ def cycleWeight(cycle, schedule): #NOTE: can avoid passing in schedule when usin
     
     #get relative rating by dividing by length of cycle
     cycleWeight = ratingSum / len(cycle)
-    print(f'{cycle}: {cycleWeight}')
+    logger.debug(f'{cycle}: {cycleWeight}')
     return cycleWeight
 
 
 def selectCycle(schedule, cycles):
-        #select heaviest cycle
-        logger.info(f'cycles found: {len(cycles)}\n {cycles}')
-        return max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
-     
+        cycle = max(cycles, key= lambda cycle: cycleWeight(cycle, schedule) )
+        logger.info(f'selected cycle: {cycle}')
+        return cycle
 
 
 def swap(schedule, cycle) -> None : #again, can avoid passing in schedule when nodes are shifts.
