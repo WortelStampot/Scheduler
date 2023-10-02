@@ -46,6 +46,37 @@ class Doubles:
         
         return 0
     
+    def isOpenFor_WithDoubles(staff, role, schedule):
+        '''
+        using the class's 'check' function inside the 'openFor' function.
+        
+        There's an edge case I'm unsure of.
+        when this function is used to find edges with:
+        (role1, role2)
+            for role1, staff1 in schedule.matching.items()
+            for role2 in schedule.matching
+            if criteria.isOpenFor(staff1, role2, schedule)
+        
+        and the 'staff' is matched with the 'role' passed in, the-
+            if role in shifts:
+                shifts.remove(role)
+        clause in Doubles.check means this can return an edge of
+        (role1, role2) where role1 and role2 are the same role object.
+
+        Question:
+        does this mess up the edge list?
+        '''
+
+        #the interest here is using the class's 'check' function directly
+        # since that's what we seem to be doing when 'layering' criteria
+
+        if Doubles.check(staff, role, schedule) == False \
+        and staff.isAvailable(role) and staff.isQualified(role):
+            return True
+        
+        return False
+            
+    
 
 class CallTimeOverlap:
 
