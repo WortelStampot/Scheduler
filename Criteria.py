@@ -14,19 +14,20 @@ class Doubles:
                 return True
         return False
 
-    def check(role, schedule):
+    def check(staff, role, schedule):
         #TODO: test this
         '''
         True when the staff of this role is matched to another role on this role's day
         '''
-        staff = schedule.matching[role]
+        shifts = staff.shifts(schedule) #get the role objects staff is currently matched with
 
-        matchedRoles = staff.shifts(schedule) #get the role objects staff is currently matched with
-        matchedRoles.remove(role) #remove the role in question
+        if role in shifts: #takes into account the staff is matched with the role passed in
+            shifts.remove(role)
 
-        daysScheduled = [role.day for role in matchedRoles]
+        shiftDays = [shift.day for shift in shifts] # 'shifts' are Role object here
+        #written this way to keep 'the role passed in' separate from 'the roles staff is matched with'
 
-        return role.day in daysScheduled
+        return role.day in shiftDays
 
 
     def isOpenFor(staff, role, schedule):
