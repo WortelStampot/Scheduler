@@ -42,9 +42,9 @@ class Doubles:
         and staff.isAvailable(role) and staff.isQualified(role):
             #TODO: pull isAvailable and isQualiified from a single source.
             #They first appear in findEdges()
-            return roleStaffRating(role, staff)
+            return True
         
-        return 0
+        return False
     
     def isOpenFor_WithDoubles(staff, role, schedule):
         '''
