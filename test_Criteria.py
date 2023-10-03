@@ -123,3 +123,29 @@ class Test_Doubles():
         assert Doubles.isOpenFor(staff, role, schedule) == False
         assert Doubles.isOpenFor_WithDoubles(staff, role, schedule) == False
 
+    def test_openFor04(self):
+        """
+        assert False
+        Staff is working the role
+        """
+        # NOTE: This test fails, 'True == False'
+        # When a staff is working the role, what is the desired outcome?
+
+        staff = Staff(name='atlas', maxShifts=4, availability=None)
+        role = Role(name='Aux', day=Weekdays.TUESDAY, callTime=datetime.time(hour=18, minute=00))
+        role.qualifiedStaff=['atlas']
+        schedule = Schedule(roles=[], staff=[], matchingAlgorithm=MatchingAlgorithms.test_emptyMatching)
+        schedule.matching = {role: staff}
+
+        isAvailabile = {Weekdays.MONDAY: [],
+                Weekdays.TUESDAY: [datetime.time(18,0)],
+                Weekdays.WEDNESDAY: [],
+                Weekdays.THURSDAY: [],
+                Weekdays.FRIDAY: [],
+                Weekdays.SATURDAY: [],
+                Weekdays.SUNDAY: []}
+
+        staff.availability = isAvailabile
+        assert Doubles.isOpenFor(staff, role, schedule) == False
+        assert Doubles.isOpenFor_WithDoubles(staff, role, schedule) == False
+
