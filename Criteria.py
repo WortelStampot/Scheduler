@@ -9,8 +9,8 @@ class Doubles:
     '''
 
     def inSchedule(schedule):
-        for role in schedule.matching:
-            if Doubles.check(role, schedule):
+        for role, staff in schedule.matching.items():
+            if Doubles.check(staff, role, schedule):
                 return True
         return False
 
@@ -81,12 +81,12 @@ class Doubles:
 class CallTimeOverlap:
 
     def inSchedule(schedule):
-        for role in schedule.matching:
-            if CallTimeOverlap.check(role, schedule):
+        for role, staff in schedule.matching.items():
+            if CallTimeOverlap.check(staff, role, schedule):
                 return True
         return False
 
-    def check(role, schedule):
+    def check(staff, role, schedule):
         '''
         True when this role calltime is AM and the assigned staff's preceeding shift is 5pm or later
         exception when role.day is first day of the week, no preceeding shift
@@ -96,7 +96,6 @@ class CallTimeOverlap:
         if role.callTime.hour > 12:
             return False # not a morning role, definition doesn't apply to roles that aren't morning shifts
 
-        staff = schedule.matching[role]
         staffShifts = staff.shifts(schedule)
         preceedingDay = role.day.value - 1
 

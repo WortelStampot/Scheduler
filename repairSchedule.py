@@ -19,13 +19,13 @@ def repairSchedule(schedule, criteria):
         swap(schedule, cycle)
     
     print(f'{criteria.__name__} repair complete\n \
-    remaining count: {len([role for role in schedule.matching if criteria.check(role, schedule)])} \
+    remaining count: {len([role for role, staff in schedule.matching.items() if criteria.check(staff, role, schedule)])} \
     {schedule.unrepaired.items()}')
 
 
 def selectRole(schedule, criteria):
         
-        rolesToRepair = [role for role in schedule.matching if criteria.check(role, schedule)]
+        rolesToRepair = [role for role, staff in schedule.matching.items() if criteria.check(staff, role, schedule)]
         logger.info(f'repair {criteria.__name__} count: {len(rolesToRepair)}')
         logger.debug(f'{rolesToRepair}')
         print(f'{criteria.__name__} progress: {len(rolesToRepair)}')
