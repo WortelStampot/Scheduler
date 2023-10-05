@@ -2,6 +2,15 @@
 file currently not functional
 """
 
+
+# four weeks of data
+# assertions for:
+    # no or low doubles
+    # low callTimeOverlap
+    # small number of roles set aside
+
+    # log the numbers for each
+
 class ScheduleTests:
     """
     verify and validate process results on a schedule object
