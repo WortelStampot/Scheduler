@@ -1,5 +1,6 @@
 import logging
-import repairDoubles
+from repairSchedule import repairSchedule
+from Criteria import Doubles, CallTimeOverlap
 from Schedule import Schedule
 from MatchingAlgorithms import MatchingAlgorithms
 
@@ -10,6 +11,7 @@ def createSchedule(roleCollection, staffCollection):
     schedule = Schedule(roles=roleCollection, staff=staffCollection, matchingAlgorithm=MatchingAlgorithms.weightedMatching)
     schedule.logSchedule()
 
-    repairDoubles.repairDoubles(schedule)
+    repairSchedule(schedule, Doubles)
+    repairSchedule(schedule, CallTimeOverlap)
     
     return schedule

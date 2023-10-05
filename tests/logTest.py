@@ -1,10 +1,9 @@
-from InputOutput import InputFile, scheduleFrom
+from tests.InputOutput import InputFile, scheduleFrom
 from MatchingAlgorithms import MatchingAlgorithms
 
 from repairSchedule import repairSchedule
 from Criteria import Doubles, CallTimeOverlap
 
-from repairDoubles import repairDoubles
 import logging
 logging.basicConfig(filename='activity.log', filemode='w', level=logging.INFO, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger(__name__)

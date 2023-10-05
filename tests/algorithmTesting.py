@@ -1,4 +1,4 @@
-from InputOutput import InputOutput
+wfrom tests.InputOutput import InputOutput
 from MatchingAlgorithms import MatchingAlgorithms
 from repairDoubles import repairDoubles
 
