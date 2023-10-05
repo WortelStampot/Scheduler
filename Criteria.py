@@ -69,7 +69,7 @@ class Doubles:
 
         #the interest here is using the class's 'check' function directly
         # since that's what we seem to be doing when 'layering' criteria
-w
+
         if Doubles.check(staff, role, schedule) == False \
         and staff.isAvailable(role) and staff.isQualified(role):
             return True
