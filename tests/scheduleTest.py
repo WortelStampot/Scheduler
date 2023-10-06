@@ -23,7 +23,7 @@ def test(input):
     assert len(overlaps) <= 4
     print(f'overlap count: {len(overlaps)}')
 
-    assert len(unassigned) <= 6
+    assert len(unassigned) <= 4
     print(f'unassigned count: {len(unassigned)}')
 
 
