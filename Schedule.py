@@ -28,6 +28,13 @@ class Schedule:
 		for role in self.unassignedRoles:
 			logger.info(role)
 
+	def identify(self, criteria):
+		'''
+		takes a Criteria and returns a list of roles that match the criteria
+		roles are keys to the 'shifts' in schedule.matching
+		'''
+		return [role for role, staff in self.matching.items() if criteria.check(staff, role, self)]
+
 	def identifyDoubles(self):
 		"""
 		return list of roles where the assigned staff is already worked that weekday
