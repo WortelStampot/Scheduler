@@ -25,3 +25,7 @@ def test(input):
 
     assert len(unassigned) <= 6
     print(f'unassigned count: {len(unassigned)}')
+
+
+input = InputFile('roleStaff_8_7_open.json')
+test(input)
