@@ -1,2 +1,3 @@
 # Directory for input files
 !.gitignore
+!dataSample.json
