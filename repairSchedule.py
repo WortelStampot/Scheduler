@@ -14,6 +14,13 @@ def repairSchedule(schedule, criteria):
 
         cycles = findCycles(problemRole, schedule, criteria)
 
+        if cycles == []: # move problemRole to 'unassigned' and remove from matching
+            schedule.unrepaired[criteria.__name__].append(problemRole)
+            logger.warning(f"{problemRole} left unrepaired.")
+            del schedule.matching[problemRole]
+            logger.info(f'{problemRole} removed from matching')
+            continue
+
         cycle = selectCycle(schedule, cycles)
 
         swap(schedule, cycle)
@@ -63,13 +70,6 @@ def findCycles(problemRole, schedule, criteria):
             cyclesByCount = [cycle for cycle in cycles if len(cycle) == i]
             logger.info(f'cycles by count {i}: {len(cyclesByCount)}')
             logger.debug(f'{cyclesByCount}')
-
-        if cycles == []: # move problemRole to 'unassigned' and remove from matching
-            schedule.unrepaired[criteria.__name__].append(problemRole)
-            logger.warning(f"{problemRole} left unrepaired.")
-            del schedule.matching[problemRole]
-            logger.info(f'{problemRole} removed from matching')
-            return
         
         return cycles  
 
