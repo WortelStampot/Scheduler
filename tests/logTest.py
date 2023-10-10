@@ -9,7 +9,7 @@ logging.basicConfig(filename='activity.log', filemode='w', level=logging.INFO, f
 logger = logging.getLogger(__name__)
 
 
-jsonInput = InputFile('roleStaff_8_7_strict.json')
+jsonInput = InputFile('roleStaff_10_2_strict.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
 schedule = scheduleFrom(jsonInput, algorithm)
