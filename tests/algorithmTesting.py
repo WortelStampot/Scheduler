@@ -1,16 +1,16 @@
-from tests.InputOutput import InputFile
+from tests.InputOutput import InputFile, scheduleFrom
 from MatchingAlgorithms import MatchingAlgorithms
 from repairSchedule import repairSchedule
 from Criteria import Doubles, CallTimeOverlap
 
 
-jsonFile = InputFile('roleStaff_8_7_open.json')
+jsonFile = InputFile('roleStaff_10_2_strict.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
-schedule = jsonFile.scheduleWith(algorithm)
+schedule = scheduleFrom(jsonFile, algorithm)
 
-repairSchedule(Doubles)
-repairSchedule(CallTimeOverlap)
+repairSchedule(schedule, Doubles)
+repairSchedule(schedule, CallTimeOverlap)
 
 jsonFile.writeCSV(schedule)
 
