@@ -1,6 +1,7 @@
 from pathlib import Path
 from Schedule import Schedule
 from parsingFunctions import parseRole, parseStaff
+import main
 import os
 import json
 import csv
@@ -66,6 +67,21 @@ def scheduleFrom(inputFile, matchingAlgorithm):
             staff = [parseStaff(staff) for staff in schedule["staff"]]
 
             return Schedule(roles=roles, staff=staff, matchingAlgorithm=matchingAlgorithm)
+        
+def scheduleFromMain(inputFile):
+        """
+        create a schedule object
+        
+        Keyword arguments:
+        inputFile = InputFile object
+        """
+        with open(inputFile.path) as file:
+            scheduleData = file.read()
+            schedule = json.loads(scheduleData)
+            roles = [parseRole(role) for role in schedule["roles"]]
+            staff = [parseStaff(staff) for staff in schedule["staff"]]
+
+            return main.createSchedule(roles, staff)
         
 def getLatest(path):
     """
