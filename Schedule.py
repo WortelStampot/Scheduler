@@ -15,11 +15,8 @@ class Schedule:
 		self.staff = staff
 		self.matchingAlgorithm = matchingAlgorithm
 		self.matching = matchingAlgorithm(self.roles, self.staff)
-		self.unassignedRoles = [role for role in self.roles if role not in self.matching]
 		self.unassigned = {} # dict to be filled with {'Criteria': [Roles]} during the createSchedule process
-		self.staffDays = {staff: {matchedRole.day: matchedRole for matchedRole, matchedStaff in self.matching.items() 
-							if matchedStaff.name == staff.name } for staff in self.staff}
-
+		
 	def logSchedule(self):
 		logger.info('---- Schedule ----')
 		for weekday in Weekdays:
