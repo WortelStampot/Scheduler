@@ -99,8 +99,9 @@ class Schedule:
 						break
 			csvLists.append(staffRow)
 
-		unassignedRow = ['unassigned'] + self.unassignedRoles
-		csvLists.append(unassignedRow)
+		for criteria in self.unassigned:
+			row = [criteria] + self.unassigned[criteria]
+			csvLists.append(row)
 		
 		# reason for attribute check,
 		# when this row prints- it means the schedule has gone through the 'repairDoubles' process
