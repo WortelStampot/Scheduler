@@ -13,9 +13,10 @@ def test(input):
 
     schedule = createSchedule(roles, staff)
 
-    doubles = schedule.identify(Doubles)
-    overlaps = schedule.identify(CallTimeOverlap)
-    unassigned = schedule.unassignedRoles
+    doubles = schedule.unassigned['Doubles']
+    overlaps = schedule.identify[CallTimeOverlap]
+    unassignedMatching = schedule.unassigned['Initial Matching']
+
 
     assert len(doubles) <= 2
     print(f'doubles count: {len(doubles)}')
@@ -23,8 +24,8 @@ def test(input):
     assert len(overlaps) <= 4
     print(f'overlap count: {len(overlaps)}')
 
-    #assert len(unassigned) <= 4
-    print(f'unassigned count: {len(unassigned)}')
+    assert len(unassignedMatching) <= 4
+    print(f'unassigned count: {len(unassignedMatching)}')
 
 
 input = InputFile('dataSample.json')
