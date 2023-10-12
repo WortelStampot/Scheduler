@@ -25,8 +25,8 @@ class Schedule:
 		for weekday in Weekdays:
 			logger.info([(role, staff) for role, staff in self.matching.items() if role.day == weekday])
 		logger.info('---- Unassigned Roles ----')
-		for role in self.unassignedRoles:
-			logger.info(role)
+		for criteria, roles in self.unassigned.items():
+			logger.info(f'{criteria}: {roles}')
 
 	def identify(self, criteria):
 		'''
@@ -67,7 +67,9 @@ class Schedule:
 				} for role, staff in self.matching.items()],
 
 			'unassignedRoles': [
-				role.toJSON() for role in self.unassignedRoles
+				{
+				criteria: [role.toJSON() for role in self.unassigned[criteria]]
+				} for criteria in self.unassigned
 			]
 		}
 	
