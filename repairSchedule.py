@@ -8,14 +8,14 @@ logger = logging.getLogger(__name__)
 
 def repairSchedule(schedule, criteria):
     while criteria.inSchedule(schedule):
-        schedule.unrepaired[criteria.__name__] = []
+        schedule.unassigned[criteria.__name__] = []
         
         problemRole = selectRole(schedule, criteria)
 
         cycles = findCycles(problemRole, schedule, criteria)
 
         if cycles == []: # move problemRole to 'unassigned' and remove from matching
-            schedule.unrepaired[criteria.__name__].append(problemRole)
+            schedule.unassigned[criteria.__name__].append(problemRole)
             logger.warning(f"{problemRole} left unrepaired.")
             del schedule.matching[problemRole]
             logger.info(f'{problemRole} removed from matching')
@@ -27,7 +27,7 @@ def repairSchedule(schedule, criteria):
     
     print(f'{criteria.__name__} repair complete\n \
     remaining count: {len([role for role, staff in schedule.matching.items() if criteria.check(staff, role, schedule)])} \
-    {schedule.unrepaired.items()}')
+    {schedule.unassigned.items()}')
 
 
 def selectRole(schedule, criteria):
