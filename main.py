@@ -16,6 +16,10 @@ def createSchedule(roleCollection, staffCollection):
 
     schedule = Schedule(roles=roleCollection, staff=staffCollection, matchingAlgorithm=MatchingAlgorithms.weightedMatching)
     schedule.logSchedule()
+
+    #adding unmatched roles to unassigned dict
+    schedule.unassigned['Initial Matching'] = [
+        role for role in schedule.roles if role not in schedule.matching]
     
     #add swing roles to schedule.unassinged['Swing']
     schedule.unassigned['Swing'] = swingRoles
