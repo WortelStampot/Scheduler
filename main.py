@@ -14,7 +14,7 @@ def createSchedule(roleCollection, staffCollection):
     for role in swingRoles:
         roleCollection.remove(role)
 
-    schedule = Schedule(roles=roleCollection, staff=staffCollection, matchingAlgorithm=MatchingAlgorithms.weightedMatching)
+    schedule = Schedule(roles=roleCollection, staff=staffCollection, matchingAlgorithm=MatchingAlgorithms.bipartiteMatching)
 
     #adding unmatched roles to unassigned dict
     schedule.unassigned['Initial Matching'] = [

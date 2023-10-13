@@ -5,7 +5,7 @@ from Criteria import Doubles, CallTimeOverlap
 
 
 jsonFile = InputFile('roleStaff_10_2_strict_maxShiftCount.json')
-algorithm = MatchingAlgorithms.weightedMatching
+# algorithm = MatchingAlgorithms.bipartiteMatching
 
 schedule = scheduleFromMain(jsonFile)
 
