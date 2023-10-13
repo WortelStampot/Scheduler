@@ -1,4 +1,4 @@
-from tests.InputOutput import InputFile, scheduleFrom
+from tests.InputOutput import InputFile, scheduleFrom, scheduleFromMain
 from MatchingAlgorithms import MatchingAlgorithms
 
 from repairSchedule import repairSchedule
@@ -9,12 +9,16 @@ logging.basicConfig(filename='activity.log', filemode='w', level=logging.INFO, f
 logger = logging.getLogger(__name__)
 
 
-jsonInput = InputFile('dataSample.json')
+jsonInput = InputFile('roleStaff_10_2_strict.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
-schedule = scheduleFrom(jsonInput, algorithm)
+schedule = scheduleFromMain(jsonInput)
+
 schedule.logSchedule()
 
-repairSchedule(schedule, Doubles)
-repairSchedule(schedule, CallTimeOverlap)
+# schedule = scheduleFrom(jsonInput, algorithm)
+# schedule.logSchedule()
+
+# repairSchedule(schedule, Doubles)
+# repairSchedule(schedule, CallTimeOverlap)
 
