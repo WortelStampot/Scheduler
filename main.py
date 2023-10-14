@@ -14,14 +14,20 @@ def createSchedule(roleCollection, staffCollection):
     for role in swingRoles:
         roleCollection.remove(role)
 
+    #set aside 'uber' roles
+    uberRoles = [role for role in roleCollection if role.name == 'uber']
+    for role in uberRoles:
+        roleCollection.remove(role)
+
     schedule = Schedule(roles=roleCollection, staff=staffCollection, matchingAlgorithm=MatchingAlgorithms.weightedMatching)
 
     #adding unmatched roles to unassigned dict
     schedule.unassigned['Initial Matching'] = [
         role for role in schedule.roles if role not in schedule.matching]
     
-    #add swing roles to schedule.unassinged['Swing']
+    #add uber and swing roles to schedule.unassinged
     schedule.unassigned['Swing'] = swingRoles
+    schedule.unassigned['Uber'] = uberRoles
 
     schedule.logSchedule()
 
