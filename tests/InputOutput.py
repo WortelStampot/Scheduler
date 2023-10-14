@@ -15,10 +15,18 @@ class InputFile:
     INPUT_DIR = 'Input/'
     OUTPUT_DIR = 'Output/'
 
-    def __init__(self, jsonFile):
+    def __init__(self, jsonFile: str):
         self.path = Path(InputFile.INPUT_DIR, jsonFile)
+        
+        #read and parse json file
+        with open(self.path) as file:
+            scheduleData = file.read()
+            scheduleJSON = json.loads(scheduleData)
+        self.roles = [parseRole(role) for role in scheduleJSON["roles"]]
+        self.staff = [parseStaff(staff) for staff in scheduleJSON["staff"]]
 
-    def writeCSV(self, schedule):
+
+    def writeCSV(self, schedule, stem=None):
         """
         write a schedule's schedule to a csv file with specified output name
         #TODO: schedule input information inside Schedule?
@@ -26,6 +34,8 @@ class InputFile:
         """
         outputFile = self.path.stem.replace('roleStaff','matching') # label file as a 'matching' result
         outputFile += '_' + schedule.matchingAlgorithm.__name__ # add algorithm used to file name
+        if stem:
+             outputFile += f'_{stem}'
         outputFile += '.csv' # save file as .csv
 
         outputFilePath = Path(InputFile.OUTPUT_DIR, outputFile)
