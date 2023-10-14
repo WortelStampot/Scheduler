@@ -16,6 +16,10 @@ class Schedule:
 		self.matchingAlgorithm = matchingAlgorithm
 		self.matching = matchingAlgorithm(self.roles, self.staff)
 		self.unassigned = {} # dict to be filled with {'Criteria': [Roles]} during the createSchedule process
+
+		#adding unmatched roles to unassigned dict
+		self.unassigned['Initial Matching'] = [
+		role for role in self.roles if role not in self.matching]
 		
 	def logSchedule(self):
 		logger.info('---- Schedule ----')
