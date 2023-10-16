@@ -28,7 +28,7 @@ def createSchedule(roleCollection, staffCollection):
 
 def removeRoles(roleCollection: list, roleName: str) -> list:
     """
-    remove 'swing' roles from the roleCollection
+    remove roles from the roleCollection
     return list of removed roles
 
     this is done to match the 'strict' input being used

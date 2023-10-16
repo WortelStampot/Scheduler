@@ -1,5 +1,7 @@
 from tests.InputOutput import InputFile, scheduleFrom, scheduleFromMain
 from MatchingAlgorithms import MatchingAlgorithms
+from main import removeRoles
+from Schedule import Schedule
 
 from repairSchedule import repairSchedule
 from Criteria import Doubles, CallTimeOverlap
@@ -9,16 +11,22 @@ logging.basicConfig(filename='activity.log', filemode='w', level=logging.INFO, f
 logger = logging.getLogger(__name__)
 
 
-jsonInput = InputFile('roleStaff_10_9_strict.json')
+input = InputFile('roleStaff_10_9_strict.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
-schedule = scheduleFromMain(jsonInput)
+#remove roles for consistant testing
+swingRoles = removeRoles(input.roles, 'swing')
+uberRoles = removeRoles(input.roles, 'uber') 
+
+schedule = Schedule(roles=input.roles, staff=input.staff, matchingAlgorithm=algorithm)
+
+#add removed roles to schedule.unassinged
+schedule.unassigned['Swing'] = swingRoles
+schedule.unassigned['Uber'] = uberRoles
 
 schedule.logSchedule()
 
-# schedule = scheduleFrom(jsonInput, algorithm)
-# schedule.logSchedule()
+repairSchedule(schedule, Doubles)
 
-# repairSchedule(schedule, Doubles)
-# repairSchedule(schedule, CallTimeOverlap)
+schedule.logSchedule()
 
