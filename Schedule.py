@@ -78,26 +78,21 @@ class Schedule:
 		"""
 		return a schedule's schedule in csv format
 		each list is a row to be printed with csvWriter
-		NOTE: this only works after repairDoubles has been run on the schedule,
-			otherwise the spacing gets messed up.
-		QUESTION: How to write this so that issue is handled?
 		"""
 		csvLists = []
-		topRow = ['staff'] + [day.name for day in Weekdays]
+		topRow = ['staff'] + [day.name for day in Weekdays] + [' shift count ']
 		csvLists.append(topRow)
 
 		for staff in self.staff:
-			staffRow = [staff.name]
+			staffRow = [staff.name,'','','','','','',''] # 7 'slots' for 7 days
 			shifts = staff.shifts(self)
-			for weekday in Weekdays:
-				for role in shifts:
-					if role.day == weekday:
-						staffRow.append(role.name)
-						shifts.remove(role)
-						break
-					else:
-						staffRow.append('')
-						break
+			for role in shifts:
+				day = role.day.value + 1 #offset index by one
+				staffRow[day] += f'{role.name}\n'
+
+			#display shift count
+			staffRow.append(f'maxShift: {staff.maxShifts}\nshifts: {len(shifts)}')
+
 			csvLists.append(staffRow)
 
 		for criteria in self.unassigned:
