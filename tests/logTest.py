@@ -26,7 +26,8 @@ schedule.unassigned['Uber'] = uberRoles
 
 schedule.logSchedule()
 
-repairSchedule(schedule, Doubles)
+repairSchedule(schedule, Doubles, removeUnrepaired=True)
+repairSchedule(schedule, CallTimeOverlap)
 
 schedule.logSchedule()
 

@@ -6,23 +6,22 @@ import logging
 logging.basicConfig(filename='activity.log', filemode='w', level=logging.DEBUG, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger(__name__)
 
-def repairSchedule(schedule, criteria):
-    while criteria.inSchedule(schedule):
-        schedule.unassigned[criteria.__name__] = []
-        
-        problemRole = selectRole(schedule, criteria)
+def repairSchedule(schedule, criteria, removeUnrepaired=False):
+    schedule.unassigned[criteria.__name__] = list()
 
+    while criteria.inSchedule(schedule):
+        problemRole = selectRole(schedule, criteria)
         cycles = findCycles(problemRole, schedule, criteria)
 
         if cycles == []: # move problemRole to 'unassigned' and remove from matching
             schedule.unassigned[criteria.__name__].append(problemRole)
             logger.warning(f"{problemRole} left unrepaired.")
-            del schedule.matching[problemRole]
-            logger.info(f'{problemRole} removed from matching')
+            if removeUnrepaired:
+                del schedule.matching[problemRole]
+                logger.info(f'{problemRole} removed from matching')
             continue
 
         cycle = selectCycle(schedule, cycles)
-
         swap(schedule, cycle)
     
     print(f'{criteria.__name__} repair complete\n \
