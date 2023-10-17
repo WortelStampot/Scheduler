@@ -3,7 +3,6 @@ import networkx as nx
 from MatchingAlgorithms import roleStaffRating
 
 import logging
-logging.basicConfig(filename='activity.log', filemode='w', level=logging.DEBUG, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger(__name__)
 
 def repairSchedule(schedule, criteria, removeUnrepaired=False):
