@@ -3,22 +3,7 @@ from MatchingAlgorithms import MatchingAlgorithms
 from repairSchedule import repairSchedule
 from Criteria import Doubles, CallTimeOverlap
 from Schedule import Schedule
-
-def removeRoles(roleCollection: list, roleName: str) -> list:
-    """
-    remove roles from the roleCollection
-    return list of removed roles
-
-    this is done to match the 'strict' input being used
-    can reintroduce these roles into the matching process-
-    after forming a stable understanding of the output
-    """
-    removedRoles = [role for role in roleCollection if role.name == roleName]
-    for role in removedRoles:
-        roleCollection.remove(role)
-
-    return removedRoles
-
+from main import removeRoles
 
 input = InputFile('roleStaff_10_9_strict.json')
 algorithm = MatchingAlgorithms.weightedMatching
@@ -38,6 +23,7 @@ schedule.logSchedule()
 #write CSV after initial matching
 input.writeCSV(schedule, stem = 'initialMatching')
 
-repairSchedule(schedule, Doubles)
+repairSchedule(schedule, Doubles, removeUnrepaired=True)
+repairSchedule(schedule, CallTimeOverlap)
 
 input.writeCSV(schedule, stem= 'repaired')
