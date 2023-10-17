@@ -107,7 +107,7 @@ def swap(schedule, cycle) -> None : #again, can avoid passing in schedule when n
         role0 = cycle[0] #shift.role
         rolei = cycle[i] #shift.role
 
-        logger.info(f'staff of {role0}: {schedule.matching[role0]}')
+        logger.debug(f'before swap: staff of {role0}: {schedule.matching[role0]}')
         #swap object 0 with object i
         schedule.matching[role0], schedule.matching[rolei] = schedule.matching[rolei], schedule.matching[role0]
-        logger.info(f'staff of {role0}: {schedule.matching[role0]}')
+        logger.debug(f'after swap: staff of {role0}: {schedule.matching[role0]}')
