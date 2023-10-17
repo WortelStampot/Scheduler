@@ -1,10 +1,9 @@
-from tests.InputOutput import InputFile, scheduleFrom, scheduleFromMain
+from tests.InputOutput import InputFile
 from MatchingAlgorithms import MatchingAlgorithms
-from main import removeRoles
-from Schedule import Schedule
-
 from repairSchedule import repairSchedule
 from Criteria import Doubles, CallTimeOverlap
+from Schedule import Schedule
+from main import removeRoles
 
 import logging
 logging.basicConfig(filename='activity.log', filemode='w', level=logging.INFO, format='%(funcName)s() - %(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
