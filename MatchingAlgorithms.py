@@ -69,7 +69,8 @@ def copyStaff(staffCollection):
 
 def findEdges(roleNodes, staffNodes):
     """
-    return a list of edges between role and staff nodes based on staff.isAvailable
+    return a list of edges between role and staff nodes based on-
+    staff.isAvailable and staff.isQualified
     each edge has a weight calculated by roleStaffRating()
     """ 
     
