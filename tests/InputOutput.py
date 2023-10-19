@@ -54,6 +54,7 @@ class InputFile:
         output file name is based on name of input file
         """
         outputFile = self.path.stem.replace('roleStaff','schedule') # label file as a 'schedule' result
+        outputFile += '.json'
         
         outputFilePath = Path(InputFile.OUTPUT_DIR, outputFile)
 

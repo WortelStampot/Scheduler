@@ -23,9 +23,7 @@ schedule = Schedule(roles=input.roles, staff=input.staff, matchingAlgorithm=algo
 schedule.unassigned['Swing'] = swingRoles
 schedule.unassigned['Uber'] = uberRoles
 
-schedule.logSchedule()
-
 repairSchedule(schedule, Doubles, removeUnrepaired=True)
 repairSchedule(schedule, CallTimeOverlap)
 
-schedule.logSchedule()
+input.writeJSON(schedule)
