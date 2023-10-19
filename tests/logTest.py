@@ -10,7 +10,7 @@ logging.basicConfig(filename='activity.log', filemode='w', level=logging.INFO, f
 logger = logging.getLogger(__name__)
 
 
-input = InputFile('roleStaff_10_9_strict.json')
+input = InputFile('roleStaff_5_1.json')
 algorithm = MatchingAlgorithms.weightedMatching
 
 #remove roles for consistant testing

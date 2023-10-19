@@ -57,7 +57,7 @@ def findCycles(problemRole, schedule, criteria):
         graph = nx.DiGraph(edges)
 
         #find cycles by length
-        maxLength = 6
+        maxLength = 3
         cycles = _bounded_cycle_search(graph, path=[problemRole], length_bound=maxLength)
         cycles = list(cycles) # 'unpack' the generator
 
