@@ -20,7 +20,7 @@ def createSchedule(roleCollection, staffCollection):
 
     schedule.logSchedule()
 
-    repairSchedule(schedule, Doubles)
+    repairSchedule(schedule, Doubles, removeUnrepaired=True)
     repairSchedule(schedule, CallTimeOverlap)
     
     return schedule
