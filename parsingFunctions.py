@@ -23,8 +23,8 @@ def validatePayload(payload, schema):
                 for preferenceKey, preferenceValue in payload[key].items():
                     if type(preferenceKey) != str:
                         raise ValueError(f'preference key: {preferenceKey} is not type string')
-                    if type(preferenceValue) != int:
-                        raise ValueError(f'preference value: {preferenceValue} is not type int')
+                    if type(preferenceValue) != int and type(preferenceValue) != float:
+                        raise ValueError(f'preference value: {preferenceValue} is not type int or float')
                 return True
             payloadValue, schemaValue = payload[key], schema[key]
             validatePayload(payloadValue, schemaValue)
