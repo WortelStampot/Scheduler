@@ -3,6 +3,7 @@ import logging
 from Weekdays import Weekdays
 from Role import Role
 from Staff import Staff
+from database import db
 logger = logging.getLogger(__name__)
 
 
@@ -56,6 +57,16 @@ def parseRole(role):
         raise ValueError(f"Day: {day} for Role: {name} not in valid format.")
     qualifiedStaff = role["qualifiedStaff"]
     preference = role["preference"]
+
+    from sqlalchemy import insert
+    from database import Roles
+    db.session.execute(
+        insert(Roles),
+        [
+           {'name': name, 'day': str(weekday), 'callTime': str(callTime), 'qualifiedStaff': str(qualifiedStaff)}, 
+        ]
+        )
+    db.session.commit()
     return Role(name=name, day=weekday, callTime=callTime, qualifiedStaff=qualifiedStaff, preference=preference)
 
 
