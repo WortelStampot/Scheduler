@@ -1,0 +1,132 @@
+staff,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY, shift count 
+Mia,"shermans
+",,"shermans
+",,"shermans
+","brunchdoor
+shermans
+",,"maxShift: 5
+shifts: 5"
+Rose,"door
+","door
+","door
+",,,,"door
+","maxShift: 4
+shifts: 4"
+Joshua,,,,"shermans
+","lunch
+shermans
+","shermans
+","shermans
+","maxShift: 5
+shifts: 5"
+Sil,"bbar
+back
+",,"back
+","bbar
+",,,,"maxShift: 4
+shifts: 4"
+Lucas,,,"lunch
+lunch
+","lunch
+lunch
+","lunch
+",,,"maxShift: 5
+shifts: 5"
+Ernesto,,,,,,,,"maxShift: 0
+shifts: 0"
+Meagan,"vbar
+",,,"vbar
+","vbar
+","vbar
+",,"maxShift: 4
+shifts: 4"
+Miroslava,,,,,,"brunch
+brunch
+","brunch
+brunch
+brunch
+","maxShift: 5
+shifts: 5"
+Emi,,"bbar
+","bbar
+",,"bbar
+","bbar
+","bbar
+","maxShift: 5
+shifts: 5"
+Sofia,"front
+","front
+vbar
+",,,,,"vbar
+","maxShift: 4
+shifts: 4"
+Sonia,,"middle
+back
+",,"outside
+",,,"middle430
+","maxShift: 4
+shifts: 4"
+Luca,,,,"aux
+veranda
+",,"veranda
+aux
+",,"maxShift: 4
+shifts: 4"
+Annika,"veranda
+",,"veranda
+",,"veranda
+",,"veranda
+","maxShift: 4
+shifts: 4"
+Selvi,,,,"shermans6pm
+","shermans6pm
+",,"shermans6pm
+","maxShift: 3
+shifts: 3"
+Matthew,,,"vbar
+","door2
+",,"brunch
+brunch
+",,"maxShift: 4
+shifts: 4"
+Rosalie,,,,"back
+","back
+","back
+","back
+","maxShift: 4
+shifts: 4"
+Michael,"shermans6pm
+","shermans
+shermans6pm
+","shermans6pm
+",,,"shermans6pm
+",,"maxShift: 5
+shifts: 5"
+Alivia,"outside
+",,,,"outside
+","outside
+","outside
+","maxShift: 4
+shifts: 4"
+Lily,"lunch
+","outside
+","outside
+",,,,,"maxShift: 4
+shifts: 3"
+Madison,,,"front
+","front
+","front
+","front
+","front
+","maxShift: 5
+shifts: 5"
+Ilton,,,"middle
+","middle
+","middle430
+aux
+","middle430
+",,"maxShift: 5
+shifts: 5"
+Initial Matching,"lunch,MONDAY","lunch,TUESDAY","lunch,TUESDAY","veranda,TUESDAY","middle,MONDAY"
+Swing,"swing,SUNDAY"
+Uber,"uber,THURSDAY"

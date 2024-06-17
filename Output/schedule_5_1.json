@@ -1,0 +1,574 @@
+{
+    "shifts": [
+        {
+            "role": "lunch",
+            "day": "WEDNESDAY",
+            "callTime": "10:30",
+            "staff": "Miroslava"
+        },
+        {
+            "role": "shermans",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Mia"
+        },
+        {
+            "role": "shermans",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Joshua"
+        },
+        {
+            "role": "shermans",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Joshua"
+        },
+        {
+            "role": "vbar",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Sofia"
+        },
+        {
+            "role": "front",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Madison"
+        },
+        {
+            "role": "brunch",
+            "day": "SUNDAY",
+            "callTime": "10:30",
+            "staff": "Matthew"
+        },
+        {
+            "role": "bbar",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Sil"
+        },
+        {
+            "role": "veranda",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Annika"
+        },
+        {
+            "role": "aux",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Sofia"
+        },
+        {
+            "role": "back",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Rosalie"
+        },
+        {
+            "role": "lunch",
+            "day": "MONDAY",
+            "callTime": "10:30",
+            "staff": "Lily"
+        },
+        {
+            "role": "shermans",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Mia"
+        },
+        {
+            "role": "brunch",
+            "day": "SATURDAY",
+            "callTime": "10:30",
+            "staff": "Lucas"
+        },
+        {
+            "role": "shermans",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Lucas"
+        },
+        {
+            "role": "back",
+            "day": "FRIDAY",
+            "callTime": "18:00",
+            "staff": "Rosalie"
+        },
+        {
+            "role": "lunch",
+            "day": "THURSDAY",
+            "callTime": "10:30",
+            "staff": "Miroslava"
+        },
+        {
+            "role": "door2",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Matthew"
+        },
+        {
+            "role": "back",
+            "day": "SATURDAY",
+            "callTime": "18:00",
+            "staff": "Rosalie"
+        },
+        {
+            "role": "door",
+            "day": "MONDAY",
+            "callTime": "18:00",
+            "staff": "Rose"
+        },
+        {
+            "role": "outside",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Alivia"
+        },
+        {
+            "role": "lunch",
+            "day": "FRIDAY",
+            "callTime": "10:30",
+            "staff": "Emi"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "FRIDAY",
+            "callTime": "18:00",
+            "staff": "Michael"
+        },
+        {
+            "role": "middle430",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Sonia"
+        },
+        {
+            "role": "brunch",
+            "day": "SATURDAY",
+            "callTime": "10:30",
+            "staff": "Emi"
+        },
+        {
+            "role": "lunch",
+            "day": "WEDNESDAY",
+            "callTime": "10:30",
+            "staff": "Lucas"
+        },
+        {
+            "role": "middle",
+            "day": "WEDNESDAY",
+            "callTime": "18:00",
+            "staff": "Selvi"
+        },
+        {
+            "role": "bbar",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Sil"
+        },
+        {
+            "role": "lunch",
+            "day": "THURSDAY",
+            "callTime": "10:30",
+            "staff": "Lucas"
+        },
+        {
+            "role": "bbar",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Miroslava"
+        },
+        {
+            "role": "door",
+            "day": "TUESDAY",
+            "callTime": "18:00",
+            "staff": "Rose"
+        },
+        {
+            "role": "front",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Madison"
+        },
+        {
+            "role": "vbar",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Matthew"
+        },
+        {
+            "role": "outside",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Lily"
+        },
+        {
+            "role": "veranda",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Annika"
+        },
+        {
+            "role": "brunch",
+            "day": "SATURDAY",
+            "callTime": "10:30",
+            "staff": "Miroslava"
+        },
+        {
+            "role": "back",
+            "day": "SUNDAY",
+            "callTime": "18:00",
+            "staff": "Rosalie"
+        },
+        {
+            "role": "vbar",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Sofia"
+        },
+        {
+            "role": "shermans",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Mia"
+        },
+        {
+            "role": "veranda",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Luca"
+        },
+        {
+            "role": "outside",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Lily"
+        },
+        {
+            "role": "middle430",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Sonia"
+        },
+        {
+            "role": "vbar",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Meagan"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "TUESDAY",
+            "callTime": "18:00",
+            "staff": "Michael"
+        },
+        {
+            "role": "vbar",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Meagan"
+        },
+        {
+            "role": "middle",
+            "day": "TUESDAY",
+            "callTime": "18:00",
+            "staff": "Emi"
+        },
+        {
+            "role": "shermans",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Joshua"
+        },
+        {
+            "role": "front",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Sofia"
+        },
+        {
+            "role": "brunch",
+            "day": "SUNDAY",
+            "callTime": "10:30",
+            "staff": "Ilton"
+        },
+        {
+            "role": "back",
+            "day": "MONDAY",
+            "callTime": "18:00",
+            "staff": "Joshua"
+        },
+        {
+            "role": "door",
+            "day": "SUNDAY",
+            "callTime": "18:00",
+            "staff": "Rose"
+        },
+        {
+            "role": "veranda",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Annika"
+        },
+        {
+            "role": "aux",
+            "day": "SATURDAY",
+            "callTime": "18:00",
+            "staff": "Luca"
+        },
+        {
+            "role": "middle",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Ilton"
+        },
+        {
+            "role": "brunch",
+            "day": "SATURDAY",
+            "callTime": "10:30",
+            "staff": "Matthew"
+        },
+        {
+            "role": "middle430",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Ilton"
+        },
+        {
+            "role": "bbar",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Ilton"
+        },
+        {
+            "role": "front",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Madison"
+        },
+        {
+            "role": "vbar",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Meagan"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "MONDAY",
+            "callTime": "18:00",
+            "staff": "Michael"
+        },
+        {
+            "role": "veranda",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Annika"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "SUNDAY",
+            "callTime": "18:00",
+            "staff": "Selvi"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "SATURDAY",
+            "callTime": "18:00",
+            "staff": "Michael"
+        },
+        {
+            "role": "outside",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Alivia"
+        },
+        {
+            "role": "aux",
+            "day": "FRIDAY",
+            "callTime": "18:00",
+            "staff": "Ilton"
+        },
+        {
+            "role": "outside",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Sonia"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Selvi"
+        },
+        {
+            "role": "bbar",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Sil"
+        },
+        {
+            "role": "back",
+            "day": "WEDNESDAY",
+            "callTime": "18:00",
+            "staff": "Sil"
+        },
+        {
+            "role": "door",
+            "day": "WEDNESDAY",
+            "callTime": "18:00",
+            "staff": "Rose"
+        },
+        {
+            "role": "bbar",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Emi"
+        },
+        {
+            "role": "outside",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Alivia"
+        },
+        {
+            "role": "brunchdoor",
+            "day": "SATURDAY",
+            "callTime": "12:00",
+            "staff": "Mia"
+        },
+        {
+            "role": "front",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Luca"
+        },
+        {
+            "role": "lunch",
+            "day": "FRIDAY",
+            "callTime": "10:30",
+            "staff": "Lucas"
+        },
+        {
+            "role": "bbar",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Emi"
+        },
+        {
+            "role": "brunch",
+            "day": "SUNDAY",
+            "callTime": "10:30",
+            "staff": "Miroslava"
+        },
+        {
+            "role": "shermans",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Joshua"
+        },
+        {
+            "role": "vbar",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Meagan"
+        },
+        {
+            "role": "outside",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Alivia"
+        },
+        {
+            "role": "back",
+            "day": "TUESDAY",
+            "callTime": "18:00",
+            "staff": "Sonia"
+        },
+        {
+            "role": "front",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Madison"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "WEDNESDAY",
+            "callTime": "18:00",
+            "staff": "Michael"
+        },
+        {
+            "role": "front",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Madison"
+        }
+    ],
+    "unassignedRoles": [
+        {
+            "Initial Matching": [
+                {
+                    "name": "lunch",
+                    "day": "MONDAY",
+                    "callTime": "10:30"
+                },
+                {
+                    "name": "lunch",
+                    "day": "TUESDAY",
+                    "callTime": "10:30"
+                },
+                {
+                    "name": "lunch",
+                    "day": "TUESDAY",
+                    "callTime": "10:30"
+                },
+                {
+                    "name": "veranda",
+                    "day": "TUESDAY",
+                    "callTime": "16:30"
+                },
+                {
+                    "name": "middle",
+                    "day": "MONDAY",
+                    "callTime": "18:00"
+                }
+            ]
+        },
+        {
+            "Swing": [
+                {
+                    "name": "swing",
+                    "day": "SUNDAY",
+                    "callTime": "13:00"
+                }
+            ]
+        },
+        {
+            "Uber": [
+                {
+                    "name": "uber",
+                    "day": "THURSDAY",
+                    "callTime": "16:30"
+                }
+            ]
+        },
+        {
+            "Doubles": [
+                {
+                    "name": "veranda",
+                    "day": "SATURDAY",
+                    "callTime": "16:30"
+                },
+                {
+                    "name": "shermans",
+                    "day": "SATURDAY",
+                    "callTime": "16:30"
+                }
+            ]
+        },
+        {
+            "CallTimeOverlap": []
+        }
+    ]
+}

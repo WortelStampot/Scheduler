@@ -1,0 +1,150 @@
+staff,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY, shift count 
+Mia,,"shermans
+shermans
+","vbar
+shermans
+",,"vbar
+",,,"maxShift: 5
+shifts: 5"
+Rose,,,,"shermans
+shermans
+",,"shermans
+","brunchdoor
+","maxShift: 4
+shifts: 4"
+Fernanda,"brunchdoor
+","door
+",,,"aux430
+","brunchdoor
+","door
+","maxShift: 6
+shifts: 5"
+Joshua,"brunch
+brunch
+",,,,"shermans
+shermans
+",,,"maxShift: 4
+shifts: 4"
+Sil,"bbar
+","back
+",,"bbar
+",,"back
+",,"maxShift: 4
+shifts: 4"
+Lucas,,,,"shermans6pm
+shermans6pm
+","middle430
+",,"bbar
+","maxShift: 5
+shifts: 4"
+Meagan,"shermans6pm
+","vbar
+veranda
+",,,,"vbar
+",,"maxShift: 4
+shifts: 4"
+Miroslava,,,,,"veranda
+","brunch
+brunch
+brunch
+brunch
+",,"maxShift: 5
+shifts: 5"
+Emi,"back
+","bbar
+","bbar
+","lunch
+","bbar
+",,,"maxShift: 5
+shifts: 5"
+Sofia,,,"back
+","front
+vbar
+",,,"brunch
+","maxShift: 4
+shifts: 4"
+Luca,"shermans
+shermans
+",,"lunch
+",,,,"shermans
+shermans
+","maxShift: 5
+shifts: 5"
+Annika,,,"veranda
+","veranda
+","back
+",,"brunch
+","maxShift: 4
+shifts: 4"
+Selvi,,"shermans6pm
+middle
+",,,,"middle430
+",,"maxShift: 3
+shifts: 3"
+Matthew,,,"shermans6pm
+",,,"bbar
+veranda
+","vbar
+","maxShift: 4
+shifts: 4"
+Rosalie,,,,,,,,"maxShift: 0
+shifts: 0"
+Michael,,,,,,"outside
+shermans
+",,"maxShift: 3
+shifts: 2"
+Alivia,"outside
+vbar
+","outside
+",,,"outside
+",,"shermans6pm
+","maxShift: 5
+shifts: 5"
+Madison,,"front
+",,,"shermans6pm
+shermans6pm
+",,"brunch
+","maxShift: 4
+shifts: 4"
+Ilton,,,"middle
+","middle
+aux
+back
+",,,,"maxShift: 4
+shifts: 4"
+Victoria,"veranda
+front
+",,"lunch
+",,,"front
+",,"maxShift: 4
+shifts: 4"
+Shelby,,,,,,"aux
+",,"maxShift: 1
+shifts: 1"
+Lucy,,"lunch
+lunch
+","outside
+",,,,,"maxShift: 3
+shifts: 3"
+Adeleza,"middle
+",,,"outside
+",,,"middle430
+outside
+","maxShift: 4
+shifts: 4"
+Isaac,,,,,"lunch
+lunch
+lunch
+","shermans6pm
+",,"maxShift: 4
+shifts: 4"
+Jonny,,,"front
+",,"front
+","shermans6pm
+","front
+veranda
+","maxShift: 5
+shifts: 5"
+Initial Matching
+Swing,"swing,MONDAY","swing,MONDAY","swing,THURSDAY","swing,SUNDAY","swing,SUNDAY"
+Uber,"uber,SUNDAY"

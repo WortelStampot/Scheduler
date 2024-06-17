@@ -1,0 +1,644 @@
+{
+    "shifts": [
+        {
+            "role": "middle",
+            "day": "WEDNESDAY",
+            "callTime": "18:00",
+            "staff": "Staff19"
+        },
+        {
+            "role": "vbar",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Staff14"
+        },
+        {
+            "role": "shermans",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Staff16"
+        },
+        {
+            "role": "shermans",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Staff2"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "FRIDAY",
+            "callTime": "18:00",
+            "staff": "Staff10"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "TUESDAY",
+            "callTime": "18:00",
+            "staff": "Staff13"
+        },
+        {
+            "role": "aux",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Staff11"
+        },
+        {
+            "role": "door",
+            "day": "TUESDAY",
+            "callTime": "18:00",
+            "staff": "Staff3"
+        },
+        {
+            "role": "door2",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Staff14"
+        },
+        {
+            "role": "veranda",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Staff19"
+        },
+        {
+            "role": "middle430",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Staff9"
+        },
+        {
+            "role": "veranda",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Staff11"
+        },
+        {
+            "role": "front",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Staff24"
+        },
+        {
+            "role": "outside",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Staff17"
+        },
+        {
+            "role": "lunch",
+            "day": "WEDNESDAY",
+            "callTime": "10:30",
+            "staff": "Staff4"
+        },
+        {
+            "role": "vbar",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Staff10"
+        },
+        {
+            "role": "veranda",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Staff25"
+        },
+        {
+            "role": "front",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Staff20"
+        },
+        {
+            "role": "brunchdoor",
+            "day": "SUNDAY",
+            "callTime": "12:00",
+            "staff": "Staff1"
+        },
+        {
+            "role": "shermans",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Staff16"
+        },
+        {
+            "role": "brunch",
+            "day": "SUNDAY",
+            "callTime": "10:30",
+            "staff": "Staff12"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "WEDNESDAY",
+            "callTime": "18:00",
+            "staff": "Staff16"
+        },
+        {
+            "role": "shermans",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Staff18"
+        },
+        {
+            "role": "lunch",
+            "day": "MONDAY",
+            "callTime": "10:30",
+            "staff": "Staff9"
+        },
+        {
+            "role": "lunch",
+            "day": "MONDAY",
+            "callTime": "10:30",
+            "staff": "Staff24"
+        },
+        {
+            "role": "front",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Staff20"
+        },
+        {
+            "role": "brunch",
+            "day": "SUNDAY",
+            "callTime": "10:30",
+            "staff": "Staff10"
+        },
+        {
+            "role": "middle430",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Staff19"
+        },
+        {
+            "role": "bbar",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Staff9"
+        },
+        {
+            "role": "shermans",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Staff1"
+        },
+        {
+            "role": "door2",
+            "day": "FRIDAY",
+            "callTime": "18:00",
+            "staff": "Staff14"
+        },
+        {
+            "role": "back",
+            "day": "SUNDAY",
+            "callTime": "18:00",
+            "staff": "Staff22"
+        },
+        {
+            "role": "outside",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Staff17"
+        },
+        {
+            "role": "back",
+            "day": "MONDAY",
+            "callTime": "18:00",
+            "staff": "Staff5"
+        },
+        {
+            "role": "middle",
+            "day": "TUESDAY",
+            "callTime": "18:00",
+            "staff": "Staff20"
+        },
+        {
+            "role": "shermans",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Staff11"
+        },
+        {
+            "role": "lunch",
+            "day": "THURSDAY",
+            "callTime": "10:30",
+            "staff": "Staff7"
+        },
+        {
+            "role": "front",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Staff20"
+        },
+        {
+            "role": "bbar",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Staff5"
+        },
+        {
+            "role": "middle430",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Staff5"
+        },
+        {
+            "role": "middle",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Staff25"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Staff4"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "SATURDAY",
+            "callTime": "18:00",
+            "staff": "Staff18"
+        },
+        {
+            "role": "outside",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Staff23"
+        },
+        {
+            "role": "middle",
+            "day": "MONDAY",
+            "callTime": "18:00",
+            "staff": "Staff18"
+        },
+        {
+            "role": "front",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Staff18"
+        },
+        {
+            "role": "aux",
+            "day": "FRIDAY",
+            "callTime": "18:00",
+            "staff": "Staff19"
+        },
+        {
+            "role": "outside",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Staff23"
+        },
+        {
+            "role": "veranda",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Staff12"
+        },
+        {
+            "role": "vbar",
+            "day": "TUESDAY",
+            "callTime": "16:30",
+            "staff": "Staff7"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "MONDAY",
+            "callTime": "18:00",
+            "staff": "Staff13"
+        },
+        {
+            "role": "vbar",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Staff1"
+        },
+        {
+            "role": "vbar",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Staff7"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "FRIDAY",
+            "callTime": "18:00",
+            "staff": "Staff13"
+        },
+        {
+            "role": "shermans",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Staff16"
+        },
+        {
+            "role": "outside",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Staff17"
+        },
+        {
+            "role": "outside",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Staff24"
+        },
+        {
+            "role": "back",
+            "day": "FRIDAY",
+            "callTime": "18:00",
+            "staff": "Staff12"
+        },
+        {
+            "role": "brunch",
+            "day": "SUNDAY",
+            "callTime": "10:30",
+            "staff": "Staff8"
+        },
+        {
+            "role": "vbar",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Staff14"
+        },
+        {
+            "role": "front",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Staff10"
+        },
+        {
+            "role": "shermans",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Staff8"
+        },
+        {
+            "role": "shermans",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Staff2"
+        },
+        {
+            "role": "door",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Staff3"
+        },
+        {
+            "role": "door",
+            "day": "FRIDAY",
+            "callTime": "18:00",
+            "staff": "Staff3"
+        },
+        {
+            "role": "aux",
+            "day": "SATURDAY",
+            "callTime": "18:00",
+            "staff": "Staff25"
+        },
+        {
+            "role": "veranda",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Staff6"
+        },
+        {
+            "role": "vbar",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Staff7"
+        },
+        {
+            "role": "door",
+            "day": "SUNDAY",
+            "callTime": "18:00",
+            "staff": "Staff3"
+        },
+        {
+            "role": "back",
+            "day": "SATURDAY",
+            "callTime": "18:00",
+            "staff": "Staff17"
+        },
+        {
+            "role": "shermans6pm",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Staff13"
+        },
+        {
+            "role": "outside",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Staff22"
+        },
+        {
+            "role": "bbar",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Staff6"
+        },
+        {
+            "role": "lunch",
+            "day": "WEDNESDAY",
+            "callTime": "10:30",
+            "staff": "Staff6"
+        },
+        {
+            "role": "lunch",
+            "day": "THURSDAY",
+            "callTime": "10:30",
+            "staff": "Staff6"
+        },
+        {
+            "role": "bbar",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Staff5"
+        },
+        {
+            "role": "back",
+            "day": "TUESDAY",
+            "callTime": "18:00",
+            "staff": "Staff22"
+        },
+        {
+            "role": "back",
+            "day": "THURSDAY",
+            "callTime": "18:00",
+            "staff": "Staff8"
+        },
+        {
+            "role": "shermans",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Staff4"
+        },
+        {
+            "role": "veranda",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Staff12"
+        },
+        {
+            "role": "bbar",
+            "day": "WEDNESDAY",
+            "callTime": "16:30",
+            "staff": "Staff23"
+        },
+        {
+            "role": "lunch",
+            "day": "FRIDAY",
+            "callTime": "10:30",
+            "staff": "Staff22"
+        },
+        {
+            "role": "bbar",
+            "day": "SUNDAY",
+            "callTime": "16:30",
+            "staff": "Staff23"
+        },
+        {
+            "role": "shermans",
+            "day": "MONDAY",
+            "callTime": "16:30",
+            "staff": "Staff4"
+        },
+        {
+            "role": "lunch",
+            "day": "FRIDAY",
+            "callTime": "10:30",
+            "staff": "Staff24"
+        },
+        {
+            "role": "veranda",
+            "day": "SATURDAY",
+            "callTime": "16:30",
+            "staff": "Staff11"
+        },
+        {
+            "role": "back",
+            "day": "WEDNESDAY",
+            "callTime": "18:00",
+            "staff": "Staff2"
+        },
+        {
+            "role": "front",
+            "day": "FRIDAY",
+            "callTime": "16:30",
+            "staff": "Staff25"
+        },
+        {
+            "role": "bbar",
+            "day": "THURSDAY",
+            "callTime": "16:30",
+            "staff": "Staff9"
+        }
+    ],
+    "unassignedRoles": [
+        {
+            "Initial Matching": [
+                {
+                    "name": "lunch",
+                    "day": "TUESDAY",
+                    "callTime": "10:30"
+                },
+                {
+                    "name": "brunch",
+                    "day": "SATURDAY",
+                    "callTime": "10:30"
+                },
+                {
+                    "name": "brunch",
+                    "day": "SATURDAY",
+                    "callTime": "10:30"
+                },
+                {
+                    "name": "brunchdoor",
+                    "day": "SATURDAY",
+                    "callTime": "12:00"
+                },
+                {
+                    "name": "shermans",
+                    "day": "SUNDAY",
+                    "callTime": "16:30"
+                },
+                {
+                    "name": "door",
+                    "day": "MONDAY",
+                    "callTime": "18:00"
+                },
+                {
+                    "name": "door",
+                    "day": "WEDNESDAY",
+                    "callTime": "18:00"
+                },
+                {
+                    "name": "shermans6pm",
+                    "day": "SATURDAY",
+                    "callTime": "18:00"
+                },
+                {
+                    "name": "shermans6pm",
+                    "day": "SUNDAY",
+                    "callTime": "18:00"
+                }
+            ]
+        },
+        {
+            "Swing": [
+                {
+                    "name": "swing",
+                    "day": "TUESDAY",
+                    "callTime": "13:00"
+                },
+                {
+                    "name": "swing",
+                    "day": "FRIDAY",
+                    "callTime": "13:00"
+                },
+                {
+                    "name": "swing",
+                    "day": "SATURDAY",
+                    "callTime": "13:00"
+                },
+                {
+                    "name": "swing",
+                    "day": "SATURDAY",
+                    "callTime": "13:00"
+                }
+            ]
+        },
+        {
+            "Uber": [
+                {
+                    "name": "uber",
+                    "day": "SATURDAY",
+                    "callTime": "16:30"
+                }
+            ]
+        },
+        {
+            "Doubles": [
+                {
+                    "name": "shermans",
+                    "day": "THURSDAY",
+                    "callTime": "16:30"
+                },
+                {
+                    "name": "shermans",
+                    "day": "SATURDAY",
+                    "callTime": "16:30"
+                },
+                {
+                    "name": "brunch",
+                    "day": "SUNDAY",
+                    "callTime": "10:30"
+                }
+            ]
+        },
+        {
+            "CallTimeOverlap": []
+        }
+    ]
+}

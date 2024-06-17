@@ -1,0 +1,152 @@
+staff,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY, shift count 
+Mia,,"shermans
+","shermans
+","shermans
+","vbar
+","bbar
+",,"maxShift: 5
+shifts: 5"
+Rose,,,,"shermans
+","shermans
+","shermans
+","brunchdoor
+","maxShift: 4
+shifts: 4"
+Fernanda,"brunchdoor
+","door
+",,,"aux430
+","brunchdoor
+","door
+","maxShift: 6
+shifts: 5"
+Joshua,"brunch
+",,,"shermans6pm
+","shermans
+","brunch
+",,"maxShift: 4
+shifts: 4"
+Sil,"bbar
+","back
+",,"bbar
+",,"back
+",,"maxShift: 4
+shifts: 4"
+Lucas,,,,"shermans6pm
+","middle430
+","brunch
+","bbar
+","maxShift: 5
+shifts: 4"
+Meagan,"shermans6pm
+","vbar
+",,,"lunch
+","vbar
+",,"maxShift: 4
+shifts: 4"
+Miroslava,,,"vbar
+","aux
+","veranda
+","brunch
+","veranda
+","maxShift: 5
+shifts: 5"
+Emi,"back
+","bbar
+","bbar
+","lunch
+","bbar
+",,,"maxShift: 5
+shifts: 5"
+Sofia,,"middle
+","back
+","front
+",,,"brunch
+","maxShift: 4
+shifts: 4"
+Luca,"shermans
+",,"lunch
+",,"shermans6pm
+","outside
+","shermans
+","maxShift: 5
+shifts: 5"
+Annika,,,"veranda
+","veranda
+","back
+",,"brunch
+","maxShift: 4
+shifts: 4"
+Selvi,,"shermans6pm
+",,,,"middle430
+","middle430
+","maxShift: 3
+shifts: 3"
+Matthew,,"lunch
+","shermans6pm
+",,,"veranda
+","vbar
+","maxShift: 4
+shifts: 4"
+Rosalie,,,,,,,,"maxShift: 0
+shifts: 0"
+Michael,,,,"middle
+",,"shermans
+",,"maxShift: 3
+shifts: 2"
+Alivia,"vbar
+","outside
+",,,"outside
+","brunch
+","shermans6pm
+","maxShift: 5
+shifts: 5"
+Madison,"shermans
+","front
+",,,"shermans6pm
+",,"brunch
+","maxShift: 4
+shifts: 4"
+Ilton,"front
+","shermans
+","middle
+","back
+",,,,"maxShift: 4
+shifts: 4"
+Victoria,"veranda
+","veranda
+","lunch
+",,,"front
+",,"maxShift: 4
+shifts: 4"
+Shelby,,,,,,"aux
+",,"maxShift: 1
+shifts: 1"
+Lucy,"outside
+","lunch
+","outside
+",,,,,"maxShift: 3
+shifts: 3"
+Adeleza,"middle
+",,,"outside
+","lunch
+",,"outside
+","maxShift: 4
+shifts: 4"
+Isaac,,,,"vbar
+","lunch
+","shermans6pm
+","shermans
+","maxShift: 4
+shifts: 4"
+Jonny,"brunch
+",,"front
+",,"front
+","shermans6pm
+","front
+","maxShift: 5
+shifts: 5"
+Initial Matching
+Swing,"swing,MONDAY","swing,MONDAY","swing,THURSDAY","swing,SUNDAY","swing,SUNDAY"
+Uber,"uber,SUNDAY"
+Doubles
+CallTimeOverlap

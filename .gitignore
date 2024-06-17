@@ -3,8 +3,6 @@
 .vscode/
 worlddata/
 DirectionTrail/
-Input/*
-Output/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
